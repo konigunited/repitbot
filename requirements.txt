@@ -1,0 +1,9 @@
+python-telegram-bot[ext]
+SQLAlchemy
+alembic
+python-dotenv
+APScheduler
+matplotlib
+seaborn
+python-telegram-bot-calendar
+Faker
