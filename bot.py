@@ -23,17 +23,16 @@ from src.handlers import (start, handle_access_code, button_handler,
                       tutor_delete_student_start, tutor_delete_student_confirm,
                       tutor_mark_lesson_attended, tutor_check_homework,
                       tutor_set_homework_status, tutor_edit_lesson_start,
-                      tutor_set_lesson_mastery, tutor_get_lesson_comment,
                       tutor_add_hw_start, tutor_get_hw_description,
                       tutor_get_hw_deadline, tutor_get_hw_link,
                       student_submit_homework_start, student_get_homework_submission,
                       show_my_progress, show_schedule,
                       show_materials_library, chat_with_tutor_start,
-                      forward_to_tutor, handle_tutor_reply,
+                      forward_message_to_tutor, handle_tutor_reply,
                       show_student_list, show_tutor_stats,
                       ADD_STUDENT_NAME, ADD_PARENT_CODE, ADD_PAYMENT_AMOUNT, 
                       ADD_LESSON_TOPIC, ADD_LESSON_DATE, ADD_LESSON_SKILLS,
-                      EDIT_STUDENT_NAME, EDIT_LESSON_COMMENT,
+                      EDIT_STUDENT_NAME, EDIT_LESSON_STATUS, EDIT_LESSON_COMMENT,
                       ADD_HW_DESC, ADD_HW_DEADLINE, ADD_HW_LINK,
                       CHAT_WITH_TUTOR, SUBMIT_HOMEWORK_FILE,
                       report_start, report_select_student, report_select_month_and_generate,
@@ -42,10 +41,11 @@ from src.handlers import (start, handle_access_code, button_handler,
                       tutor_get_material_link, tutor_get_material_description,
                       ADD_MATERIAL_TITLE, ADD_MATERIAL_LINK, ADD_MATERIAL_DESC,
                       show_tutor_dashboard, handle_calendar_selection,
-                      broadcast_start, broadcast_get_message, broadcast_cancel,
-                      BROADCAST_MESSAGE, BROADCAST_CONFIRM)
+                      broadcast_start, broadcast_get_message, broadcast_cancel, broadcast_send,
+                      BROADCAST_MESSAGE, BROADCAST_CONFIRM,
+                      tutor_edit_lesson_get_status, tutor_edit_lesson_get_comment)
 from src.database import engine, Base
-from src.scheduler import send_reminders, send_payment_reminders
+from src.scheduler import send_reminders, send_payment_reminders, send_homework_deadline_reminders
 from src.admin_handlers import add_tutor, add_parent
 
 # Загружаем переменные окружения из .env файла
@@ -74,8 +74,11 @@ async def start_scheduler(application):
     # Напоминания о низком балансе (каждый день в 10:00)
     scheduler.add_job(send_payment_reminders, 'cron', hour=10, minute=0, args=[application], name="Payment Reminders")
     
+    # Напоминания о дедлайнах ДЗ (каждый день в 12:00)
+    scheduler.add_job(send_homework_deadline_reminders, 'cron', hour=12, minute=0, args=[application], name="Homework Deadline Reminders")
+    
     scheduler.start()
-    logger.info("Планировщик запущен с двумя задачами: напоминания об уроках и о низком балансе.")
+    logger.info("Планировщик запущен с тремя задачами: напоминания об уроках, о низком балансе и о дедлайнах ДЗ.")
 
 def main() -> None:
     """Запускает бота."""
@@ -123,7 +126,9 @@ def main() -> None:
     )
     chat_conv = ConversationHandler(
         entry_points=[CallbackQueryHandler(chat_with_tutor_start, pattern="^chat_with_tutor$")],
-        states={CHAT_WITH_TUTOR: [MessageHandler(filters.TEXT & ~filters.COMMAND, forward_to_tutor)]},
+        states={
+            CHAT_WITH_TUTOR: [MessageHandler(filters.TEXT | filters.PHOTO | filters.Document.ALL, forward_message_to_tutor)]
+        },
         fallbacks=[CommandHandler("cancel", cancel_conversation)],
     )
 
@@ -163,7 +168,7 @@ def main() -> None:
             CommandHandler("broadcast", broadcast_start)
         ],
         states={
-            BROADCAST_MESSAGE: [MessageHandler(filters.TEXT | filters.PHOTO | filters.VIDEO | filters.DOCUMENT, broadcast_get_message)],
+            BROADCAST_MESSAGE: [MessageHandler(filters.TEXT | filters.PHOTO | filters.VIDEO | filters.Document.ALL, broadcast_get_message)],
             BROADCAST_CONFIRM: [
                 CallbackQueryHandler(broadcast_send, pattern="^broadcast_send$"),
                 CallbackQueryHandler(broadcast_cancel, pattern="^broadcast_cancel$")
@@ -173,11 +178,24 @@ def main() -> None:
     )
 
 
+    edit_lesson_conv = ConversationHandler(
+        entry_points=[CallbackQueryHandler(tutor_edit_lesson_start, pattern="^tutor_edit_lesson_")],
+        states={
+            EDIT_LESSON_STATUS: [CallbackQueryHandler(tutor_edit_lesson_get_status, pattern="^tutor_set_mastery_")],
+            EDIT_LESSON_COMMENT: [MessageHandler(filters.TEXT & ~filters.COMMAND, tutor_edit_lesson_get_comment)],
+        },
+        fallbacks=[CommandHandler("cancel", cancel_conversation)],
+        # Позволяет ConversationHandler работать в разных чатах одновременно
+        per_user=True,
+        per_chat=True,
+    )
+
     # --- Регистрация обработчиков ---
     application.add_handler(add_student_conv)
     application.add_handler(add_payment_conv)
     application.add_handler(add_lesson_conv)
     application.add_handler(edit_student_name_conv)
+    application.add_handler(edit_lesson_conv)
     application.add_handler(add_hw_conv)
     application.add_handler(chat_conv)
     application.add_handler(report_conv)
@@ -197,6 +215,8 @@ def main() -> None:
     application.add_handler(MessageHandler(filters.Regex(f"^{TUTOR_BUTTONS['library']}$"), tutor_manage_library))
     application.add_handler(MessageHandler(filters.Regex(f"^{TUTOR_BUTTONS['stats']}$"), show_tutor_dashboard))
     
+    # Этот обработчик должен быть ПЕРЕД обработчиком handle_access_code, 
+    # чтобы правильно перехватывать ответы репетитора.
     application.add_handler(MessageHandler(filters.REPLY & filters.TEXT & ~filters.COMMAND, handle_tutor_reply))
     application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_access_code))
 

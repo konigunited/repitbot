@@ -4,6 +4,5 @@ alembic
 python-dotenv
 APScheduler
 matplotlib
-seaborn
 python-telegram-bot-calendar
 Faker

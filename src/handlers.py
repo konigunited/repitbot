@@ -44,13 +44,13 @@ ADD_STUDENT_NAME, ADD_PARENT_CODE = range(2)
 ADD_PAYMENT_AMOUNT = range(1)
 ADD_LESSON_TOPIC, ADD_LESSON_DATE, ADD_LESSON_SKILLS = range(3)
 EDIT_STUDENT_NAME = range(1)
-EDIT_LESSON_COMMENT = range(1)
 ADD_HW_DESC, ADD_HW_DEADLINE, ADD_HW_LINK = range(3)
 CHAT_WITH_TUTOR = range(1)
 SELECT_STUDENT_FOR_REPORT, SELECT_MONTH_FOR_REPORT = range(2)
 ADD_MATERIAL_TITLE, ADD_MATERIAL_LINK, ADD_MATERIAL_DESC = range(3)
 SUBMIT_HOMEWORK_FILE = range(1)
 BROADCAST_MESSAGE, BROADCAST_CONFIRM = range(2)
+EDIT_LESSON_STATUS, EDIT_LESSON_COMMENT = range(2)
 
 
 # --- Helper Functions ---
@@ -140,12 +140,12 @@ async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
         "tutor_delete_confirm_": (tutor_delete_student_confirm, "student_id"),
         "tutor_lessons_list_": (show_tutor_lessons, "student_id"),
         "tutor_lesson_details_": (show_lesson_details, "lesson_id"),
-        "tutor_edit_lesson_": (tutor_edit_lesson_start, "lesson_id"),
         "tutor_mark_attended_": (tutor_mark_lesson_attended, "lesson_id"),
         "tutor_check_hw_": (tutor_check_homework, "lesson_id"),
         "tutor_manage_library": (tutor_manage_library, None),
         "tutor_delete_material_start": (tutor_delete_material_start, None),
         "tutor_delete_material_": (tutor_delete_material_confirm, "material_id"),
+        "tutor_view_material_": (show_material_details, "material_id"),
         "materials_library": (show_materials_library, None),
         "student_view_material_": (show_material_details, "material_id"),
         "select_child": (parent_select_child, None),
@@ -200,9 +200,12 @@ async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 
 async def cancel_conversation(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
+    lesson_id = context.user_data.get('lesson_id')
     context.user_data.clear()
     await update.message.reply_text("Действие отменено.")
-    await show_main_menu(update, context)
+    if lesson_id:
+        # Возвращаемся к карточке урока после отмены
+        await show_lesson_details(update, context, lesson_id)
     return ConversationHandler.END
 
 # --- Tutor: Student Management ---
@@ -365,27 +368,34 @@ def escape_md(text: str) -> str:
 async def show_lesson_details(update: Update, context: ContextTypes.DEFAULT_TYPE, lesson_id: int):
     db = SessionLocal()
     try:
-        # "Жадно" загружаем связанные домашние задания, чтобы избежать ошибки DetachedInstanceError
         lesson = db.query(Lesson).options(joinedload(Lesson.homeworks)).filter(Lesson.id == lesson_id).first()
         if not lesson:
             await update.callback_query.edit_message_text("Урок не найден.")
             return
 
-        # Используем официальную функцию для экранирования MarkdownV2 для ВСЕХ вставляемых данных
         topic = escape_markdown(lesson.topic or "", version=2)
         skills = escape_markdown(lesson.skills_developed or 'Не указаны', version=2)
         mastery_level_ru = TOPIC_MASTERY_RU.get(lesson.mastery_level, "Неизвестно")
         mastery_level = escape_markdown(mastery_level_ru, version=2)
         date_str = escape_markdown(lesson.date.strftime('%d.%m.%Y'), version=2)
+        comment = escape_markdown(lesson.mastery_comment or '', version=2)
 
         text = (f"📚 *Тема:* {topic}\n"
                 f"🗓️ *Дата:* {date_str}\n"
                 f"👍 *Навыки:* {skills}\n"
-                f"🎓 *Статус:* {mastery_level}\n"
-                f"✅ *Посещение:* {'Да' if lesson.is_attended else 'Нет'}")
+                f"🎓 *Статус:* {mastery_level}\n")
+        if comment:
+            text += f"💬 *Комментарий:* {comment}\n"
+        text += f"✅ *Посещение:* {'Да' if lesson.is_attended else 'Нет'}"
+
         keyboard = tutor_lesson_details_keyboard(lesson)
-        # Используем parse_mode='MarkdownV2'
-        await update.callback_query.edit_message_text(text, reply_markup=keyboard, parse_mode='MarkdownV2')
+        
+        # Используем edit_message_text, если есть query
+        if update.callback_query:
+            await update.callback_query.edit_message_text(text, reply_markup=keyboard, parse_mode='MarkdownV2')
+        else: # Иначе отправляем новое сообщение (например, после отмены диалога)
+            await context.bot.send_message(chat_id=update.effective_chat.id, text=text, reply_markup=keyboard, parse_mode='MarkdownV2')
+
     finally:
         db.close()
 
@@ -428,13 +438,66 @@ async def tutor_get_lesson_skills(update: Update, context: ContextTypes.DEFAULT_
     await show_main_menu(update, context)
     return ConversationHandler.END
 
-async def tutor_edit_lesson_start(update: Update, context: ContextTypes.DEFAULT_TYPE, lesson_id: int):
+async def tutor_edit_lesson_start(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Начинает диалог редактирования статуса и комментария урока."""
+    query = update.callback_query
+    lesson_id = int(query.data.split("_")[-1])
+    context.user_data['lesson_id'] = lesson_id
+    
     keyboard = tutor_edit_lesson_status_keyboard(lesson_id)
-    await update.callback_query.edit_message_text("Выберите новый статус:", reply_markup=keyboard)
+    await query.edit_message_text("Выберите новый статус усвоения темы:", reply_markup=keyboard)
+    return EDIT_LESSON_STATUS
 
-async def tutor_get_lesson_comment(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await update.message.reply_text("Комментарий к уроку (не реализовано).")
+async def tutor_edit_lesson_get_status(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Получает новый статус и спрашивает про комментарий."""
+    query = update.callback_query
+    # Извлекаем lesson_id и mastery_value из callback_data
+    prefix = "tutor_set_mastery_"
+    payload = query.data[len(prefix):]
+    lesson_id_str, mastery_value = payload.split('_', 1)
+    lesson_id = int(lesson_id_str)
+
+    # Сохраняем выбранный статус
+    context.user_data['new_mastery_status'] = TopicMastery(mastery_value)
+    
+    await query.edit_message_text(
+        "Статус выбран. Теперь введите комментарий к уровню усвоения.\n"
+        "Чтобы пропустить, введите /skip."
+    )
+    return EDIT_LESSON_COMMENT
+
+async def tutor_edit_lesson_get_comment(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Получает комментарий, сохраняет все изменения и завершает диалог."""
+    comment = update.message.text
+    if comment.lower() == '/skip':
+        comment = None
+
+    lesson_id = context.user_data.get('lesson_id')
+    new_mastery = context.user_data.get('new_mastery_status')
+
+    db = SessionLocal()
+    try:
+        lesson = db.query(Lesson).filter(Lesson.id == lesson_id).first()
+        if lesson:
+            # Начисляем баллы, если тема закреплена впервые
+            if new_mastery == TopicMastery.MASTERED and lesson.mastery_level != TopicMastery.MASTERED:
+                lesson.student.points += 25
+                await update.message.reply_text("✅ Статус и комментарий обновлены! +25 баллов ученику.")
+            else:
+                await update.message.reply_text("✅ Статус и комментарий обновлены!")
+
+            lesson.mastery_level = new_mastery
+            lesson.mastery_comment = comment
+            db.commit()
+        else:
+            await update.message.reply_text("❌ Урок не найден.")
+    finally:
+        db.close()
+
+    context.user_data.clear()
+    await show_lesson_details(update, context, lesson_id)
     return ConversationHandler.END
+
 
 async def tutor_add_hw_start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     query = update.callback_query
@@ -648,16 +711,96 @@ async def parent_view_child_progress(update: Update, context: ContextTypes.DEFAU
 
 
 # --- Chat ---
-async def chat_with_tutor_start(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await update.callback_query.edit_message_text("Напишите ваше сообщение репетитору. Для отмены введите /cancel.")
+async def chat_with_tutor_start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
+    """Начинает диалог с репетитором."""
+    query = update.callback_query
+    await query.answer()
+    await query.edit_message_text(
+        "Напишите ваше сообщение репетитору. Вы можете отправить текст, фото или документ.\n"
+        "Для отмены введите /cancel."
+    )
     return CHAT_WITH_TUTOR
 
-async def forward_to_tutor(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await update.message.reply_text("Сообщение репетитору (не реализовано).")
+async def forward_message_to_tutor(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
+    """Пересылает сообщение от пользователя репетитору с подписью."""
+    user = get_user_by_telegram_id(update.effective_user.id)
+    db = SessionLocal()
+    tutor = db.query(User).filter(User.role == UserRole.TUTOR).first()
+    db.close()
+
+    if not tutor or not tutor.telegram_id:
+        await update.message.reply_text("Не удалось найти репетитора. Сообщение не отправлено.")
+        return ConversationHandler.END
+
+    # Формируем подпись
+    user_role_ru = "Родитель" if user.role == UserRole.PARENT else "Ученик"
+    caption = (f"Сообщение от *{user_role_ru.lower()}* {escape_markdown(user.full_name, 2)}\n"
+               f"ID для ответа: `{user.telegram_id}`")
+
+    try:
+        # Пересылаем сообщение пользователя
+        forwarded_message = await context.bot.forward_message(
+            chat_id=tutor.telegram_id,
+            from_chat_id=update.message.chat_id,
+            message_id=update.message.message_id
+        )
+        # Отправляем подпись как отдельное сообщение в ответ на пересланное
+        await context.bot.send_message(
+            chat_id=tutor.telegram_id,
+            text=caption,
+            parse_mode='MarkdownV2',
+            reply_to_message_id=forwarded_message.message_id
+        )
+        await update.message.reply_text("✅ Ваше сообщение отправлено репетитору!")
+    except Forbidden:
+        await update.message.reply_text("Не удалось отправить сообщение: репетитор заблокировал бота.")
+    except Exception as e:
+        await update.message.reply_text(f"Произошла ошибка при отправке: {e}")
+
     return ConversationHandler.END
 
+
 async def handle_tutor_reply(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await update.message.reply_text("Ответ ученику (не реализовано).")
+    """Обрабатывает ответ репетитора на сообщение пользователя."""
+    # Проверяем, что это действительно ответ
+    if not update.message.reply_to_message:
+        return
+
+    tutor_reply_text = update.message.text
+    original_message = update.message.reply_to_message
+
+    # --- Вариант 1: Ответ на пересланное сообщение ---
+    if original_message.forward_from:
+        user_to_reply_id = original_message.forward_from.id
+        try:
+            await context.bot.send_message(
+                chat_id=user_to_reply_id,
+                text=f"Сообщение от репетитора:\n\n{tutor_reply_text}"
+            )
+            await update.message.reply_text("✅ Ответ успешно отправлен.")
+        except Forbidden:
+            await update.message.reply_text("Не удалось отправить ответ: пользователь заблокировал бота.")
+        except Exception as e:
+            await update.message.reply_text(f"Ошибка при отправке ответа: {e}")
+        return
+
+    # --- Вариант 2: Ответ на сообщение с подписью (содержит ID) ---
+    if original_message.text and "ID для ответа:" in original_message.text:
+        try:
+            # Извлекаем ID из текста подписи
+            user_to_reply_id = int(original_message.text.split("`")[1])
+            await context.bot.send_message(
+                chat_id=user_to_reply_id,
+                text=f"Сообщение от репетитора:\n\n{tutor_reply_text}"
+            )
+            await update.message.reply_text("✅ Ответ успешно отправлен.")
+        except (ValueError, IndexError):
+            await update.message.reply_text("Не удалось извлечь ID пользователя из сообщения. Ответ не отправлен.")
+        except Forbidden:
+            await update.message.reply_text("Не удалось отправить ответ: пользователь заблокировал бота.")
+        except Exception as e:
+            await update.message.reply_text(f"Ошибка при отправке ответа: {e}")
+        return
 
 # --- Broadcast ---
 async def broadcast_start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
@@ -786,7 +929,7 @@ async def report_select_month_and_generate(update: Update, context: ContextTypes
         f"📊 *Ежемесячный отчет*\n\n"
         f"👤 *Ученик:* {escape_markdown(student.full_name, 2)}\n"
         f"🗓️ *Период:* {month_names[month-1]} {year}\n\n"
-        "\-\\-\\- *Проведенные занятия* \-\\-\\-\\n"
+        "\\-\\-\\- *Проведенные занятия* \\-\\-\\-\n"
     )
 
     if not lessons:
@@ -799,7 +942,7 @@ async def report_select_month_and_generate(update: Update, context: ContextTypes
                 report_text += f"• *{escape_markdown(lesson.date.strftime('%d.%m.%Y'), 2)}*: {escape_markdown(lesson.topic, 2)} \\(Статус: {escape_markdown(mastery_ru, 2)}\\)\\n"
         report_text += f"\n*Итого проведено занятий:* {total_attended}\n\n"
 
-    report_text += "\-\\-\\- *Оплаты* \-\\-\\-\\n"
+    report_text += "\\-\\-\\- *Оплаты* \\-\\-\\-\n"
     if not payments:
         report_text += "В этом месяце оплат не было\\.\n"
     else:
@@ -819,8 +962,13 @@ async def report_cancel(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 # --- Material Management ---
 async def tutor_manage_library(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    keyboard = tutor_library_management_keyboard()
-    message = "📚 *Управление библиотекой*\n\nВыберите действие:"
+    materials = get_all_materials()
+    keyboard = tutor_library_management_keyboard(materials)
+    message = "📚 *Библиотека материалов*\n\nЗдесь вы можете просматривать, добавлять и удалять материалы."
+    if not materials:
+        message = "📚 *Библиотека материалов*\n\nВ библиотеке пока пусто. Добавьте первый материал."
+
+    # This handler can be called by a ReplyKeyboard button (no query) or an InlineKeyboard button (query)
     if update.callback_query:
         await update.callback_query.edit_message_text(message, reply_markup=keyboard, parse_mode='Markdown')
     else:
@@ -1005,11 +1153,20 @@ async def show_materials_library(update: Update, context: ContextTypes.DEFAULT_T
 
 async def show_material_details(update: Update, context: ContextTypes.DEFAULT_TYPE, material_id: int):
     query = update.callback_query
+    user = get_user_by_telegram_id(query.from_user.id)
     material = get_material_by_id(material_id)
+    
     text = (f"*{material.title}*\n\n"
             f"{material.description or 'Описания нет.'}\n\n"
             f"🔗 *Ссылка:* {material.link}")
-    keyboard = InlineKeyboardMarkup([[InlineKeyboardButton("⬅️ К списку материалов", callback_data="materials_library")]])
+
+    # Determine the correct back button based on user role
+    if user.role == UserRole.TUTOR:
+        back_button = InlineKeyboardButton("⬅️ К списку материалов", callback_data="tutor_manage_library")
+    else:
+        back_button = InlineKeyboardButton("⬅️ К списку материалов", callback_data="materials_library")
+        
+    keyboard = InlineKeyboardMarkup([[back_button]])
     await query.edit_message_text(text, reply_markup=keyboard, parse_mode='Markdown', disable_web_page_preview=True)
 
 async def show_tutor_dashboard(update: Update, context: ContextTypes.DEFAULT_TYPE):

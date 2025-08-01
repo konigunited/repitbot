@@ -2,7 +2,7 @@
 from datetime import datetime, timedelta
 from telegram.ext import Application
 from telegram.error import Forbidden
-from .database import SessionLocal, Lesson, User, UserRole, Payment, get_student_balance
+from .database import SessionLocal, Lesson, User, UserRole, Payment, get_student_balance, Homework, HomeworkStatus
 from sqlalchemy import func
 
 # --- Константы ---
@@ -77,5 +77,40 @@ async def send_payment_reminders(application: Application):
                     print(f"Не удалось отправить напоминание о балансе для {student.full_name} (ID: {student.id}) пользователю {target_user.full_name} (ID: {target_user.id}): бот заблокирован.")
                 except Exception as e:
                     print(f"Не удалось отправить напоминание о балансе для {student.full_name} (ID: {student.id}): {e}")
+    finally:
+        db.close()
+
+async def send_homework_deadline_reminders(application: Application):
+    """Отправляет напоминания о приближающемся дедлайне ДЗ."""
+    db = SessionLocal()
+    try:
+        now = datetime.now()
+        reminder_time_start = now + timedelta(hours=23, minutes=55)
+        reminder_time_end = now + timedelta(hours=24, minutes=5)
+
+        # Ищем ДЗ в статусе "В работе", у которых дедлайн наступает в ближайшие 24 часа
+        pending_homeworks = db.query(Homework).join(Lesson).join(User).filter(
+            Homework.status == HomeworkStatus.PENDING,
+            Homework.deadline >= reminder_time_start,
+            Homework.deadline <= reminder_time_end,
+            User.telegram_id.isnot(None)
+        ).all()
+
+        for hw in pending_homeworks:
+            student = hw.lesson.student
+            try:
+                await application.bot.send_message(
+                    chat_id=student.telegram_id,
+                    text=f"🔥 *Напоминание: дедлайн близко!*\n\n"
+                         f"У вас осталось 24 часа, чтобы сдать домашнее задание по теме:\n"
+                         f"*{hw.lesson.topic or 'Без темы'}*\n\n"
+                         f"*{hw.description}*\n\n"
+                         "Не забудьте отправить его на проверку!",
+                    parse_mode='Markdown'
+                )
+            except Forbidden:
+                print(f"Не удалось отправить напоминание о ДЗ студенту {student.full_name} (ID: {student.id}): бот заблокирован.")
+            except Exception as e:
+                print(f"Не удалось отправить напоминание о ДЗ студенту {student.full_name} (ID: {student.id}): {e}")
     finally:
         db.close()

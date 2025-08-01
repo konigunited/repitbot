@@ -1,30 +1,27 @@
-# check_db.py
 import sys
 import os
 
-# Добавляем src в sys.path для импорта моделей
-sys.path.append(os.path.join(os.path.dirname(__file__), "src"))
+# Add the 'src' directory to the Python path
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), 'src')))
 
-from src.database import SessionLocal, User
+from src.database import SessionLocal, Material
 
-def check_users_in_db():
-    """Читает и выводит всех пользователей и их коды доступа из БД."""
+def check_and_fix_materials():
     db = SessionLocal()
-    try:
-        users = db.query(User).all()
-        if not users:
-            print("База данных пуста. Пользователи не найдены.")
-            print("Пожалуйста, запустите 'python create_all_users.py' для создания пользователей.")
-            return
+    materials = db.query(Material).all()
+    if not materials:
+        print("No materials found in the database.")
+    else:
+        print(f"Found {len(materials)} materials:")
+        for material in materials:
+            print(f"  - ID: {material.id}, Title: {material.title}, Link: {material.link}")
+            if material.id == 1:
+                print("Found material with ID 1. Attempting to fix title...")
+                material.title = "Test Material"
+                db.commit()
+                print("Material title updated successfully.")
 
-        print("--- Актуальные пользователи в базе данных ---")
-        for user in users:
-            print(f"Имя: {user.full_name:<20} | Роль: {user.role.name:<10} | Код доступа: {user.access_code}")
-        print("---------------------------------------------")
-        print("\nИспользуйте один из этих кодов для входа в бота.")
-
-    finally:
-        db.close()
+    db.close()
 
 if __name__ == "__main__":
-    check_users_in_db()
+    check_and_fix_materials()

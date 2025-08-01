@@ -206,15 +206,23 @@ def tutor_select_month_for_report_keyboard(student_id):
     return InlineKeyboardMarkup(keyboard)
 
 # --- Клавиатуры для библиотеки ---
-def tutor_library_management_keyboard():
-    """Клавиатура для управления библиотекой."""
-    keyboard = [
-        [
-            InlineKeyboardButton("➕ Добавить материал", callback_data="tutor_add_material"),
-            InlineKeyboardButton("🗑️ Удалить материал", callback_data="tutor_delete_material_start")
-        ],
-        [InlineKeyboardButton("⬅️ Назад в главное меню", callback_data="main_menu")]
-    ]
+def tutor_library_management_keyboard(materials):
+    """Клавиатура для управления библиотекой репетитора (просмотр, добавление, удаление)."""
+    keyboard = []
+    # Список материалов
+    for material in materials:
+        # Ограничиваем длину текста на кнопке
+        title = (material.title[:30] + '..') if len(material.title) > 30 else material.title
+        keyboard.append([InlineKeyboardButton(f"📖 {title}", callback_data=f"tutor_view_material_{material.id}")])
+    
+    # Кнопки управления
+    keyboard.append([
+        InlineKeyboardButton("➕ Добавить", callback_data="tutor_add_material"),
+        InlineKeyboardButton("🗑️ Удалить", callback_data="tutor_delete_material_start")
+    ])
+    
+    keyboard.append([InlineKeyboardButton("⬅️ Назад в главное меню", callback_data="main_menu")])
+    
     return InlineKeyboardMarkup(keyboard)
 
 def tutor_select_material_to_delete_keyboard(materials):
