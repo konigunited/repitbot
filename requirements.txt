@@ -1,8 +1,27 @@
-python-telegram-bot[ext]
-SQLAlchemy
-alembic
-python-dotenv
-APScheduler
-matplotlib
-python-telegram-bot-calendar
-Faker
+# Core bot functionality
+python-telegram-bot[ext]>=20.0
+SQLAlchemy>=2.0.0
+python-dotenv>=1.0.0
+
+# Scheduling and background tasks
+APScheduler>=3.10.0
+
+# Database migrations
+alembic>=1.12.0
+
+# Charts and visualization
+matplotlib>=3.7.0
+seaborn>=0.12.0
+
+# Calendar functionality
+python-telegram-bot-calendar>=1.0.5
+
+# System monitoring
+psutil>=5.9.0
+
+# Testing and development
+Faker>=19.0.0
+
+# Production dependencies
+gunicorn>=21.0.0
+supervisor>=4.2.0

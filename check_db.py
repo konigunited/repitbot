@@ -1,27 +1,30 @@
-import sys
+# -*- coding: utf-8 -*-
 import os
+import sys
+sys.path.append(os.path.join(os.path.dirname(__file__), 'src'))
+from database import SessionLocal, User, UserRole
 
-# Add the 'src' directory to the Python path
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), 'src')))
-
-from src.database import SessionLocal, Material
-
-def check_and_fix_materials():
+def check_users():
     db = SessionLocal()
-    materials = db.query(Material).all()
-    if not materials:
-        print("No materials found in the database.")
-    else:
-        print(f"Found {len(materials)} materials:")
-        for material in materials:
-            print(f"  - ID: {material.id}, Title: {material.title}, Link: {material.link}")
-            if material.id == 1:
-                print("Found material with ID 1. Attempting to fix title...")
-                material.title = "Test Material"
-                db.commit()
-                print("Material title updated successfully.")
-
-    db.close()
+    try:
+        users = db.query(User).all()
+        print(f"Всего пользователей в БД: {len(users)}")
+        print("=" * 50)
+        for user in users:
+            print(f"ID: {user.id}")
+            print(f"Telegram ID: {user.telegram_id}")
+            print(f"Имя: {user.full_name}")
+            print(f"Роль: {user.role}")
+            print(f"Код доступа: {user.access_code}")
+            print("-" * 30)
+        tutors = db.query(User).filter(User.role == UserRole.TUTOR).all()
+        print(f"\nРепетиторов найдено: {len(tutors)}")
+        for tutor in tutors:
+            print(f"Репетитор: {tutor.full_name} (Telegram ID: {tutor.telegram_id})")
+    except Exception as e:
+        print(f"Ошибка: {e}")
+    finally:
+        db.close()
 
 if __name__ == "__main__":
-    check_and_fix_materials()
+    check_users()

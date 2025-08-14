@@ -3,7 +3,7 @@ import logging
 import os
 from dotenv import load_dotenv
 from telegram.ext import (Application, CommandHandler, MessageHandler, filters, 
-                          CallbackQueryHandler, ConversationHandler)
+                          CallbackQueryHandler, ConversationHandler, ContextTypes)
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from telegram_bot_calendar import DetailedTelegramCalendar
 
@@ -12,38 +12,46 @@ from telegram_bot_calendar import DetailedTelegramCalendar
 import sys
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), 'src')))
 
-from src.keyboards import TUTOR_BUTTONS
-from src.handlers import (start, handle_access_code, button_handler,
-                      tutor_add_student_start, tutor_get_student_name,
-                      tutor_get_parent_code, cancel_conversation,
-                      tutor_add_payment_start, tutor_get_payment_amount,
-                      tutor_add_lesson_start, tutor_get_lesson_topic,
-                      tutor_get_lesson_date, tutor_get_lesson_skills,
-                      tutor_edit_name_start, tutor_get_new_name,
-                      tutor_delete_student_start, tutor_delete_student_confirm,
-                      tutor_mark_lesson_attended, tutor_check_homework,
-                      tutor_set_homework_status, tutor_edit_lesson_start,
-                      tutor_add_hw_start, tutor_get_hw_description,
-                      tutor_get_hw_deadline, tutor_get_hw_link,
-                      student_submit_homework_start, student_get_homework_submission,
-                      show_my_progress, show_schedule,
-                      show_materials_library, chat_with_tutor_start,
-                      forward_message_to_tutor, handle_tutor_reply,
-                      show_student_list, show_tutor_stats,
-                      ADD_STUDENT_NAME, ADD_PARENT_CODE, ADD_PAYMENT_AMOUNT, 
-                      ADD_LESSON_TOPIC, ADD_LESSON_DATE, ADD_LESSON_SKILLS,
-                      EDIT_STUDENT_NAME, EDIT_LESSON_STATUS, EDIT_LESSON_COMMENT,
-                      ADD_HW_DESC, ADD_HW_DEADLINE, ADD_HW_LINK,
-                      CHAT_WITH_TUTOR, SUBMIT_HOMEWORK_FILE,
-                      report_start, report_select_student, report_select_month_and_generate,
-                      report_cancel, SELECT_STUDENT_FOR_REPORT, SELECT_MONTH_FOR_REPORT,
-                      tutor_manage_library, tutor_add_material_start, tutor_get_material_title,
-                      tutor_get_material_link, tutor_get_material_description,
-                      ADD_MATERIAL_TITLE, ADD_MATERIAL_LINK, ADD_MATERIAL_DESC,
-                      show_tutor_dashboard, handle_calendar_selection,
-                      broadcast_start, broadcast_get_message, broadcast_cancel, broadcast_send,
-                      BROADCAST_MESSAGE, BROADCAST_CONFIRM,
-                      tutor_edit_lesson_get_status, tutor_edit_lesson_get_comment)
+from src.keyboards import TUTOR_BUTTONS, STUDENT_BUTTONS, PARENT_BUTTONS
+# Импортируем из микросервисов
+from src.handlers.common import start, handle_access_code, cancel_conversation
+from src.handlers.shared import button_handler, handle_calendar_selection, chat_with_tutor_start, forward_message_to_tutor, handle_tutor_reply, CHAT_WITH_TUTOR
+
+# Импортируем обработчики репетитора
+from src.handlers.tutor import (
+    tutor_add_student_start, tutor_get_student_name, tutor_get_parent_code,
+    tutor_add_payment_start, tutor_get_payment_amount,
+    tutor_add_lesson_start, tutor_get_lesson_topic, tutor_get_lesson_date, tutor_get_lesson_skills,
+    tutor_edit_name_start, tutor_get_new_name, tutor_add_parent_start, tutor_get_parent_name,
+    tutor_delete_student_start, tutor_delete_student_confirm,
+    tutor_mark_lesson_attended, tutor_set_lesson_attendance, tutor_check_homework,
+    tutor_set_homework_status, tutor_edit_lesson_start, tutor_edit_lesson_get_status, tutor_edit_lesson_get_comment,
+    tutor_add_hw_start, tutor_get_hw_description, tutor_get_hw_deadline, tutor_get_hw_link, tutor_get_hw_photos,
+    show_student_list, show_tutor_stats, show_tutor_dashboard,
+    report_start, report_select_student, report_select_month_and_generate, report_cancel,
+    tutor_manage_library, tutor_add_material_start, tutor_get_material_title, 
+    tutor_get_material_link, tutor_get_material_description,
+    broadcast_start, broadcast_get_message, broadcast_cancel, broadcast_send
+)
+
+# Импортируем обработчики ученика
+from src.handlers.student import (
+    student_submit_homework_start, student_get_homework_submission, SUBMIT_HOMEWORK_FILE,
+    show_my_progress, show_schedule, show_materials_library, show_lesson_history,
+    show_homework_menu, show_student_achievements, show_payment_and_attendance
+)
+
+# Импортируем обработчики родителя
+from src.handlers.parent import show_parent_dashboard
+
+# Состояния ConversationHandler (исключаем уже импортированные CHAT_WITH_TUTOR и SUBMIT_HOMEWORK_FILE)
+(ADD_STUDENT_NAME, ADD_PARENT_CODE, ADD_PARENT_NAME, ADD_PAYMENT_AMOUNT, 
+ ADD_LESSON_TOPIC, ADD_LESSON_DATE, ADD_LESSON_SKILLS,
+ EDIT_STUDENT_NAME, EDIT_LESSON_STATUS, EDIT_LESSON_COMMENT,
+ ADD_HW_DESC, ADD_HW_DEADLINE, ADD_HW_LINK, ADD_HW_PHOTOS,
+ SELECT_STUDENT_FOR_REPORT, SELECT_MONTH_FOR_REPORT,
+ ADD_MATERIAL_TITLE, ADD_MATERIAL_LINK, ADD_MATERIAL_DESC,
+ BROADCAST_MESSAGE, BROADCAST_CONFIRM) = range(21)
 from src.database import engine, Base
 from src.scheduler import send_reminders, send_payment_reminders, send_homework_deadline_reminders
 from src.admin_handlers import add_tutor, add_parent
@@ -52,11 +60,48 @@ from src.admin_handlers import add_tutor, add_parent
 load_dotenv()
 
 
-# Включаем логирование
-logging.basicConfig(
-    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.INFO
+# Профессиональное логирование
+from src.logger import setup_logging, log_user_action, log_telegram_error, metrics
+from src.health_monitor import health_monitor, setup_default_checks
+
+logger = setup_logging(
+    log_level=os.getenv("LOG_LEVEL", "INFO"),
+    log_dir=os.getenv("LOG_DIR", "logs")
 )
-logger = logging.getLogger(__name__)
+
+async def error_handler(update: object, context: ContextTypes.DEFAULT_TYPE) -> None:
+    """Профессиональный обработчик ошибок с логированием и метриками."""
+    
+    # Логируем ошибку через профессиональную систему
+    log_telegram_error(logger, update, context, "Global Error Handler")
+    
+    # Записываем метрики
+    metrics.record_error()
+    
+    # Отправляем пользователю дружественное сообщение
+    if update and hasattr(update, 'effective_user') and update.effective_user:
+        try:
+            user_id = update.effective_user.id
+            log_user_action(user_id, "error_encountered", str(context.error)[:100])
+            
+            await context.bot.send_message(
+                chat_id=user_id,
+                text="⚠️ Произошла техническая ошибка. Попробуйте позже или обратитесь к администратору.\n"
+                     "Мы уже получили уведомление и работаем над исправлением."
+            )
+        except Exception as send_error:
+            logger.error(f"Failed to send error message to user: {send_error}")
+    
+    # В критических случаях уведомляем администратора
+    admin_id = os.getenv("ADMIN_USER_ID")
+    if admin_id and context.error and "critical" in str(context.error).lower():
+        try:
+            await context.bot.send_message(
+                chat_id=int(admin_id),
+                text=f"🚨 CRITICAL ERROR:\n{context.error}"
+            )
+        except Exception:
+            pass
 
 # Токен бота из .env файла
 TOKEN = os.getenv("TELEGRAM_TOKEN")
@@ -78,28 +123,77 @@ async def start_scheduler(application):
     scheduler.add_job(send_homework_deadline_reminders, 'cron', hour=12, minute=0, args=[application], name="Homework Deadline Reminders")
     
     scheduler.start()
-    logger.info("Планировщик запущен с тремя задачами: напоминания об уроках, о низком балансе и о дедлайнах ДЗ.")
+    logger.info("Планировщик запущен с задачами: напоминания об уроках, балансе и дедлайнах ДЗ")
+
+async def start_health_monitoring(application):
+    """Инициализирует систему мониторинга здоровья."""
+    # Настраиваем стандартные проверки
+    setup_default_checks()
+    
+    # Добавляем проверку подключения к Telegram
+    async def check_bot_connection():
+        try:
+            me = await application.bot.get_me()
+            return me is not None
+        except Exception:
+            return False
+    
+    health_monitor.add_check("bot_connection", check_bot_connection, interval=120)
+    health_monitor.bot_application = application
+    
+    # Запускаем мониторинг
+    await health_monitor.start_monitoring()
+    logger.info("Система мониторинга здоровья запущена")
+
+async def initialize_systems(application):
+    """Инициализирует все системы бота."""
+    try:
+        # Сначала инициализируем сам бот
+        await application.bot.initialize()
+        logger.info("Бот инициализирован")
+        
+        # Проверяем соединение
+        me = await application.bot.get_me()
+        logger.info(f"Подключение к Telegram API установлено. Бот: @{me.username}")
+        
+        # Запускаем системы
+        await start_scheduler(application)
+        await start_health_monitoring(application)
+        
+    except Exception as e:
+        logger.error(f"❌ Ошибка при инициализации систем: {e}")
+        raise
 
 def main() -> None:
     """Запускает бота."""
     Base.metadata.create_all(bind=engine)
     logger.info("Database tables created/checked.")
 
-    application = Application.builder().token(TOKEN).post_init(start_scheduler).build()
+    # Создаем приложение с улучшенными настройками таймаута и обработки ошибок
+    application = (Application.builder()
+                   .token(TOKEN)
+                   .post_init(initialize_systems)
+                   .connect_timeout(30)  # Таймаут подключения 30 сек
+                   .read_timeout(30)     # Таймаут чтения 30 сек
+                   .write_timeout(30)    # Таймаут записи 30 сек
+                   .pool_timeout(10)     # Таймаут пула соединений 10 сек
+                   .build())
 
     # --- Диалоги ---
+    # Диалог добавления студента (репетитор)
     add_student_conv = ConversationHandler(
-        entry_points=[MessageHandler(filters.Regex(f"^{TUTOR_BUTTONS['add_student']}$"), tutor_add_student_start)],
+        entry_points=[CallbackQueryHandler(tutor_add_student_start, pattern="^add_student$")],
         states={
             ADD_STUDENT_NAME: [MessageHandler(filters.TEXT & ~filters.COMMAND, tutor_get_student_name)],
             ADD_PARENT_CODE: [MessageHandler(filters.TEXT & ~filters.COMMAND, tutor_get_parent_code)],
         },
         fallbacks=[CommandHandler("cancel", cancel_conversation)],
+        per_message=True
     )
     add_payment_conv = ConversationHandler(
         entry_points=[CallbackQueryHandler(tutor_add_payment_start, pattern="^tutor_add_payment_")],
         states={ADD_PAYMENT_AMOUNT: [MessageHandler(filters.TEXT & ~filters.COMMAND, tutor_get_payment_amount)]},
-        fallbacks=[CommandHandler("cancel", cancel_conversation)],
+        fallbacks=[CommandHandler("cancel", cancel_conversation)]
     )
     add_lesson_conv = ConversationHandler(
         entry_points=[CallbackQueryHandler(tutor_add_lesson_start, pattern="^tutor_add_lesson_")],
@@ -108,12 +202,17 @@ def main() -> None:
             ADD_LESSON_DATE: [MessageHandler(filters.TEXT & ~filters.COMMAND, tutor_get_lesson_date)],
             ADD_LESSON_SKILLS: [MessageHandler(filters.TEXT & ~filters.COMMAND, tutor_get_lesson_skills)],
         },
-        fallbacks=[CommandHandler("cancel", cancel_conversation)],
+        fallbacks=[CommandHandler("cancel", cancel_conversation)]
     )
     edit_student_name_conv = ConversationHandler(
         entry_points=[CallbackQueryHandler(tutor_edit_name_start, pattern="^tutor_edit_name_")],
         states={EDIT_STUDENT_NAME: [MessageHandler(filters.TEXT & ~filters.COMMAND, tutor_get_new_name)]},
-        fallbacks=[CommandHandler("cancel", cancel_conversation)],
+        fallbacks=[CommandHandler("cancel", cancel_conversation)]
+    )
+    add_parent_conv = ConversationHandler(
+        entry_points=[CallbackQueryHandler(tutor_add_parent_start, pattern="^tutor_add_parent_")],
+        states={ADD_PARENT_NAME: [MessageHandler(filters.TEXT & ~filters.COMMAND, tutor_get_parent_name)]},
+        fallbacks=[CommandHandler("cancel", cancel_conversation)]
     )
     add_hw_conv = ConversationHandler(
         entry_points=[CallbackQueryHandler(tutor_add_hw_start, pattern="^tutor_add_hw_")],
@@ -121,15 +220,21 @@ def main() -> None:
             ADD_HW_DESC: [MessageHandler(filters.TEXT & ~filters.COMMAND, tutor_get_hw_description)],
             ADD_HW_DEADLINE: [MessageHandler(filters.TEXT & ~filters.COMMAND, tutor_get_hw_deadline)],
             ADD_HW_LINK: [MessageHandler(filters.TEXT & ~filters.COMMAND, tutor_get_hw_link)],
+            ADD_HW_PHOTOS: [MessageHandler(filters.TEXT | filters.PHOTO, tutor_get_hw_photos)],
         },
-        fallbacks=[CommandHandler("cancel", cancel_conversation)],
+        fallbacks=[CommandHandler("cancel", cancel_conversation)]
     )
     chat_conv = ConversationHandler(
-        entry_points=[CallbackQueryHandler(chat_with_tutor_start, pattern="^chat_with_tutor$")],
+        entry_points=[
+            CallbackQueryHandler(chat_with_tutor_start, pattern="^chat_with_tutor$"),
+            CallbackQueryHandler(chat_with_tutor_start, pattern="^parent_chat_with_tutor$"),
+            MessageHandler(filters.Regex(f"^{STUDENT_BUTTONS['chat']}$"), chat_with_tutor_start)
+        ],
         states={
             CHAT_WITH_TUTOR: [MessageHandler(filters.TEXT | filters.PHOTO | filters.Document.ALL, forward_message_to_tutor)]
         },
         fallbacks=[CommandHandler("cancel", cancel_conversation)],
+        per_message=True
     )
 
     report_conv = ConversationHandler(
@@ -142,6 +247,7 @@ def main() -> None:
             CommandHandler("cancel", cancel_conversation),
             CallbackQueryHandler(report_cancel, pattern="^cancel_report$")
         ],
+        per_message=True
     )
 
     add_material_conv = ConversationHandler(
@@ -152,6 +258,7 @@ def main() -> None:
             ADD_MATERIAL_DESC: [MessageHandler(filters.TEXT & ~filters.COMMAND, tutor_get_material_description)],
         },
         fallbacks=[CommandHandler("cancel", cancel_conversation)],
+        per_message=True
     )
     
     submit_hw_conv = ConversationHandler(
@@ -160,6 +267,7 @@ def main() -> None:
             SUBMIT_HOMEWORK_FILE: [MessageHandler(filters.TEXT | filters.Document.ALL | filters.PHOTO, student_get_homework_submission)]
         },
         fallbacks=[CommandHandler("cancel", cancel_conversation)],
+        per_message=True
     )
 
     broadcast_conv = ConversationHandler(
@@ -175,6 +283,7 @@ def main() -> None:
             ],
         },
         fallbacks=[CommandHandler("cancel", cancel_conversation)],
+        per_message=True
     )
 
 
@@ -188,13 +297,26 @@ def main() -> None:
         # Позволяет ConversationHandler работать в разных чатах одновременно
         per_user=True,
         per_chat=True,
+        per_message=True
     )
 
     # --- Регистрация обработчиков ---
+    # ВАЖНО: CallbackQueryHandler должен быть зарегистрирован ПЕРЕД ConversationHandlers
+    application.add_handler(CommandHandler("start", start))
+    application.add_handler(CallbackQueryHandler(handle_calendar_selection, pattern="^calendar"))
+    # button_handler НЕ должен обрабатывать callback_data для ConversationHandlers
+    application.add_handler(CallbackQueryHandler(button_handler, pattern="^(?!(tutor_add_payment_|tutor_add_lesson_|tutor_add_parent_|tutor_edit_name_|tutor_add_hw_|student_submit_hw_|report_select_|broadcast_|add_student|tutor_add_material)).*"))
+    
+    # --- Admin Commands ---
+    application.add_handler(CommandHandler("add_tutor", add_tutor))
+    application.add_handler(CommandHandler("add_parent", add_parent))
+    
+    # ConversationHandlers регистрируем ПОСЛЕ основных callback handlers
     application.add_handler(add_student_conv)
     application.add_handler(add_payment_conv)
     application.add_handler(add_lesson_conv)
     application.add_handler(edit_student_name_conv)
+    application.add_handler(add_parent_conv)
     application.add_handler(edit_lesson_conv)
     application.add_handler(add_hw_conv)
     application.add_handler(chat_conv)
@@ -202,27 +324,60 @@ def main() -> None:
     application.add_handler(add_material_conv)
     application.add_handler(submit_hw_conv)
     application.add_handler(broadcast_conv)
+
+    # Импортируем микросервисы
+    from src.handlers.tutor import show_tutor_dashboard, show_student_list
+    from src.handlers.student import show_homework_menu, show_my_progress, show_schedule, show_materials_library, show_lesson_history, show_student_achievements, show_payment_and_attendance
+    from src.handlers.parent import show_parent_dashboard
     
-    # --- Admin Commands ---
-    application.add_handler(CommandHandler("add_tutor", add_tutor))
-    application.add_handler(CommandHandler("add_parent", add_parent))
-
-    application.add_handler(CommandHandler("start", start))
-    application.add_handler(CallbackQueryHandler(handle_calendar_selection, pattern="^calendar"))
-    application.add_handler(CallbackQueryHandler(button_handler))
-
+    # Обработчики кнопок репетитора
     application.add_handler(MessageHandler(filters.Regex(f"^{TUTOR_BUTTONS['students']}$"), show_student_list))
+    application.add_handler(MessageHandler(filters.Regex(f"^{TUTOR_BUTTONS['add_student']}$"), show_tutor_dashboard))
+    application.add_handler(MessageHandler(filters.Regex(f"^{TUTOR_BUTTONS['monthly_report']}$"), report_start))
     application.add_handler(MessageHandler(filters.Regex(f"^{TUTOR_BUTTONS['library']}$"), tutor_manage_library))
-    application.add_handler(MessageHandler(filters.Regex(f"^{TUTOR_BUTTONS['stats']}$"), show_tutor_dashboard))
+    application.add_handler(MessageHandler(filters.Regex(f"^{TUTOR_BUTTONS['stats']}$"), show_tutor_stats))
+    application.add_handler(MessageHandler(filters.Regex(f"^{TUTOR_BUTTONS['broadcast']}$"), broadcast_start))
+    
+    # Обработчики для кнопок ученика
+    application.add_handler(MessageHandler(filters.Regex(f"^{STUDENT_BUTTONS['lessons_history']}$"), show_lesson_history))
+    application.add_handler(MessageHandler(filters.Regex(f"^{STUDENT_BUTTONS['schedule']}$"), show_schedule))
+    application.add_handler(MessageHandler(filters.Regex(f"^{STUDENT_BUTTONS['homework']}$"), show_homework_menu))
+    application.add_handler(MessageHandler(filters.Regex(f"^{STUDENT_BUTTONS['progress']}$"), show_my_progress))
+    application.add_handler(MessageHandler(filters.Regex(f"^{STUDENT_BUTTONS['payment']}$"), show_payment_and_attendance))
+    application.add_handler(MessageHandler(filters.Regex(f"^{STUDENT_BUTTONS['achievements']}$"), show_student_achievements))
+    application.add_handler(MessageHandler(filters.Regex(f"^{STUDENT_BUTTONS['library']}$"), show_materials_library))
+    application.add_handler(MessageHandler(filters.Regex(f"^{STUDENT_BUTTONS['chat']}$"), chat_with_tutor_start))
+    
+    # Обработчики для кнопок родителя
+    application.add_handler(MessageHandler(filters.Regex(f"^{PARENT_BUTTONS['dashboard']}$"), show_parent_dashboard))
+    application.add_handler(MessageHandler(filters.Regex(f"^{PARENT_BUTTONS['chat']}$"), chat_with_tutor_start))
     
     # Этот обработчик должен быть ПЕРЕД обработчиком handle_access_code, 
     # чтобы правильно перехватывать ответы репетитора.
     application.add_handler(MessageHandler(filters.REPLY & filters.TEXT & ~filters.COMMAND, handle_tutor_reply))
     application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_access_code))
 
+    # Добавляем обработчик ошибок
+    application.add_error_handler(error_handler)
+
     # --- Запуск бота ---
     logger.info("Запускаем бота...")
-    application.run_polling()
+    
+    try:
+        # Запуск с настройками таймаута для polling
+        application.run_polling(
+            timeout=30,          # Таймаут для long polling
+            bootstrap_retries=3, # Количество попыток переподключения
+            close_loop=True,     # Закрыть event loop при завершении
+            stop_signals=None    # Отключаем default stop signals для Windows
+        )
+    except KeyboardInterrupt:
+        logger.info("Получен сигнал завершения работы")
+    except Exception as e:
+        logger.error(f"Критическая ошибка при запуске бота: {e}")
+        raise
+    finally:
+        logger.info("Завершение работы бота")
 
 
 if __name__ == "__main__":

@@ -1,8 +1,14 @@
 # -*- coding: utf-8 -*-
-import matplotlib.pyplot as plt
-import matplotlib.dates as mdates
+try:
+    import matplotlib.pyplot as plt
+    import matplotlib.dates as mdates
+    HAS_MATPLOTLIB = True
+except ImportError:
+    plt = None
+    mdates = None  
+    HAS_MATPLOTLIB = False
 from datetime import datetime, timedelta
-from .database import SessionLocal, Lesson, User, Homework, TopicMastery, HomeworkStatus
+from .database import SessionLocal, Lesson, User, Homework, TopicMastery, HomeworkStatus, AttendanceStatus
 from sqlalchemy import func
 import os
 
@@ -11,6 +17,8 @@ def generate_progress_chart(student_id: int):
     Генерирует и сохраняет комплексный график прогресса ученика,
     включая динамику баллов и уровень усвоения тем.
     """
+    if not HAS_MATPLOTLIB:
+        return None
     db = SessionLocal()
     try:
         student = db.query(User).filter(User.id == student_id).first()
@@ -23,7 +31,7 @@ def generate_progress_chart(student_id: int):
         # Уроки (посещение)
         attended_lessons = db.query(Lesson).filter(
             Lesson.student_id == student_id,
-            Lesson.is_attended == True
+            Lesson.attendance_status == AttendanceStatus.ATTENDED
         ).order_by(Lesson.date).all()
         for lesson in attended_lessons:
             events.append({'date': lesson.date, 'points': 10, 'label': 'Посещение урока'})
@@ -89,7 +97,14 @@ def generate_progress_chart(student_id: int):
         ]
 
         # 4. Стилизация и построение графика
-        plt.style.use('seaborn-v0_8-whitegrid')
+        try:
+            plt.style.use('seaborn-v0_8-whitegrid')
+        except:
+            try:
+                plt.style.use('seaborn-whitegrid')
+            except:
+                pass  # Используем стандартный стиль
+        
         fig, ax1 = plt.subplots(figsize=(14, 8))
 
         # --- График баллов (левая ось Y) ---

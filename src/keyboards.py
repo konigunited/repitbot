@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, ReplyKeyboardMarkup
-from .database import TopicMastery, HomeworkStatus
+from .database import TopicMastery, HomeworkStatus, AttendanceStatus
 
 # --- Общие клавиатуры ---
 def main_menu_keyboard(user_role):
@@ -21,6 +21,18 @@ TUTOR_BUTTONS = {
     "broadcast": "📣 Рассылка"
 }
 
+# --- Клавиатуры для ученика ---
+STUDENT_BUTTONS = {
+    "lessons_history": "📚 Мои уроки",
+    "schedule": "🗓️ Расписание",
+    "homework": "📝 Домашние задания",
+    "progress": "📊 Мой прогресс",
+    "library": "🗂️ Библиотека",
+    "payment": "💰 Баланс уроков",
+    "achievements": "🏆 Достижения",
+    "chat": "💬 Связь с репетитором"
+}
+
 def tutor_main_keyboard():
     keyboard = [
         [TUTOR_BUTTONS["students"], TUTOR_BUTTONS["add_student"]],
@@ -33,17 +45,18 @@ def tutor_main_keyboard():
 def student_main_keyboard():
     """Создает клавиатуру для главного меню ученика."""
     keyboard = [
-        [
-            InlineKeyboardButton("📚 Темы уроков", callback_data="lessons_history"),
-            InlineKeyboardButton("🗓️ Расписание", callback_data="schedule")
-        ],
-        [InlineKeyboardButton("📝 Домашнее задание", callback_data="homework")],
+        [STUDENT_BUTTONS["lessons_history"], STUDENT_BUTTONS["schedule"]],
+        [STUDENT_BUTTONS["homework"], STUDENT_BUTTONS["progress"]],
+        [STUDENT_BUTTONS["payment"], STUDENT_BUTTONS["achievements"]],
+        [STUDENT_BUTTONS["library"], STUDENT_BUTTONS["chat"]]
+    ]
+    return ReplyKeyboardMarkup(keyboard, resize_keyboard=True)
+
+def student_inline_menu():
+    """Создает inline-клавиатуру для дополнительных функций ученика."""
+    keyboard = [
         [InlineKeyboardButton("💰 Оплата и посещаемость", callback_data="payment_attendance")],
-        [
-            InlineKeyboardButton("📊 Мой прогресс", callback_data="my_progress"),
-            InlineKeyboardButton("🗂️ Библиотека", callback_data="materials_library")
-        ],
-        [InlineKeyboardButton("💬 Связь с репетитором", callback_data="chat_with_tutor")],
+        [InlineKeyboardButton("⚙️ Настройки", callback_data="student_settings")],
     ]
     return InlineKeyboardMarkup(keyboard)
 
@@ -110,9 +123,12 @@ def tutor_student_profile_keyboard(student_id):
         ],
         [
             InlineKeyboardButton("✏️ Редактировать ФИО", callback_data=f"tutor_edit_name_{student_id}"),
-            InlineKeyboardButton("❌ Удалить ученика", callback_data=f"tutor_delete_student_{student_id}")
+            InlineKeyboardButton("👨‍👩‍👧‍👦 Добавить родителя", callback_data=f"tutor_add_parent_{student_id}")
         ],
-        [InlineKeyboardButton("⬅️ К списку учеников", callback_data="tutor_student_list")]
+        [
+            InlineKeyboardButton("❌ Удалить ученика", callback_data=f"tutor_delete_student_{student_id}"),
+            InlineKeyboardButton("⬅️ К списку учеников", callback_data="tutor_student_list")
+        ]
     ]
     return InlineKeyboardMarkup(keyboard)
 
@@ -126,21 +142,54 @@ def tutor_lesson_list_keyboard(lessons, student_id):
 
 def tutor_lesson_details_keyboard(lesson):
     """Создает клавиатуру для карточки урока."""
-    keyboard = [
-        [
-            InlineKeyboardButton("✏️ Изменить статус", callback_data=f"tutor_edit_lesson_{lesson.id}")
-        ]
-    ]
+    keyboard = []
+    
+    # Кнопки посещаемости
+    attendance_buttons = []
+    if lesson.attendance_status != AttendanceStatus.ATTENDED:
+        attendance_buttons.append(InlineKeyboardButton("✅ Проведен", callback_data=f"tutor_set_attendance_{lesson.id}_attended"))
+    if lesson.attendance_status != AttendanceStatus.EXCUSED_ABSENCE:
+        attendance_buttons.append(InlineKeyboardButton("Отмена (уваж.)", callback_data=f"tutor_confirm_cancel_{lesson.id}_excused_absence"))
+    if lesson.attendance_status != AttendanceStatus.UNEXCUSED_ABSENCE:
+        attendance_buttons.append(InlineKeyboardButton("Отмена (неуваж.)", callback_data=f"tutor_confirm_cancel_{lesson.id}_unexcused_absence"))
+    if lesson.attendance_status != AttendanceStatus.RESCHEDULED:
+        attendance_buttons.append(InlineKeyboardButton("📅 Перенести", callback_data=f"tutor_confirm_cancel_{lesson.id}_rescheduled"))
+    
+    # Добавляем кнопки посещаемости по две в ряд
+    if len(attendance_buttons) > 0:
+        if len(attendance_buttons) <= 2:
+            keyboard.append(attendance_buttons)
+        else:
+            keyboard.append(attendance_buttons[:2])
+            keyboard.append(attendance_buttons[2:])
+    
+    # Кнопки управления уроком
+    management_row = [InlineKeyboardButton("✏️ Изменить статус", callback_data=f"tutor_edit_lesson_{lesson.id}")]
+    
     # Если ДЗ есть, добавляем кнопку для его просмотра/проверки
     if lesson.homeworks:
-        keyboard[0].append(InlineKeyboardButton("📝 Проверить ДЗ", callback_data=f"tutor_check_hw_{lesson.id}"))
+        management_row.append(InlineKeyboardButton("📝 Проверить ДЗ", callback_data=f"tutor_check_hw_{lesson.id}"))
     else:
-        keyboard[0].append(InlineKeyboardButton("➕ Добавить ДЗ", callback_data=f"tutor_add_hw_{lesson.id}"))
-
-    if not lesson.is_attended:
-        keyboard.insert(0, [InlineKeyboardButton("✅ Отметить как проведенный", callback_data=f"tutor_mark_attended_{lesson.id}")])
+        management_row.append(InlineKeyboardButton("➕ Добавить ДЗ", callback_data=f"tutor_add_hw_{lesson.id}"))
     
+    keyboard.append(management_row)
     keyboard.append([InlineKeyboardButton("⬅️ К списку уроков", callback_data=f"tutor_lessons_list_{lesson.student_id}")])
+    return InlineKeyboardMarkup(keyboard)
+
+def tutor_cancel_confirmation_keyboard(lesson_id, status):
+    """Клавиатура подтверждения отмены урока с предупреждением о сдвиге тем."""
+    status_names = {
+        'excused_absence': 'уважительной причине',
+        'unexcused_absence': 'неуважительной причине', 
+        'rescheduled': 'переносе'
+    }
+    
+    keyboard = [
+        [InlineKeyboardButton(f"✅ Да, отменить по {status_names.get(status, status)}", 
+                             callback_data=f"tutor_set_attendance_{lesson_id}_{status}")],
+        [InlineKeyboardButton("❌ Нет, вернуться к уроку", 
+                             callback_data=f"tutor_lesson_details_{lesson_id}")]
+    ]
     return InlineKeyboardMarkup(keyboard)
 
 def tutor_check_homework_keyboard(homework):
@@ -239,6 +288,94 @@ def student_materials_list_keyboard(materials):
     for material in materials:
         keyboard.append([InlineKeyboardButton(material.title, callback_data=f"student_view_material_{material.id}")])
     keyboard.append([InlineKeyboardButton("⬅️ Назад в главное меню", callback_data="main_menu")])
+    return InlineKeyboardMarkup(keyboard)
+
+def student_lesson_list_keyboard(lessons):
+    """Клавиатура со списком уроков для ученика (только просмотр)."""
+    keyboard = []
+    for lesson in lessons:
+        date_str = lesson.date.strftime('%d.%m.%y')
+        
+        # Эмодзи для статуса посещаемости
+        attendance_emoji = {
+            AttendanceStatus.ATTENDED: "✅",
+            AttendanceStatus.EXCUSED_ABSENCE: "😷",
+            AttendanceStatus.UNEXCUSED_ABSENCE: "❌",
+            AttendanceStatus.RESCHEDULED: "📅"
+        }.get(lesson.attendance_status, "✅")
+        
+        mastery_emoji = {
+            TopicMastery.NOT_LEARNED: "⚪",
+            TopicMastery.LEARNED: "🟡", 
+            TopicMastery.MASTERED: "🟢"
+        }.get(lesson.mastery_level, "⚪")
+        
+        button_text = f"{date_str} {attendance_emoji}{mastery_emoji} {lesson.topic}"
+        if len(button_text) > 50:
+            button_text = button_text[:47] + "..."
+            
+        keyboard.append([InlineKeyboardButton(button_text, callback_data=f"student_view_lesson_{lesson.id}")])
+    
+    keyboard.append([InlineKeyboardButton("⬅️ Назад", callback_data="main_menu")])
+    return InlineKeyboardMarkup(keyboard)
+
+def student_lesson_details_keyboard(lesson):
+    """Клавиатура для детального просмотра урока студентом."""
+    keyboard = []
+    
+    # Если есть ДЗ к уроку
+    if lesson.homeworks:
+        for hw in lesson.homeworks:
+            if hw.status == HomeworkStatus.PENDING:
+                keyboard.append([InlineKeyboardButton("📝 Сдать ДЗ", callback_data=f"student_submit_hw_{hw.id}")])
+            else:
+                keyboard.append([InlineKeyboardButton("👁️ Посмотреть ДЗ", callback_data=f"student_view_hw_{hw.id}")])
+    
+    keyboard.append([InlineKeyboardButton("⬅️ К урокам", callback_data="lessons_history")])
+    return InlineKeyboardMarkup(keyboard)
+
+# --- Клавиатуры для родителей ---
+PARENT_BUTTONS = {
+    "dashboard": "👨‍👩‍👧‍👦 Мои дети",
+    "chat": "💬 Связь с репетитором"
+}
+
+def parent_main_keyboard():
+    """Главная клавиатура для родителя."""
+    keyboard = [
+        [PARENT_BUTTONS["dashboard"]],
+        [PARENT_BUTTONS["chat"]]
+    ]
+    return ReplyKeyboardMarkup(keyboard, resize_keyboard=True)
+
+def parent_child_selection_keyboard(children):
+    """Клавиатура для выбора ребенка."""
+    keyboard = []
+    for child in children:
+        keyboard.append([InlineKeyboardButton(
+            f"👨‍🎓 {child.full_name}", 
+            callback_data=f"parent_child_{child.id}"
+        )])
+    
+    keyboard.append([InlineKeyboardButton("🔄 Обновить", callback_data="parent_dashboard")])
+    return InlineKeyboardMarkup(keyboard)
+
+def parent_child_menu_keyboard(student_id):
+    """Клавиатура для меню конкретного ребенка."""
+    keyboard = [
+        [
+            InlineKeyboardButton("📊 Прогресс", callback_data=f"parent_progress_{student_id}"),
+            InlineKeyboardButton("📅 Расписание", callback_data=f"parent_schedule_{student_id}")
+        ],
+        [
+            InlineKeyboardButton("💰 Оплаты", callback_data=f"parent_payments_{student_id}"),
+            InlineKeyboardButton("💬 Чат с репетитором", callback_data="parent_chat_with_tutor")
+        ],
+        [
+            InlineKeyboardButton("⬅️ Назад к выбору", callback_data="parent_dashboard"),
+            InlineKeyboardButton("🏠 Главное меню", callback_data="main_menu")
+        ]
+    ]
     return InlineKeyboardMarkup(keyboard)
 
 # --- Клавиатуры для рассылки ---
