@@ -188,7 +188,9 @@ def main() -> None:
             ADD_PARENT_CODE: [MessageHandler(filters.TEXT & ~filters.COMMAND, tutor_get_parent_code)],
         },
         fallbacks=[CommandHandler("cancel", cancel_conversation)],
-        per_message=True
+        per_user=True,
+        per_chat=True,
+        per_message=False
     )
     add_payment_conv = ConversationHandler(
         entry_points=[CallbackQueryHandler(tutor_add_payment_start, pattern="^tutor_add_payment_")],
@@ -249,7 +251,9 @@ def main() -> None:
             CHAT_WITH_TUTOR: [MessageHandler(filters.TEXT | filters.PHOTO | filters.Document.ALL, forward_message_to_tutor)]
         },
         fallbacks=[CommandHandler("cancel", cancel_conversation)],
-        per_message=True
+        per_user=True,
+        per_chat=True,
+        per_message=False
     )
 
     report_conv = ConversationHandler(
@@ -262,7 +266,9 @@ def main() -> None:
             CommandHandler("cancel", cancel_conversation),
             CallbackQueryHandler(report_cancel, pattern="^cancel_report$")
         ],
-        per_message=True
+        per_user=True,
+        per_chat=True,
+        per_message=False
     )
 
     add_material_conv = ConversationHandler(
@@ -273,7 +279,9 @@ def main() -> None:
             ADD_MATERIAL_DESC: [MessageHandler(filters.TEXT & ~filters.COMMAND, tutor_get_material_description)],
         },
         fallbacks=[CommandHandler("cancel", cancel_conversation)],
-        per_message=True
+        per_user=True,
+        per_chat=True,
+        per_message=False
     )
     
     submit_hw_conv = ConversationHandler(
@@ -282,7 +290,9 @@ def main() -> None:
             SUBMIT_HOMEWORK_FILE: [MessageHandler(filters.TEXT | filters.Document.ALL | filters.PHOTO, student_get_homework_submission)]
         },
         fallbacks=[CommandHandler("cancel", cancel_conversation)],
-        per_message=True
+        per_user=True,
+        per_chat=True,
+        per_message=False
     )
 
     broadcast_conv = ConversationHandler(
@@ -298,7 +308,9 @@ def main() -> None:
             ],
         },
         fallbacks=[CommandHandler("cancel", cancel_conversation)],
-        per_message=True
+        per_user=True,
+        per_chat=True,
+        per_message=False
     )
 
 
@@ -312,7 +324,7 @@ def main() -> None:
         # Позволяет ConversationHandler работать в разных чатах одновременно
         per_user=True,
         per_chat=True,
-        per_message=True
+        per_message=False
     )
 
     # --- Регистрация обработчиков ---
