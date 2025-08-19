@@ -57,18 +57,38 @@ ATTENDANCE_STATUS_RU = {
     AttendanceStatus.RESCHEDULED: "Перенесен",
 }
 
-# --- Состояния для ConversationHandler ---
-ADD_STUDENT_NAME, ADD_PARENT_CODE = range(2)
-ADD_PARENT_NAME = range(1)
-ADD_PAYMENT_AMOUNT = range(1)
-ADD_LESSON_TOPIC, ADD_LESSON_DATE, ADD_LESSON_SKILLS = range(3)
-RESCHEDULE_LESSON_DATE = range(1)
-EDIT_STUDENT_NAME = range(1)
-ADD_HW_DESC, ADD_HW_DEADLINE, ADD_HW_LINK, ADD_HW_PHOTOS = range(4)
-SELECT_STUDENT_FOR_REPORT, SELECT_MONTH_FOR_REPORT = range(2)
-ADD_MATERIAL_TITLE, ADD_MATERIAL_LINK, ADD_MATERIAL_DESC = range(3)
-BROADCAST_MESSAGE, BROADCAST_CONFIRM = range(2)
-EDIT_LESSON_STATUS, EDIT_LESSON_COMMENT = range(2)
+# Состояния ConversationHandler - должны совпадать с bot.py
+# (ADD_STUDENT_NAME, ADD_PARENT_CODE, ADD_PARENT_NAME, ADD_PAYMENT_AMOUNT, 
+#  ADD_LESSON_TOPIC, ADD_LESSON_DATE, ADD_LESSON_SKILLS,
+#  EDIT_STUDENT_NAME, EDIT_LESSON_STATUS, EDIT_LESSON_COMMENT,
+#  ADD_HW_DESC, ADD_HW_DEADLINE, ADD_HW_LINK, ADD_HW_PHOTOS,
+#  SELECT_STUDENT_FOR_REPORT, SELECT_MONTH_FOR_REPORT,
+#  ADD_MATERIAL_TITLE, ADD_MATERIAL_LINK, ADD_MATERIAL_DESC,
+#  BROADCAST_MESSAGE, BROADCAST_CONFIRM) = range(21)
+
+# Определяем состояния с правильными значениями (как в bot.py)
+ADD_STUDENT_NAME = 0
+ADD_PARENT_CODE = 1  
+ADD_PARENT_NAME = 2
+ADD_PAYMENT_AMOUNT = 3
+ADD_LESSON_TOPIC = 4
+ADD_LESSON_DATE = 5
+ADD_LESSON_SKILLS = 6
+RESCHEDULE_LESSON_DATE = 7
+EDIT_STUDENT_NAME = 8
+EDIT_LESSON_STATUS = 9
+EDIT_LESSON_COMMENT = 10
+ADD_HW_DESC = 11
+ADD_HW_DEADLINE = 12
+ADD_HW_LINK = 13
+ADD_HW_PHOTOS = 14
+SELECT_STUDENT_FOR_REPORT = 15
+SELECT_MONTH_FOR_REPORT = 16
+ADD_MATERIAL_TITLE = 17
+ADD_MATERIAL_LINK = 18
+ADD_MATERIAL_DESC = 19
+BROADCAST_MESSAGE = 20
+BROADCAST_CONFIRM = 21
 
 # --- Helper Functions ---
 def generate_access_code(length=8):
@@ -155,10 +175,20 @@ async def show_student_profile(update: Update, context: ContextTypes.DEFAULT_TYP
 async def tutor_add_student_start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Начинает процесс добавления нового ученика."""
     if not check_user_role(update, UserRole.TUTOR):
-        await update.message.reply_text("У вас нет доступа к этой функции.")
+        message = "У вас нет доступа к этой функции."
+        if update.callback_query:
+            await update.callback_query.answer()
+            await update.callback_query.edit_message_text(message)
+        else:
+            await update.message.reply_text(message)
         return ConversationHandler.END
-        
-    await update.message.reply_text("Введите ФИО нового ученика:")
+    
+    message = "Введите ФИО нового ученика:"
+    if update.callback_query:
+        await update.callback_query.answer()
+        await update.callback_query.edit_message_text(message)
+    else:
+        await update.message.reply_text(message)
     return ADD_STUDENT_NAME
 
 async def tutor_get_student_name(update: Update, context: ContextTypes.DEFAULT_TYPE):

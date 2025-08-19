@@ -436,7 +436,11 @@ def shift_lessons_after_cancellation(cancelled_lesson_id: int):
             Lesson.date >= cancelled_lesson.date
         ).order_by(Lesson.date.asc()).all()
         
+        print(f"DEBUG: Found {len(all_lessons)} lessons starting from cancelled lesson date")
+        print(f"DEBUG: Cancelled lesson ID={cancelled_lesson.id}, date={cancelled_lesson.date.strftime('%d.%m.%Y %H:%M')}")
+        
         if len(all_lessons) <= 1:
+            print(f"DEBUG: This is the last lesson - no future lessons to shift")
             # Если это последний урок, создаем урок для отработки
             from datetime import datetime, timedelta
             far_future_date = datetime.now() + timedelta(days=3650)

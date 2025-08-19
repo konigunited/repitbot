@@ -46,12 +46,12 @@ from src.handlers.parent import show_parent_dashboard
 
 # Состояния ConversationHandler (исключаем уже импортированные CHAT_WITH_TUTOR и SUBMIT_HOMEWORK_FILE)
 (ADD_STUDENT_NAME, ADD_PARENT_CODE, ADD_PARENT_NAME, ADD_PAYMENT_AMOUNT, 
- ADD_LESSON_TOPIC, ADD_LESSON_DATE, ADD_LESSON_SKILLS,
+ ADD_LESSON_TOPIC, ADD_LESSON_DATE, ADD_LESSON_SKILLS, RESCHEDULE_LESSON_DATE,
  EDIT_STUDENT_NAME, EDIT_LESSON_STATUS, EDIT_LESSON_COMMENT,
  ADD_HW_DESC, ADD_HW_DEADLINE, ADD_HW_LINK, ADD_HW_PHOTOS,
  SELECT_STUDENT_FOR_REPORT, SELECT_MONTH_FOR_REPORT,
  ADD_MATERIAL_TITLE, ADD_MATERIAL_LINK, ADD_MATERIAL_DESC,
- BROADCAST_MESSAGE, BROADCAST_CONFIRM) = range(21)
+ BROADCAST_MESSAGE, BROADCAST_CONFIRM) = range(22)
 from src.database import engine, Base
 from src.scheduler import send_reminders, send_payment_reminders, send_homework_deadline_reminders
 from src.admin_handlers import add_tutor, add_parent
@@ -193,7 +193,10 @@ def main() -> None:
     add_payment_conv = ConversationHandler(
         entry_points=[CallbackQueryHandler(tutor_add_payment_start, pattern="^tutor_add_payment_")],
         states={ADD_PAYMENT_AMOUNT: [MessageHandler(filters.TEXT & ~filters.COMMAND, tutor_get_payment_amount)]},
-        fallbacks=[CommandHandler("cancel", cancel_conversation)]
+        fallbacks=[CommandHandler("cancel", cancel_conversation)],
+        per_user=True,
+        per_chat=True,
+        per_message=False
     )
     add_lesson_conv = ConversationHandler(
         entry_points=[CallbackQueryHandler(tutor_add_lesson_start, pattern="^tutor_add_lesson_")],
@@ -202,17 +205,26 @@ def main() -> None:
             ADD_LESSON_DATE: [MessageHandler(filters.TEXT & ~filters.COMMAND, tutor_get_lesson_date)],
             ADD_LESSON_SKILLS: [MessageHandler(filters.TEXT & ~filters.COMMAND, tutor_get_lesson_skills)],
         },
-        fallbacks=[CommandHandler("cancel", cancel_conversation)]
+        fallbacks=[CommandHandler("cancel", cancel_conversation)],
+        per_user=True,
+        per_chat=True,
+        per_message=False
     )
     edit_student_name_conv = ConversationHandler(
         entry_points=[CallbackQueryHandler(tutor_edit_name_start, pattern="^tutor_edit_name_")],
         states={EDIT_STUDENT_NAME: [MessageHandler(filters.TEXT & ~filters.COMMAND, tutor_get_new_name)]},
-        fallbacks=[CommandHandler("cancel", cancel_conversation)]
+        fallbacks=[CommandHandler("cancel", cancel_conversation)],
+        per_user=True,
+        per_chat=True,
+        per_message=False
     )
     add_parent_conv = ConversationHandler(
         entry_points=[CallbackQueryHandler(tutor_add_parent_start, pattern="^tutor_add_parent_")],
         states={ADD_PARENT_NAME: [MessageHandler(filters.TEXT & ~filters.COMMAND, tutor_get_parent_name)]},
-        fallbacks=[CommandHandler("cancel", cancel_conversation)]
+        fallbacks=[CommandHandler("cancel", cancel_conversation)],
+        per_user=True,
+        per_chat=True,
+        per_message=False
     )
     add_hw_conv = ConversationHandler(
         entry_points=[CallbackQueryHandler(tutor_add_hw_start, pattern="^tutor_add_hw_")],
@@ -222,7 +234,10 @@ def main() -> None:
             ADD_HW_LINK: [MessageHandler(filters.TEXT & ~filters.COMMAND, tutor_get_hw_link)],
             ADD_HW_PHOTOS: [MessageHandler(filters.TEXT | filters.PHOTO, tutor_get_hw_photos)],
         },
-        fallbacks=[CommandHandler("cancel", cancel_conversation)]
+        fallbacks=[CommandHandler("cancel", cancel_conversation)],
+        per_user=True,
+        per_chat=True,
+        per_message=False
     )
     chat_conv = ConversationHandler(
         entry_points=[
@@ -332,7 +347,7 @@ def main() -> None:
     
     # Обработчики кнопок репетитора
     application.add_handler(MessageHandler(filters.Regex(f"^{TUTOR_BUTTONS['students']}$"), show_student_list))
-    application.add_handler(MessageHandler(filters.Regex(f"^{TUTOR_BUTTONS['add_student']}$"), show_tutor_dashboard))
+    application.add_handler(MessageHandler(filters.Regex(f"^{TUTOR_BUTTONS['add_student']}$"), show_student_list))
     application.add_handler(MessageHandler(filters.Regex(f"^{TUTOR_BUTTONS['monthly_report']}$"), report_start))
     application.add_handler(MessageHandler(filters.Regex(f"^{TUTOR_BUTTONS['library']}$"), tutor_manage_library))
     application.add_handler(MessageHandler(filters.Regex(f"^{TUTOR_BUTTONS['stats']}$"), show_tutor_stats))

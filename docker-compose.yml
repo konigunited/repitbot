@@ -1,0 +1,43 @@
+version: '3.8'
+
+services:
+  repitbot:
+    build: .
+    container_name: repitbot
+    restart: unless-stopped
+    environment:
+      - BOT_TOKEN=${BOT_TOKEN}
+      - ADMIN_ACCESS_CODE=${ADMIN_ACCESS_CODE}
+      - DATABASE_URL=sqlite:///data/repitbot.db
+      - LOG_LEVEL=INFO
+    volumes:
+      - ./data:/app/data
+      - ./logs:/app/logs
+      - ./charts:/app/charts
+    depends_on:
+      - db
+    networks:
+      - repitbot_network
+
+  # Опционально: PostgreSQL база данных
+  db:
+    image: postgres:15-alpine
+    container_name: repitbot_db
+    restart: unless-stopped
+    environment:
+      - POSTGRES_DB=repitbot
+      - POSTGRES_USER=repitbot
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - repitbot_network
+    ports:
+      - "5432:5432"
+
+volumes:
+  postgres_data:
+
+networks:
+  repitbot_network:
+    driver: bridge

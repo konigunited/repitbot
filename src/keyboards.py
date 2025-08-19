@@ -110,6 +110,9 @@ def tutor_student_list_keyboard(students):
     keyboard = []
     for student in students:
         keyboard.append([InlineKeyboardButton(student.full_name, callback_data=f"tutor_view_student_{student.id}")])
+    
+    # Добавляем кнопку для добавления нового ученика
+    keyboard.append([InlineKeyboardButton("➕ Добавить ученика", callback_data="add_student")])
     keyboard.append([InlineKeyboardButton("⬅️ Назад в главное меню", callback_data="main_menu")])
     return InlineKeyboardMarkup(keyboard)
 
