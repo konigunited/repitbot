@@ -24,6 +24,9 @@ from .tutor import (
     tutor_add_student_start, tutor_get_student_name, tutor_get_parent_code,
     tutor_edit_name_start, tutor_get_new_name, tutor_add_parent_start, tutor_get_parent_name,
     tutor_select_parent_type, tutor_select_existing_parent,
+    tutor_add_second_parent_start, tutor_get_second_parent_name,
+    tutor_select_second_parent_type, tutor_select_existing_second_parent,
+    tutor_remove_second_parent, tutor_replace_second_parent,
     tutor_delete_student_start, tutor_delete_student_confirm, show_student_list, show_student_profile,
     
     # Управление уроками  
@@ -57,7 +60,8 @@ from .tutor import (
     ADD_HW_DESC, ADD_HW_DEADLINE, ADD_HW_LINK, ADD_HW_PHOTOS,
     SELECT_STUDENT_FOR_REPORT, SELECT_MONTH_FOR_REPORT,
     ADD_MATERIAL_GRADE, ADD_MATERIAL_TITLE, ADD_MATERIAL_LINK, ADD_MATERIAL_DESC,
-    BROADCAST_MESSAGE, BROADCAST_CONFIRM, SELECT_PARENT_TYPE, SELECT_EXISTING_PARENT
+    BROADCAST_MESSAGE, BROADCAST_CONFIRM, SELECT_PARENT_TYPE, SELECT_EXISTING_PARENT,
+    SELECT_SECOND_PARENT_TYPE, SELECT_EXISTING_SECOND_PARENT, ADD_SECOND_PARENT_NAME
 )
 
 # Обработчики для родителей
@@ -88,6 +92,9 @@ __all__ = [
     'tutor_add_student_start', 'tutor_get_student_name', 'tutor_get_parent_code',
     'tutor_edit_name_start', 'tutor_get_new_name', 'tutor_add_parent_start', 'tutor_get_parent_name',
     'tutor_select_parent_type', 'tutor_select_existing_parent',
+    'tutor_add_second_parent_start', 'tutor_get_second_parent_name',
+    'tutor_select_second_parent_type', 'tutor_select_existing_second_parent',
+    'tutor_remove_second_parent', 'tutor_replace_second_parent',
     'tutor_delete_student_start', 'tutor_delete_student_confirm', 'show_student_list', 'show_student_profile',
     'tutor_add_lesson_start', 'tutor_get_lesson_topic', 'tutor_get_lesson_date', 'tutor_get_lesson_skills',
     'tutor_edit_lesson_start', 'tutor_edit_lesson_get_status', 'tutor_edit_lesson_get_comment',
@@ -117,6 +124,7 @@ __all__ = [
     'ADD_HW_DESC', 'ADD_HW_DEADLINE', 'ADD_HW_LINK', 'ADD_HW_PHOTOS',
     'SELECT_STUDENT_FOR_REPORT', 'SELECT_MONTH_FOR_REPORT', 
     'ADD_MATERIAL_GRADE', 'ADD_MATERIAL_TITLE', 'ADD_MATERIAL_LINK', 'ADD_MATERIAL_DESC',
-    'BROADCAST_MESSAGE', 'BROADCAST_CONFIRM', 'SELECT_PARENT_TYPE', 'SELECT_EXISTING_PARENT', 
+    'BROADCAST_MESSAGE', 'BROADCAST_CONFIRM', 'SELECT_PARENT_TYPE', 'SELECT_EXISTING_PARENT',
+    'SELECT_SECOND_PARENT_TYPE', 'SELECT_EXISTING_SECOND_PARENT', 'ADD_SECOND_PARENT_NAME',
     'CHAT_WITH_TUTOR', 'SUBMIT_HOMEWORK_FILE'
 ]

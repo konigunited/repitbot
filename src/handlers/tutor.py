@@ -32,7 +32,8 @@ from ..keyboards import (
     tutor_delete_confirm_keyboard, tutor_edit_lesson_status_keyboard, tutor_edit_attendance_keyboard,
     tutor_edit_mastery_keyboard, tutor_check_homework_keyboard, tutor_select_student_for_report_keyboard,
     tutor_select_month_for_report_keyboard, tutor_library_management_keyboard,
-    tutor_select_material_to_delete_keyboard, broadcast_confirm_keyboard
+    tutor_select_material_to_delete_keyboard, broadcast_confirm_keyboard,
+    second_parent_choice_keyboard, existing_second_parents_keyboard
 )
 from ..chart_generator import generate_progress_chart
 from .common import show_main_menu
@@ -452,12 +453,12 @@ async def tutor_add_second_parent_start(update: Update, context: ContextTypes.DE
         return ConversationHandler.END
     
     # Предлагаем выбор: создать нового или выбрать существующего
-    from ..keyboards import parent_choice_keyboard
+    from ..keyboards import second_parent_choice_keyboard
     await query.edit_message_text(
         f"Добавление 2-го родителя для ученика *{student.full_name}*:\n\n"
         f"Выберите действие:",
         parse_mode='Markdown',
-        reply_markup=parent_choice_keyboard()
+        reply_markup=second_parent_choice_keyboard()
     )
     return SELECT_SECOND_PARENT_TYPE
 
@@ -471,15 +472,15 @@ async def tutor_select_second_parent_type(update: Update, context: ContextTypes.
     student = db.query(User).filter(User.id == student_id).first()
     db.close()
     
-    if query.data == "parent_create_new":
+    if query.data == "second_parent_create_new":
         # Создаем нового родителя
         await query.edit_message_text(f"Введите ФИО второго родителя для ученика *{student.full_name}*:", parse_mode='Markdown')
         return ADD_SECOND_PARENT_NAME
     
-    elif query.data == "parent_select_existing":
+    elif query.data == "second_parent_select_existing":
         # Показываем список существующих родителей
         from ..database import get_all_parents
-        from ..keyboards import existing_parents_keyboard
+        from ..keyboards import existing_second_parents_keyboard
         
         parents = get_all_parents()
         if not parents:
@@ -490,21 +491,24 @@ async def tutor_select_second_parent_type(update: Update, context: ContextTypes.
             )
             return ADD_SECOND_PARENT_NAME
         
+        # Исключаем уже привязанного основного родителя
+        current_parent_id = student.parent_id if student else None
+        
         await query.edit_message_text(
             f"Выберите второго родителя для ученика *{student.full_name}*:",
             parse_mode='Markdown',
-            reply_markup=existing_parents_keyboard(parents)
+            reply_markup=existing_second_parents_keyboard(parents, current_parent_id)
         )
         return SELECT_EXISTING_SECOND_PARENT
     
-    elif query.data == "parent_back_to_choice":
+    elif query.data == "second_parent_back_to_choice":
         # Возврат к выбору типа родителя
-        from ..keyboards import parent_choice_keyboard
+        from ..keyboards import second_parent_choice_keyboard
         await query.edit_message_text(
             f"Добавление 2-го родителя для ученика *{student.full_name}*:\n\n"
             f"Выберите действие:",
             parse_mode='Markdown',
-            reply_markup=parent_choice_keyboard()
+            reply_markup=second_parent_choice_keyboard()
         )
         return SELECT_SECOND_PARENT_TYPE
     
@@ -519,7 +523,7 @@ async def tutor_select_existing_second_parent(update: Update, context: ContextTy
     query = update.callback_query
     await query.answer()
     
-    if query.data == "parent_back_to_choice":
+    if query.data == "second_parent_back_to_choice":
         return await tutor_select_second_parent_type(update, context)
     
     # Извлекаем ID родителя
@@ -605,6 +609,80 @@ async def tutor_get_second_parent_name(update: Update, context: ContextTypes.DEF
     
     context.user_data.clear()
     return ConversationHandler.END
+
+# --- Функции управления вторым родителем ---
+async def tutor_remove_second_parent(update: Update, context: ContextTypes.DEFAULT_TYPE, student_id: int):
+    """Удаляет второго родителя у ученика."""
+    query = update.callback_query
+    await query.answer()
+    
+    db = SessionLocal()
+    try:
+        student = db.query(User).filter(User.id == student_id).first()
+        if not student:
+            await query.edit_message_text("❌ Ученик не найден.")
+            return
+        
+        if not student.second_parent_id:
+            await query.edit_message_text("❌ У ученика нет второго родителя.")
+            return
+        
+        # Сохраняем имя второго родителя для уведомления
+        second_parent = get_user_by_id(student.second_parent_id)
+        second_parent_name = second_parent.full_name if second_parent else "Неизвестный"
+        
+        # Удаляем связь
+        student.second_parent_id = None
+        db.commit()
+        
+        await query.edit_message_text(
+            f"✅ Второй родитель *{second_parent_name}* успешно отвязан от ученика *{student.full_name}*.",
+            parse_mode='Markdown'
+        )
+        
+        # Возвращаемся к профилю ученика через 2 секунды
+        import asyncio
+        await asyncio.sleep(2)
+        await show_student_profile(update, context, student_id)
+        
+    except Exception as e:
+        await query.edit_message_text("❌ Ошибка при удалении второго родителя.")
+        print(f"Ошибка в tutor_remove_second_parent: {e}")
+    finally:
+        db.close()
+
+async def tutor_replace_second_parent(update: Update, context: ContextTypes.DEFAULT_TYPE, student_id: int):
+    """Начинает процесс замены второго родителя."""
+    query = update.callback_query
+    await query.answer()
+    
+    context.user_data['student_id_for_second_parent'] = student_id
+    context.user_data['replace_mode'] = True  # Флаг режима замены
+    
+    db = SessionLocal()
+    student = db.query(User).filter(User.id == student_id).first()
+    db.close()
+    
+    if not student:
+        await query.edit_message_text("❌ Ученик не найден.")
+        return ConversationHandler.END
+    
+    if not student.second_parent_id:
+        await query.edit_message_text("❌ У ученика нет второго родителя для замены.")
+        return ConversationHandler.END
+    
+    # Показываем текущего второго родителя и предлагаем замену
+    current_second_parent = get_user_by_id(student.second_parent_id)
+    
+    from ..keyboards import second_parent_choice_keyboard
+    await query.edit_message_text(
+        f"Замена второго родителя для ученика *{student.full_name}*:\n\n"
+        f"Текущий второй родитель: *{current_second_parent.full_name}*\n\n"
+        f"Выберите действие:",
+        parse_mode='Markdown',
+        reply_markup=second_parent_choice_keyboard()
+    )
+    return SELECT_SECOND_PARENT_TYPE
 
 async def tutor_get_parent_name(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Создает родителя и привязывает к ученику."""

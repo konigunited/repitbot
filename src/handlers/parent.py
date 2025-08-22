@@ -79,9 +79,9 @@ async def show_parent_dashboard(update: Update, context: ContextTypes.DEFAULT_TY
     
     db = SessionLocal()
     try:
-        # Получаем всех детей этого родителя
+        # Получаем всех детей этого родителя (как основной, так и второй родитель)
         children = db.query(User).filter(
-            User.parent_id == parent.id,
+            (User.parent_id == parent.id) | (User.second_parent_id == parent.id),
             User.role == UserRole.STUDENT
         ).all()
         
@@ -144,7 +144,7 @@ async def show_child_schedule(update: Update, context: ContextTypes.DEFAULT_TYPE
     
     # Проверяем права доступа
     parent = get_user_by_telegram_id(update.effective_user.id)
-    if student.parent_id != parent.id:
+    if student.parent_id != parent.id and student.second_parent_id != parent.id:
         await query.edit_message_text("У вас нет доступа к этой информации.")
         return
     
@@ -191,7 +191,7 @@ async def show_child_payments(update: Update, context: ContextTypes.DEFAULT_TYPE
     
     # Проверяем права доступа
     parent = get_user_by_telegram_id(update.effective_user.id)
-    if student.parent_id != parent.id:
+    if student.parent_id != parent.id and student.second_parent_id != parent.id:
         await query.edit_message_text("У вас нет доступа к этой информации.")
         return
     
@@ -240,7 +240,7 @@ async def parent_generate_chart(update: Update, context: ContextTypes.DEFAULT_TY
     
     # Проверяем права доступа
     parent = get_user_by_telegram_id(update.effective_user.id)
-    if student.parent_id != parent.id:
+    if student.parent_id != parent.id and student.second_parent_id != parent.id:
         await query.edit_message_text("У вас нет доступа к этой информации.")
         return
     
@@ -303,7 +303,7 @@ async def show_child_menu(update: Update, context: ContextTypes.DEFAULT_TYPE):
     try:
         student = db.query(User).filter(
             User.id == student_id,
-            User.parent_id == parent.id,
+            (User.parent_id == parent.id) | (User.second_parent_id == parent.id),
             User.role == UserRole.STUDENT
         ).first()
         

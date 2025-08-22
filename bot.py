@@ -26,6 +26,7 @@ from src.handlers.tutor import (
     tutor_select_parent_type, tutor_select_existing_parent,
     tutor_add_second_parent_start, tutor_get_second_parent_name,
     tutor_select_second_parent_type, tutor_select_existing_second_parent,
+    tutor_remove_second_parent, tutor_replace_second_parent,
     tutor_delete_student_start, tutor_delete_student_confirm,
     tutor_mark_lesson_attended, tutor_set_lesson_attendance, tutor_check_homework,
     tutor_set_homework_status, tutor_edit_lesson_start, tutor_edit_lesson_get_status, tutor_edit_lesson_get_comment,
@@ -238,7 +239,10 @@ def main() -> None:
         per_message=False
     )
     add_second_parent_conv = ConversationHandler(
-        entry_points=[CallbackQueryHandler(tutor_add_second_parent_start, pattern="^tutor_add_second_parent_")],
+        entry_points=[
+            CallbackQueryHandler(tutor_add_second_parent_start, pattern="^tutor_add_second_parent_"),
+            CallbackQueryHandler(tutor_replace_second_parent, pattern="^tutor_replace_second_parent_")
+        ],
         states={
             SELECT_SECOND_PARENT_TYPE: [CallbackQueryHandler(tutor_select_second_parent_type, pattern="^(second_parent_create_new|second_parent_select_existing|second_parent_back_to_choice|main_menu)$")],
             SELECT_EXISTING_SECOND_PARENT: [CallbackQueryHandler(tutor_select_existing_second_parent, pattern="^(second_parent_select_|second_parent_back_to_choice).*")],

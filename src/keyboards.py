@@ -133,9 +133,17 @@ def tutor_student_profile_keyboard(student_id, has_parent=False, has_second_pare
         parent_buttons.append(InlineKeyboardButton("👨‍👩‍👧‍👦 Добавить родителя", callback_data=f"tutor_add_parent_{student_id}"))
     elif not has_second_parent:
         parent_buttons.append(InlineKeyboardButton("👨‍👩‍👧‍👦 Добавить 2-го родителя", callback_data=f"tutor_add_second_parent_{student_id}"))
+    else:
+        # Есть оба родителя - добавляем кнопки управления
+        parent_buttons.append(InlineKeyboardButton("✏️ Заменить 2-го родителя", callback_data=f"tutor_replace_second_parent_{student_id}"))
+        parent_buttons.append(InlineKeyboardButton("❌ Удалить 2-го родителя", callback_data=f"tutor_remove_second_parent_{student_id}"))
     
     if parent_buttons:
-        keyboard.append(parent_buttons)
+        if len(parent_buttons) == 1:
+            keyboard.append(parent_buttons)
+        else:
+            # Если 2 кнопки, размещаем их в одной строке
+            keyboard.append(parent_buttons)
     
     keyboard.append([
         InlineKeyboardButton("❌ Удалить ученика", callback_data=f"tutor_delete_student_{student_id}"),
@@ -500,6 +508,15 @@ def parent_choice_keyboard():
     ]
     return InlineKeyboardMarkup(keyboard)
 
+def second_parent_choice_keyboard():
+    """Клавиатура выбора для второго родителя: создать нового или выбрать существующего."""
+    keyboard = [
+        [InlineKeyboardButton("👤 Создать нового", callback_data="second_parent_create_new")],
+        [InlineKeyboardButton("👥 Выбрать существующего", callback_data="second_parent_select_existing")],
+        [InlineKeyboardButton("❌ Отмена", callback_data="main_menu")]
+    ]
+    return InlineKeyboardMarkup(keyboard)
+
 def existing_parents_keyboard(parents):
     """Клавиатура со списком существующих родителей."""
     keyboard = []
@@ -516,4 +533,26 @@ def existing_parents_keyboard(parents):
         keyboard.append([InlineKeyboardButton(text, callback_data=f"parent_select_{parent.id}")])
     
     keyboard.append([InlineKeyboardButton("⬅️ Назад", callback_data="parent_back_to_choice")])
+    return InlineKeyboardMarkup(keyboard)
+
+def existing_second_parents_keyboard(parents, current_parent_id=None):
+    """Клавиатура со списком существующих родителей для выбора второго родителя."""
+    keyboard = []
+    for parent in parents:
+        # Исключаем уже привязанного основного родителя
+        if current_parent_id and parent.id == current_parent_id:
+            continue
+            
+        # Показываем имя и количество детей
+        try:
+            children_count = len(parent.children) if hasattr(parent, 'children') and parent.children else 0
+        except:
+            children_count = 0
+            
+        text = f"{parent.full_name}"
+        if children_count > 0:
+            text += f" ({children_count} дет.)"
+        keyboard.append([InlineKeyboardButton(text, callback_data=f"second_parent_select_{parent.id}")])
+    
+    keyboard.append([InlineKeyboardButton("⬅️ Назад", callback_data="second_parent_back_to_choice")])
     return InlineKeyboardMarkup(keyboard)

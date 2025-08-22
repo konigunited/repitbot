@@ -282,7 +282,8 @@ async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
                        tutor_delete_material_confirm, show_material_details, show_tutor_dashboard,
                        show_tutor_stats, tutor_edit_name_start, tutor_set_homework_status, 
                        tutor_add_payment_start, tutor_add_lesson_start,
-                       tutor_confirm_lesson_cancellation, tutor_library_by_grade)
+                       tutor_confirm_lesson_cancellation, tutor_library_by_grade,
+                       tutor_remove_second_parent, tutor_replace_second_parent)
     from .parent import (show_parent_dashboard, show_child_menu, show_child_progress,
                         show_child_schedule, show_child_payments, parent_generate_chart,
                         show_child_homework, show_child_lessons, show_child_achievements)
@@ -337,6 +338,8 @@ async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
         "parent_lessons_": (show_child_lessons, None),
         "parent_achievements_": (show_child_achievements, None),
         "parent_chart_": (parent_generate_chart, None),
+        "tutor_remove_second_parent_": (tutor_remove_second_parent, "student_id"),
+        "tutor_replace_second_parent_": (tutor_replace_second_parent, "student_id"),
         "noop": (lambda update, context: update.callback_query.answer(), None),
     }
     
