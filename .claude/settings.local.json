@@ -5,7 +5,8 @@
       "Bash(rm:*)",
       "Bash(cd:*)",
       "Bash(git add:*)",
-      "Bash(grep:*)"
+      "Bash(grep:*)",
+      "Bash(git checkout:*)"
     ],
     "deny": [],
     "additionalDirectories": [
