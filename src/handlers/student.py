@@ -315,23 +315,39 @@ async def show_materials_library(update: Update, context: ContextTypes.DEFAULT_T
         
     query = update.callback_query
     
-    from ..database import get_all_materials
-    materials = get_all_materials()
-    
-    if not materials:
-        message = "🗂️ Библиотека материалов пуста."
-        keyboard = InlineKeyboardMarkup([
-            [InlineKeyboardButton("⬅️ Назад в главное меню", callback_data="main_menu")]
-        ])
-    else:
-        message = "🗂️ *Библиотека материалов*\n\nДоступные материалы:"
-        keyboard = student_materials_list_keyboard(materials)
+    from ..keyboards import library_grade_selection_keyboard
+    keyboard = library_grade_selection_keyboard(is_tutor=False)
+    message = "🗂️ *Библиотека материалов*\n\nВыберите класс для просмотра материалов:"
     
     if query:
         await query.edit_message_text(message, reply_markup=keyboard, parse_mode='Markdown')
         await query.answer()
     else:
         await update.message.reply_text(message, reply_markup=keyboard, parse_mode='Markdown')
+
+async def student_library_by_grade(update: Update, context: ContextTypes.DEFAULT_TYPE, grade=None):
+    """Показывает материалы для определённого класса или все материалы для студента."""
+    if not check_user_role(update, UserRole.STUDENT):
+        await update.callback_query.answer("У вас нет доступа к этой функции.")
+        return
+        
+    if grade == "all":
+        from ..database import get_all_materials
+        materials = get_all_materials()
+        message = "🗂️ *Библиотека материалов - Все классы*\n\nВсе материалы:"
+    else:
+        from ..database import get_materials_by_grade
+        materials = get_materials_by_grade(int(grade))
+        message = f"🗂️ *Библиотека материалов - {grade} класс*\n\nМатериалы для {grade} класса:"
+    
+    if not materials:
+        if grade == "all":
+            message = "🗂️ Библиотека материалов пуста."
+        else:
+            message = f"🗂️ *Библиотека материалов - {grade} класс*\n\nДля {grade} класса материалов пока нет."
+    
+    keyboard = student_materials_list_keyboard(materials, grade)
+    await update.callback_query.edit_message_text(message, reply_markup=keyboard, parse_mode='Markdown')
 
 async def show_lesson_history(update: Update, context: ContextTypes.DEFAULT_TYPE):
     # Проверяем роль пользователя для text-сообщений (reply keyboard)

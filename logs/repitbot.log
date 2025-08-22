@@ -1692,3 +1692,831 @@
 2025-08-15 02:08:47 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
 2025-08-15 02:08:49 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
 2025-08-15 02:09:09 | RepitBot | INFO     | bot.py:395 | main | Завершение работы бота
+2025-08-22 16:37:43 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-22 16:37:43 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-22 16:37:44 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-22 16:37:44 | RepitBot | INFO     | bot.py:170 | main | Database tables created/checked.
+2025-08-22 16:37:45 | RepitBot | INFO     | bot.py:391 | main | Запускаем бота...
+2025-08-22 16:37:49 | RepitBot | INFO     | bot.py:153 | initialize_systems | Бот инициализирован
+2025-08-22 16:37:49 | RepitBot | INFO     | bot.py:157 | initialize_systems | Подключение к Telegram API установлено. Бот: @mathtestmathbot
+2025-08-22 16:37:49 | RepitBot | INFO     | bot.py:126 | start_scheduler | Планировщик запущен с задачами: напоминания об уроках, балансе и дедлайнах ДЗ
+2025-08-22 16:37:49 | RepitBot.HealthMonitor | INFO     | health_monitor.py:56 | add_check | Добавлена проверка здоровья: database_connection (интервал: 60с)
+2025-08-22 16:37:49 | RepitBot.HealthMonitor | INFO     | health_monitor.py:56 | add_check | Добавлена проверка здоровья: disk_space (интервал: 300с)
+2025-08-22 16:37:49 | RepitBot.HealthMonitor | INFO     | health_monitor.py:56 | add_check | Добавлена проверка здоровья: memory_usage (интервал: 120с)
+2025-08-22 16:37:49 | RepitBot.HealthMonitor | INFO     | health_monitor.py:266 | setup_default_checks | Стандартные проверки здоровья настроены
+2025-08-22 16:37:49 | RepitBot.HealthMonitor | INFO     | health_monitor.py:56 | add_check | Добавлена проверка здоровья: bot_connection (интервал: 120с)
+2025-08-22 16:37:49 | RepitBot.HealthMonitor | INFO     | health_monitor.py:99 | start_monitoring | Мониторинг здоровья запущен
+2025-08-22 16:37:49 | RepitBot | INFO     | bot.py:146 | start_health_monitoring | Система мониторинга здоровья запущена
+2025-08-22 16:39:30 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_library_grade_6
+2025-08-22 16:39:42 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_view_student_8
+2025-08-22 16:39:52 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_analytics_8
+2025-08-22 16:47:40 | RepitBot | INFO     | bot.py:407 | main | Завершение работы бота
+2025-08-22 17:05:44 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-22 17:05:44 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-22 17:05:44 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-22 17:05:44 | RepitBot | INFO     | bot.py:171 | main | Database tables created/checked.
+2025-08-22 17:05:46 | RepitBot | INFO     | bot.py:396 | main | Запускаем бота...
+2025-08-22 17:05:48 | RepitBot | INFO     | bot.py:154 | initialize_systems | Бот инициализирован
+2025-08-22 17:05:48 | RepitBot | ERROR    | bot.py:165 | initialize_systems | ❌ Ошибка при инициализации систем: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+2025-08-22 17:05:48 | RepitBot | ERROR    | bot.py:409 | main | Критическая ошибка при запуске бота: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+2025-08-22 17:05:48 | RepitBot | INFO     | bot.py:412 | main | Завершение работы бота
+2025-08-22 17:06:14 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-22 17:06:14 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-22 17:06:14 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-22 17:06:14 | RepitBot | INFO     | bot.py:171 | main | Database tables created/checked.
+2025-08-22 17:06:15 | RepitBot | INFO     | bot.py:396 | main | Запускаем бота...
+2025-08-22 17:06:29 | RepitBot | INFO     | bot.py:154 | initialize_systems | Бот инициализирован
+2025-08-22 17:06:29 | RepitBot | ERROR    | bot.py:165 | initialize_systems | ❌ Ошибка при инициализации систем: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+2025-08-22 17:06:29 | RepitBot | ERROR    | bot.py:409 | main | Критическая ошибка при запуске бота: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+2025-08-22 17:06:29 | RepitBot | INFO     | bot.py:412 | main | Завершение работы бота
+2025-08-22 17:06:58 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-22 17:06:58 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-22 17:06:58 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-22 17:06:58 | RepitBot | INFO     | bot.py:171 | main | Database tables created/checked.
+2025-08-22 17:06:59 | RepitBot | INFO     | bot.py:396 | main | Запускаем бота...
+2025-08-22 17:07:00 | RepitBot | INFO     | bot.py:154 | initialize_systems | Бот инициализирован
+2025-08-22 17:07:00 | RepitBot | INFO     | bot.py:158 | initialize_systems | Подключение к Telegram API установлено. Бот: @mathtestmathbot
+2025-08-22 17:07:00 | RepitBot | INFO     | bot.py:127 | start_scheduler | Планировщик запущен с задачами: напоминания об уроках, балансе и дедлайнах ДЗ
+2025-08-22 17:07:00 | RepitBot.HealthMonitor | INFO     | health_monitor.py:56 | add_check | Добавлена проверка здоровья: database_connection (интервал: 60с)
+2025-08-22 17:07:00 | RepitBot.HealthMonitor | INFO     | health_monitor.py:56 | add_check | Добавлена проверка здоровья: disk_space (интервал: 300с)
+2025-08-22 17:07:00 | RepitBot.HealthMonitor | INFO     | health_monitor.py:56 | add_check | Добавлена проверка здоровья: memory_usage (интервал: 120с)
+2025-08-22 17:07:00 | RepitBot.HealthMonitor | INFO     | health_monitor.py:266 | setup_default_checks | Стандартные проверки здоровья настроены
+2025-08-22 17:07:00 | RepitBot.HealthMonitor | INFO     | health_monitor.py:56 | add_check | Добавлена проверка здоровья: bot_connection (интервал: 120с)
+2025-08-22 17:07:00 | RepitBot.HealthMonitor | INFO     | health_monitor.py:99 | start_monitoring | Мониторинг здоровья запущен
+2025-08-22 17:07:00 | RepitBot | INFO     | bot.py:147 | start_health_monitoring | Система мониторинга здоровья запущена
+2025-08-22 17:07:06 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': 1229333908, 'message': '🎓 Список учеников', 'error': '(sqlite3.OperationalError) no such column: users.grade\n[SQL: SELECT users.id AS users_id, users.telegram_id AS users_telegram_id, users.username AS users_username, users.full_name AS users_full_name, users.role AS users_role, users.access_code AS users_access_code, users.grade AS users_grade, users.points AS users_points, users.streak_days AS users_streak_days, users.last_lesson_date AS users_last_lesson_date, users.total_study_hours AS users_total_study_hours, users.created_at AS users_created_at, users.parent_id AS users_parent_id \nFROM users \nWHERE users.telegram_id = ?\n LIMIT ? OFFSET ?]\n[parameters: (1229333908, 1, 0)]\n(Background on this error at: https://sqlalche.me/e/20/e3q8)'}
+2025-08-22 17:07:06 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - error_encountered | (sqlite3.OperationalError) no such column: users.grade
+[SQL: SELECT users.id AS users_id, users.tele
+2025-08-22 17:07:08 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': 1229333908, 'message': '🎓 Список учеников', 'error': '(sqlite3.OperationalError) no such column: users.grade\n[SQL: SELECT users.id AS users_id, users.telegram_id AS users_telegram_id, users.username AS users_username, users.full_name AS users_full_name, users.role AS users_role, users.access_code AS users_access_code, users.grade AS users_grade, users.points AS users_points, users.streak_days AS users_streak_days, users.last_lesson_date AS users_last_lesson_date, users.total_study_hours AS users_total_study_hours, users.created_at AS users_created_at, users.parent_id AS users_parent_id \nFROM users \nWHERE users.telegram_id = ?\n LIMIT ? OFFSET ?]\n[parameters: (1229333908, 1, 0)]\n(Background on this error at: https://sqlalche.me/e/20/e3q8)'}
+2025-08-22 17:07:08 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - error_encountered | (sqlite3.OperationalError) no such column: users.grade
+[SQL: SELECT users.id AS users_id, users.tele
+2025-08-22 17:07:10 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': 1229333908, 'message': '➕ Добавить ученика', 'error': '(sqlite3.OperationalError) no such column: users.grade\n[SQL: SELECT users.id AS users_id, users.telegram_id AS users_telegram_id, users.username AS users_username, users.full_name AS users_full_name, users.role AS users_role, users.access_code AS users_access_code, users.grade AS users_grade, users.points AS users_points, users.streak_days AS users_streak_days, users.last_lesson_date AS users_last_lesson_date, users.total_study_hours AS users_total_study_hours, users.created_at AS users_created_at, users.parent_id AS users_parent_id \nFROM users \nWHERE users.telegram_id = ?\n LIMIT ? OFFSET ?]\n[parameters: (1229333908, 1, 0)]\n(Background on this error at: https://sqlalche.me/e/20/e3q8)'}
+2025-08-22 17:07:10 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - error_encountered | (sqlite3.OperationalError) no such column: users.grade
+[SQL: SELECT users.id AS users_id, users.tele
+2025-08-22 17:07:12 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': 1229333908, 'message': '📊 Отчёт за месяц', 'error': '(sqlite3.OperationalError) no such column: users.grade\n[SQL: SELECT users.id AS users_id, users.telegram_id AS users_telegram_id, users.username AS users_username, users.full_name AS users_full_name, users.role AS users_role, users.access_code AS users_access_code, users.grade AS users_grade, users.points AS users_points, users.streak_days AS users_streak_days, users.last_lesson_date AS users_last_lesson_date, users.total_study_hours AS users_total_study_hours, users.created_at AS users_created_at, users.parent_id AS users_parent_id \nFROM users \nWHERE users.telegram_id = ?\n LIMIT ? OFFSET ?]\n[parameters: (1229333908, 1, 0)]\n(Background on this error at: https://sqlalche.me/e/20/e3q8)'}
+2025-08-22 17:07:12 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - error_encountered | (sqlite3.OperationalError) no such column: users.grade
+[SQL: SELECT users.id AS users_id, users.tele
+2025-08-22 17:09:41 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-22 17:09:41 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-22 17:09:42 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-22 17:09:42 | RepitBot | INFO     | bot.py:171 | main | Database tables created/checked.
+2025-08-22 17:09:43 | RepitBot | INFO     | bot.py:396 | main | Запускаем бота...
+2025-08-22 17:09:43 | RepitBot | INFO     | bot.py:154 | initialize_systems | Бот инициализирован
+2025-08-22 17:09:43 | RepitBot | INFO     | bot.py:158 | initialize_systems | Подключение к Telegram API установлено. Бот: @mathtestmathbot
+2025-08-22 17:09:50 | RepitBot | INFO     | bot.py:127 | start_scheduler | Планировщик запущен с задачами: напоминания об уроках, балансе и дедлайнах ДЗ
+2025-08-22 17:09:50 | RepitBot.HealthMonitor | INFO     | health_monitor.py:56 | add_check | Добавлена проверка здоровья: database_connection (интервал: 60с)
+2025-08-22 17:09:50 | RepitBot.HealthMonitor | INFO     | health_monitor.py:56 | add_check | Добавлена проверка здоровья: disk_space (интервал: 300с)
+2025-08-22 17:09:50 | RepitBot.HealthMonitor | INFO     | health_monitor.py:56 | add_check | Добавлена проверка здоровья: memory_usage (интервал: 120с)
+2025-08-22 17:09:50 | RepitBot.HealthMonitor | INFO     | health_monitor.py:266 | setup_default_checks | Стандартные проверки здоровья настроены
+2025-08-22 17:09:50 | RepitBot.HealthMonitor | INFO     | health_monitor.py:56 | add_check | Добавлена проверка здоровья: bot_connection (интервал: 120с)
+2025-08-22 17:09:50 | RepitBot.HealthMonitor | INFO     | health_monitor.py:99 | start_monitoring | Мониторинг здоровья запущен
+2025-08-22 17:09:50 | RepitBot | INFO     | bot.py:147 | start_health_monitoring | Система мониторинга здоровья запущена
+2025-08-22 17:09:50 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': 1229333908, 'message': '🎓 Список учеников', 'error': '(sqlite3.OperationalError) no such column: users.grade\n[SQL: SELECT users.id AS users_id, users.telegram_id AS users_telegram_id, users.username AS users_username, users.full_name AS users_full_name, users.role AS users_role, users.access_code AS users_access_code, users.grade AS users_grade, users.points AS users_points, users.streak_days AS users_streak_days, users.last_lesson_date AS users_last_lesson_date, users.total_study_hours AS users_total_study_hours, users.created_at AS users_created_at, users.parent_id AS users_parent_id \nFROM users \nWHERE users.telegram_id = ?\n LIMIT ? OFFSET ?]\n[parameters: (1229333908, 1, 0)]\n(Background on this error at: https://sqlalche.me/e/20/e3q8)'}
+2025-08-22 17:09:50 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - error_encountered | (sqlite3.OperationalError) no such column: users.grade
+[SQL: SELECT users.id AS users_id, users.tele
+2025-08-22 17:09:52 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': 1229333908, 'message': '🎓 Список учеников', 'error': '(sqlite3.OperationalError) no such column: users.grade\n[SQL: SELECT users.id AS users_id, users.telegram_id AS users_telegram_id, users.username AS users_username, users.full_name AS users_full_name, users.role AS users_role, users.access_code AS users_access_code, users.grade AS users_grade, users.points AS users_points, users.streak_days AS users_streak_days, users.last_lesson_date AS users_last_lesson_date, users.total_study_hours AS users_total_study_hours, users.created_at AS users_created_at, users.parent_id AS users_parent_id \nFROM users \nWHERE users.telegram_id = ?\n LIMIT ? OFFSET ?]\n[parameters: (1229333908, 1, 0)]\n(Background on this error at: https://sqlalche.me/e/20/e3q8)'}
+2025-08-22 17:09:52 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - error_encountered | (sqlite3.OperationalError) no such column: users.grade
+[SQL: SELECT users.id AS users_id, users.tele
+2025-08-22 17:21:01 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-22 17:21:01 | RepitBot.HealthMonitor | WARNING  | health_monitor.py:149 | _handle_warning | ⚠️ WARNING: Health check bot_connection failed 1 times
+2025-08-22 17:21:02 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-22 17:21:03 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-22 17:21:05 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-22 17:24:16 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-22 17:24:16 | RepitBot.HealthMonitor | WARNING  | health_monitor.py:149 | _handle_warning | ⚠️ WARNING: Health check bot_connection failed 2 times
+2025-08-22 17:24:21 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-22 17:26:31 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-22 17:26:31 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-22 17:26:32 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-22 17:26:32 | RepitBot | INFO     | bot.py:171 | main | Database tables created/checked.
+2025-08-22 17:26:33 | RepitBot | INFO     | bot.py:396 | main | Запускаем бота...
+2025-08-22 17:26:34 | RepitBot | INFO     | bot.py:154 | initialize_systems | Бот инициализирован
+2025-08-22 17:26:34 | RepitBot | INFO     | bot.py:158 | initialize_systems | Подключение к Telegram API установлено. Бот: @mathtestmathbot
+2025-08-22 17:26:34 | RepitBot | INFO     | bot.py:127 | start_scheduler | Планировщик запущен с задачами: напоминания об уроках, балансе и дедлайнах ДЗ
+2025-08-22 17:26:34 | RepitBot.HealthMonitor | INFO     | health_monitor.py:56 | add_check | Добавлена проверка здоровья: database_connection (интервал: 60с)
+2025-08-22 17:26:34 | RepitBot.HealthMonitor | INFO     | health_monitor.py:56 | add_check | Добавлена проверка здоровья: disk_space (интервал: 300с)
+2025-08-22 17:26:34 | RepitBot.HealthMonitor | INFO     | health_monitor.py:56 | add_check | Добавлена проверка здоровья: memory_usage (интервал: 120с)
+2025-08-22 17:26:34 | RepitBot.HealthMonitor | INFO     | health_monitor.py:266 | setup_default_checks | Стандартные проверки здоровья настроены
+2025-08-22 17:26:34 | RepitBot.HealthMonitor | INFO     | health_monitor.py:56 | add_check | Добавлена проверка здоровья: bot_connection (интервал: 120с)
+2025-08-22 17:26:34 | RepitBot.HealthMonitor | INFO     | health_monitor.py:99 | start_monitoring | Мониторинг здоровья запущен
+2025-08-22 17:26:34 | RepitBot | INFO     | bot.py:147 | start_health_monitoring | Система мониторинга здоровья запущена
+2025-08-22 17:26:34 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'Conflict: terminated by other getUpdates request; make sure that only one bot instance is running'}
+2025-08-22 17:26:38 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'Conflict: terminated by other getUpdates request; make sure that only one bot instance is running'}
+2025-08-22 17:26:40 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'Conflict: terminated by other getUpdates request; make sure that only one bot instance is running'}
+2025-08-22 17:26:44 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'Conflict: terminated by other getUpdates request; make sure that only one bot instance is running'}
+2025-08-22 17:26:46 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'Conflict: terminated by other getUpdates request; make sure that only one bot instance is running'}
+2025-08-22 17:26:48 | RepitBot | INFO     | bot.py:407 | main | Получен сигнал завершения работы
+2025-08-22 17:26:48 | RepitBot | INFO     | bot.py:412 | main | Завершение работы бота
+2025-08-22 17:28:44 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-22 17:28:44 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-22 17:28:44 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-22 17:28:44 | RepitBot | INFO     | bot.py:171 | main | Database tables created/checked.
+2025-08-22 17:28:45 | RepitBot | INFO     | bot.py:396 | main | Запускаем бота...
+2025-08-22 17:28:46 | RepitBot | INFO     | bot.py:154 | initialize_systems | Бот инициализирован
+2025-08-22 17:28:46 | RepitBot | INFO     | bot.py:158 | initialize_systems | Подключение к Telegram API установлено. Бот: @mathtestmathbot
+2025-08-22 17:28:46 | RepitBot | INFO     | bot.py:127 | start_scheduler | Планировщик запущен с задачами: напоминания об уроках, балансе и дедлайнах ДЗ
+2025-08-22 17:28:46 | RepitBot.HealthMonitor | INFO     | health_monitor.py:56 | add_check | Добавлена проверка здоровья: database_connection (интервал: 60с)
+2025-08-22 17:28:46 | RepitBot.HealthMonitor | INFO     | health_monitor.py:56 | add_check | Добавлена проверка здоровья: disk_space (интервал: 300с)
+2025-08-22 17:28:46 | RepitBot.HealthMonitor | INFO     | health_monitor.py:56 | add_check | Добавлена проверка здоровья: memory_usage (интервал: 120с)
+2025-08-22 17:28:46 | RepitBot.HealthMonitor | INFO     | health_monitor.py:266 | setup_default_checks | Стандартные проверки здоровья настроены
+2025-08-22 17:28:46 | RepitBot.HealthMonitor | INFO     | health_monitor.py:56 | add_check | Добавлена проверка здоровья: bot_connection (интервал: 120с)
+2025-08-22 17:28:46 | RepitBot.HealthMonitor | INFO     | health_monitor.py:99 | start_monitoring | Мониторинг здоровья запущен
+2025-08-22 17:28:46 | RepitBot | INFO     | bot.py:147 | start_health_monitoring | Система мониторинга здоровья запущена
+2025-08-22 17:28:47 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'Conflict: terminated by other getUpdates request; make sure that only one bot instance is running'}
+2025-08-22 17:28:51 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'Conflict: terminated by other getUpdates request; make sure that only one bot instance is running'}
+2025-08-22 17:28:52 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'Conflict: terminated by other getUpdates request; make sure that only one bot instance is running'}
+2025-08-22 17:28:56 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'Conflict: terminated by other getUpdates request; make sure that only one bot instance is running'}
+2025-08-22 17:28:58 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'Conflict: terminated by other getUpdates request; make sure that only one bot instance is running'}
+2025-08-22 17:29:03 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'Conflict: terminated by other getUpdates request; make sure that only one bot instance is running'}
+2025-08-22 17:29:06 | RepitBot | INFO     | bot.py:412 | main | Завершение работы бота
+2025-08-22 17:29:36 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-22 17:29:36 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-22 17:29:36 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-22 17:29:36 | RepitBot | INFO     | bot.py:171 | main | Database tables created/checked.
+2025-08-22 17:29:38 | RepitBot | INFO     | bot.py:396 | main | Запускаем бота...
+2025-08-22 17:29:38 | RepitBot | INFO     | bot.py:154 | initialize_systems | Бот инициализирован
+2025-08-22 17:29:39 | RepitBot | INFO     | bot.py:158 | initialize_systems | Подключение к Telegram API установлено. Бот: @mathtestmathbot
+2025-08-22 17:29:39 | RepitBot | INFO     | bot.py:127 | start_scheduler | Планировщик запущен с задачами: напоминания об уроках, балансе и дедлайнах ДЗ
+2025-08-22 17:29:39 | RepitBot.HealthMonitor | INFO     | health_monitor.py:56 | add_check | Добавлена проверка здоровья: database_connection (интервал: 60с)
+2025-08-22 17:29:39 | RepitBot.HealthMonitor | INFO     | health_monitor.py:56 | add_check | Добавлена проверка здоровья: disk_space (интервал: 300с)
+2025-08-22 17:29:39 | RepitBot.HealthMonitor | INFO     | health_monitor.py:56 | add_check | Добавлена проверка здоровья: memory_usage (интервал: 120с)
+2025-08-22 17:29:39 | RepitBot.HealthMonitor | INFO     | health_monitor.py:266 | setup_default_checks | Стандартные проверки здоровья настроены
+2025-08-22 17:29:39 | RepitBot.HealthMonitor | INFO     | health_monitor.py:56 | add_check | Добавлена проверка здоровья: bot_connection (интервал: 120с)
+2025-08-22 17:29:39 | RepitBot.HealthMonitor | INFO     | health_monitor.py:99 | start_monitoring | Мониторинг здоровья запущен
+2025-08-22 17:29:39 | RepitBot | INFO     | bot.py:147 | start_health_monitoring | Система мониторинга здоровья запущена
+2025-08-22 17:29:39 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'Conflict: terminated by other getUpdates request; make sure that only one bot instance is running'}
+2025-08-22 17:29:43 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'Conflict: terminated by other getUpdates request; make sure that only one bot instance is running'}
+2025-08-22 17:29:44 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'Conflict: terminated by other getUpdates request; make sure that only one bot instance is running'}
+2025-08-22 17:29:46 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': 1229333908, 'message': '🎓 Список учеников', 'error': '(sqlite3.OperationalError) no such column: users.grade\n[SQL: SELECT users.id AS users_id, users.telegram_id AS users_telegram_id, users.username AS users_username, users.full_name AS users_full_name, users.role AS users_role, users.access_code AS users_access_code, users.grade AS users_grade, users.points AS users_points, users.streak_days AS users_streak_days, users.last_lesson_date AS users_last_lesson_date, users.total_study_hours AS users_total_study_hours, users.created_at AS users_created_at, users.parent_id AS users_parent_id \nFROM users \nWHERE users.telegram_id = ?\n LIMIT ? OFFSET ?]\n[parameters: (1229333908, 1, 0)]\n(Background on this error at: https://sqlalche.me/e/20/e3q8)'}
+2025-08-22 17:29:46 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - error_encountered | (sqlite3.OperationalError) no such column: users.grade
+[SQL: SELECT users.id AS users_id, users.tele
+2025-08-22 17:29:46 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': 1229333908, 'message': '🎓 Список учеников', 'error': '(sqlite3.OperationalError) no such column: users.grade\n[SQL: SELECT users.id AS users_id, users.telegram_id AS users_telegram_id, users.username AS users_username, users.full_name AS users_full_name, users.role AS users_role, users.access_code AS users_access_code, users.grade AS users_grade, users.points AS users_points, users.streak_days AS users_streak_days, users.last_lesson_date AS users_last_lesson_date, users.total_study_hours AS users_total_study_hours, users.created_at AS users_created_at, users.parent_id AS users_parent_id \nFROM users \nWHERE users.telegram_id = ?\n LIMIT ? OFFSET ?]\n[parameters: (1229333908, 1, 0)]\n(Background on this error at: https://sqlalche.me/e/20/e3q8)'}
+2025-08-22 17:29:46 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - error_encountered | (sqlite3.OperationalError) no such column: users.grade
+[SQL: SELECT users.id AS users_id, users.tele
+2025-08-22 17:29:49 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'Conflict: terminated by other getUpdates request; make sure that only one bot instance is running'}
+2025-08-22 17:29:50 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'Conflict: terminated by other getUpdates request; make sure that only one bot instance is running'}
+2025-08-22 17:29:54 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'Conflict: terminated by other getUpdates request; make sure that only one bot instance is running'}
+2025-08-22 17:29:56 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'Conflict: terminated by other getUpdates request; make sure that only one bot instance is running'}
+2025-08-22 17:30:01 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'Conflict: terminated by other getUpdates request; make sure that only one bot instance is running'}
+2025-08-22 17:30:03 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'Conflict: terminated by other getUpdates request; make sure that only one bot instance is running'}
+2025-08-22 17:30:08 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'Conflict: terminated by other getUpdates request; make sure that only one bot instance is running'}
+2025-08-22 17:30:12 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'Conflict: terminated by other getUpdates request; make sure that only one bot instance is running'}
+2025-08-22 17:30:16 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'Conflict: terminated by other getUpdates request; make sure that only one bot instance is running'}
+2025-08-22 17:30:18 | RepitBot.HealthMonitor | WARNING  | health_monitor.py:149 | _handle_warning | ⚠️ WARNING: Health check memory_usage failed 1 times
+2025-08-22 17:30:29 | RepitBot.HealthMonitor | ERROR    | health_monitor.py:83 | run_check | Health check bot_connection timeout after 10s
+2025-08-22 17:30:29 | RepitBot.HealthMonitor | CRITICAL | health_monitor.py:139 | _handle_critical_failure | 🚨 CRITICAL: Health check bot_connection failed 1 times
+2025-08-22 17:30:43 | RepitBot.HealthMonitor | INFO     | health_monitor.py:171 | _recover_bot_connection | Bot connection recovered: mathtestmathbot
+2025-08-22 17:30:53 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'Conflict: terminated by other getUpdates request; make sure that only one bot instance is running'}
+2025-08-22 17:30:57 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'Conflict: terminated by other getUpdates request; make sure that only one bot instance is running'}
+2025-08-22 17:30:59 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'Conflict: terminated by other getUpdates request; make sure that only one bot instance is running'}
+2025-08-22 17:31:04 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'Conflict: terminated by other getUpdates request; make sure that only one bot instance is running'}
+2025-08-22 17:31:04 | RepitBot | INFO     | bot.py:412 | main | Завершение работы бота
+2025-08-22 17:31:36 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': 1229333908, 'message': '🎓 Список учеников', 'error': '(sqlite3.OperationalError) no such column: users.grade\n[SQL: SELECT users.id AS users_id, users.telegram_id AS users_telegram_id, users.username AS users_username, users.full_name AS users_full_name, users.role AS users_role, users.access_code AS users_access_code, users.grade AS users_grade, users.points AS users_points, users.streak_days AS users_streak_days, users.last_lesson_date AS users_last_lesson_date, users.total_study_hours AS users_total_study_hours, users.created_at AS users_created_at, users.parent_id AS users_parent_id \nFROM users \nWHERE users.telegram_id = ?\n LIMIT ? OFFSET ?]\n[parameters: (1229333908, 1, 0)]\n(Background on this error at: https://sqlalche.me/e/20/e3q8)'}
+2025-08-22 17:31:36 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - error_encountered | (sqlite3.OperationalError) no such column: users.grade
+[SQL: SELECT users.id AS users_id, users.tele
+2025-08-22 17:31:45 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': 1229333908, 'message': '📊 Отчёт за месяц', 'error': '(sqlite3.OperationalError) no such column: users.grade\n[SQL: SELECT users.id AS users_id, users.telegram_id AS users_telegram_id, users.username AS users_username, users.full_name AS users_full_name, users.role AS users_role, users.access_code AS users_access_code, users.grade AS users_grade, users.points AS users_points, users.streak_days AS users_streak_days, users.last_lesson_date AS users_last_lesson_date, users.total_study_hours AS users_total_study_hours, users.created_at AS users_created_at, users.parent_id AS users_parent_id \nFROM users \nWHERE users.telegram_id = ?\n LIMIT ? OFFSET ?]\n[parameters: (1229333908, 1, 0)]\n(Background on this error at: https://sqlalche.me/e/20/e3q8)'}
+2025-08-22 17:31:45 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - error_encountered | (sqlite3.OperationalError) no such column: users.grade
+[SQL: SELECT users.id AS users_id, users.tele
+2025-08-22 17:32:05 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-22 17:32:05 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-22 17:32:06 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-22 17:32:06 | RepitBot | INFO     | bot.py:171 | main | Database tables created/checked.
+2025-08-22 17:32:17 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': 1229333908, 'message': '📊 Отчёт за месяц', 'error': '(sqlite3.OperationalError) no such column: users.grade\n[SQL: SELECT users.id AS users_id, users.telegram_id AS users_telegram_id, users.username AS users_username, users.full_name AS users_full_name, users.role AS users_role, users.access_code AS users_access_code, users.grade AS users_grade, users.points AS users_points, users.streak_days AS users_streak_days, users.last_lesson_date AS users_last_lesson_date, users.total_study_hours AS users_total_study_hours, users.created_at AS users_created_at, users.parent_id AS users_parent_id \nFROM users \nWHERE users.telegram_id = ?\n LIMIT ? OFFSET ?]\n[parameters: (1229333908, 1, 0)]\n(Background on this error at: https://sqlalche.me/e/20/e3q8)'}
+2025-08-22 17:32:17 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - error_encountered | (sqlite3.OperationalError) no such column: users.grade
+[SQL: SELECT users.id AS users_id, users.tele
+2025-08-22 17:32:24 | RepitBot.HealthMonitor | WARNING  | health_monitor.py:149 | _handle_warning | ⚠️ WARNING: Health check memory_usage failed 2 times
+2025-08-22 17:33:38 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': 1229333908, 'message': '🎓 Список учеников', 'error': '(sqlite3.OperationalError) no such column: users.grade\n[SQL: SELECT users.id AS users_id, users.telegram_id AS users_telegram_id, users.username AS users_username, users.full_name AS users_full_name, users.role AS users_role, users.access_code AS users_access_code, users.grade AS users_grade, users.points AS users_points, users.streak_days AS users_streak_days, users.last_lesson_date AS users_last_lesson_date, users.total_study_hours AS users_total_study_hours, users.created_at AS users_created_at, users.parent_id AS users_parent_id \nFROM users \nWHERE users.telegram_id = ?\n LIMIT ? OFFSET ?]\n[parameters: (1229333908, 1, 0)]\n(Background on this error at: https://sqlalche.me/e/20/e3q8)'}
+2025-08-22 17:33:38 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - error_encountered | (sqlite3.OperationalError) no such column: users.grade
+[SQL: SELECT users.id AS users_id, users.tele
+2025-08-22 17:35:36 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-22 17:35:36 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-22 17:35:36 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-22 17:35:36 | RepitBot | INFO     | bot.py:171 | main | Database tables created/checked.
+2025-08-22 17:35:37 | RepitBot | INFO     | bot.py:396 | main | Запускаем бота...
+2025-08-22 17:35:38 | RepitBot | INFO     | bot.py:154 | initialize_systems | Бот инициализирован
+2025-08-22 17:35:38 | RepitBot | INFO     | bot.py:158 | initialize_systems | Подключение к Telegram API установлено. Бот: @mathtestmathbot
+2025-08-22 17:35:38 | RepitBot | INFO     | bot.py:127 | start_scheduler | Планировщик запущен с задачами: напоминания об уроках, балансе и дедлайнах ДЗ
+2025-08-22 17:35:38 | RepitBot.HealthMonitor | INFO     | health_monitor.py:56 | add_check | Добавлена проверка здоровья: database_connection (интервал: 60с)
+2025-08-22 17:35:38 | RepitBot.HealthMonitor | INFO     | health_monitor.py:56 | add_check | Добавлена проверка здоровья: disk_space (интервал: 300с)
+2025-08-22 17:35:38 | RepitBot.HealthMonitor | INFO     | health_monitor.py:56 | add_check | Добавлена проверка здоровья: memory_usage (интервал: 120с)
+2025-08-22 17:35:38 | RepitBot.HealthMonitor | INFO     | health_monitor.py:266 | setup_default_checks | Стандартные проверки здоровья настроены
+2025-08-22 17:35:38 | RepitBot.HealthMonitor | INFO     | health_monitor.py:56 | add_check | Добавлена проверка здоровья: bot_connection (интервал: 120с)
+2025-08-22 17:35:38 | RepitBot.HealthMonitor | INFO     | health_monitor.py:99 | start_monitoring | Мониторинг здоровья запущен
+2025-08-22 17:35:38 | RepitBot | INFO     | bot.py:147 | start_health_monitoring | Система мониторинга здоровья запущена
+2025-08-22 17:35:39 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': 1229333908, 'message': '🎓 Список учеников', 'error': '(sqlite3.OperationalError) no such column: users.grade\n[SQL: SELECT users.id AS users_id, users.telegram_id AS users_telegram_id, users.username AS users_username, users.full_name AS users_full_name, users.role AS users_role, users.access_code AS users_access_code, users.grade AS users_grade, users.points AS users_points, users.streak_days AS users_streak_days, users.last_lesson_date AS users_last_lesson_date, users.total_study_hours AS users_total_study_hours, users.created_at AS users_created_at, users.parent_id AS users_parent_id \nFROM users \nWHERE users.telegram_id = ?\n LIMIT ? OFFSET ?]\n[parameters: (1229333908, 1, 0)]\n(Background on this error at: https://sqlalche.me/e/20/e3q8)'}
+2025-08-22 17:35:39 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - error_encountered | (sqlite3.OperationalError) no such column: users.grade
+[SQL: SELECT users.id AS users_id, users.tele
+2025-08-22 17:35:48 | RepitBot.HealthMonitor | ERROR    | health_monitor.py:83 | run_check | Health check bot_connection timeout after 10s
+2025-08-22 17:35:49 | RepitBot.HealthMonitor | CRITICAL | health_monitor.py:139 | _handle_critical_failure | 🚨 CRITICAL: Health check bot_connection failed 1 times
+2025-08-22 17:35:49 | RepitBot.HealthMonitor | INFO     | health_monitor.py:171 | _recover_bot_connection | Bot connection recovered: mathtestmathbot
+2025-08-22 17:35:54 | RepitBot | INFO     | bot.py:407 | main | Получен сигнал завершения работы
+2025-08-22 17:35:54 | RepitBot | INFO     | bot.py:412 | main | Завершение работы бота
+2025-08-22 17:36:52 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-22 17:36:52 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-22 17:36:52 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-22 17:36:52 | RepitBot | INFO     | bot.py:171 | main | Database tables created/checked.
+2025-08-22 17:36:53 | RepitBot | INFO     | bot.py:396 | main | Запускаем бота...
+2025-08-22 17:36:55 | RepitBot | INFO     | bot.py:154 | initialize_systems | Бот инициализирован
+2025-08-22 17:36:55 | RepitBot | INFO     | bot.py:158 | initialize_systems | Подключение к Telegram API установлено. Бот: @mathtestmathbot
+2025-08-22 17:36:55 | RepitBot | INFO     | bot.py:127 | start_scheduler | Планировщик запущен с задачами: напоминания об уроках, балансе и дедлайнах ДЗ
+2025-08-22 17:36:55 | RepitBot.HealthMonitor | INFO     | health_monitor.py:56 | add_check | Добавлена проверка здоровья: database_connection (интервал: 60с)
+2025-08-22 17:36:55 | RepitBot.HealthMonitor | INFO     | health_monitor.py:56 | add_check | Добавлена проверка здоровья: disk_space (интервал: 300с)
+2025-08-22 17:36:55 | RepitBot.HealthMonitor | INFO     | health_monitor.py:56 | add_check | Добавлена проверка здоровья: memory_usage (интервал: 120с)
+2025-08-22 17:36:55 | RepitBot.HealthMonitor | INFO     | health_monitor.py:266 | setup_default_checks | Стандартные проверки здоровья настроены
+2025-08-22 17:36:55 | RepitBot.HealthMonitor | INFO     | health_monitor.py:56 | add_check | Добавлена проверка здоровья: bot_connection (интервал: 120с)
+2025-08-22 17:36:55 | RepitBot.HealthMonitor | INFO     | health_monitor.py:99 | start_monitoring | Мониторинг здоровья запущен
+2025-08-22 17:36:55 | RepitBot | INFO     | bot.py:147 | start_health_monitoring | Система мониторинга здоровья запущена
+2025-08-22 17:37:01 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': 1229333908, 'message': '🎓 Список учеников', 'error': '(sqlite3.OperationalError) no such column: users.grade\n[SQL: SELECT users.id AS users_id, users.telegram_id AS users_telegram_id, users.username AS users_username, users.full_name AS users_full_name, users.role AS users_role, users.access_code AS users_access_code, users.grade AS users_grade, users.points AS users_points, users.streak_days AS users_streak_days, users.last_lesson_date AS users_last_lesson_date, users.total_study_hours AS users_total_study_hours, users.created_at AS users_created_at, users.parent_id AS users_parent_id \nFROM users \nWHERE users.telegram_id = ?\n LIMIT ? OFFSET ?]\n[parameters: (1229333908, 1, 0)]\n(Background on this error at: https://sqlalche.me/e/20/e3q8)'}
+2025-08-22 17:37:01 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - error_encountered | (sqlite3.OperationalError) no such column: users.grade
+[SQL: SELECT users.id AS users_id, users.tele
+2025-08-22 17:37:19 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': 1229333908, 'message': 'MARINA2024', 'error': '(sqlite3.OperationalError) no such column: users.grade\n[SQL: SELECT users.id AS users_id, users.telegram_id AS users_telegram_id, users.username AS users_username, users.full_name AS users_full_name, users.role AS users_role, users.access_code AS users_access_code, users.grade AS users_grade, users.points AS users_points, users.streak_days AS users_streak_days, users.last_lesson_date AS users_last_lesson_date, users.total_study_hours AS users_total_study_hours, users.created_at AS users_created_at, users.parent_id AS users_parent_id \nFROM users \nWHERE users.telegram_id = ?\n LIMIT ? OFFSET ?]\n[parameters: (1229333908, 1, 0)]\n(Background on this error at: https://sqlalche.me/e/20/e3q8)'}
+2025-08-22 17:37:19 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - error_encountered | (sqlite3.OperationalError) no such column: users.grade
+[SQL: SELECT users.id AS users_id, users.tele
+2025-08-22 17:38:33 | RepitBot | INFO     | bot.py:412 | main | Завершение работы бота
+2025-08-22 17:38:39 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-22 17:38:39 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-22 17:38:39 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-22 17:38:39 | RepitBot | INFO     | bot.py:170 | main | Database tables created/checked.
+2025-08-22 17:38:40 | RepitBot | INFO     | bot.py:391 | main | Запускаем бота...
+2025-08-22 17:38:41 | RepitBot | INFO     | bot.py:153 | initialize_systems | Бот инициализирован
+2025-08-22 17:38:42 | RepitBot | INFO     | bot.py:157 | initialize_systems | Подключение к Telegram API установлено. Бот: @mathtestmathbot
+2025-08-22 17:38:42 | RepitBot | INFO     | bot.py:126 | start_scheduler | Планировщик запущен с задачами: напоминания об уроках, балансе и дедлайнах ДЗ
+2025-08-22 17:38:42 | RepitBot.HealthMonitor | INFO     | health_monitor.py:56 | add_check | Добавлена проверка здоровья: database_connection (интервал: 60с)
+2025-08-22 17:38:42 | RepitBot.HealthMonitor | INFO     | health_monitor.py:56 | add_check | Добавлена проверка здоровья: disk_space (интервал: 300с)
+2025-08-22 17:38:42 | RepitBot.HealthMonitor | INFO     | health_monitor.py:56 | add_check | Добавлена проверка здоровья: memory_usage (интервал: 120с)
+2025-08-22 17:38:42 | RepitBot.HealthMonitor | INFO     | health_monitor.py:266 | setup_default_checks | Стандартные проверки здоровья настроены
+2025-08-22 17:38:42 | RepitBot.HealthMonitor | INFO     | health_monitor.py:56 | add_check | Добавлена проверка здоровья: bot_connection (интервал: 120с)
+2025-08-22 17:38:42 | RepitBot.HealthMonitor | INFO     | health_monitor.py:99 | start_monitoring | Мониторинг здоровья запущен
+2025-08-22 17:38:42 | RepitBot | INFO     | bot.py:146 | start_health_monitoring | Система мониторинга здоровья запущена
+2025-08-22 17:38:51 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_view_student_12
+2025-08-22 17:50:06 | RepitBot | INFO     | bot.py:407 | main | Завершение работы бота
+2025-08-22 17:50:10 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-22 17:50:10 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-22 17:50:11 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-22 17:50:11 | RepitBot | INFO     | bot.py:170 | main | Database tables created/checked.
+2025-08-22 17:50:12 | RepitBot | INFO     | bot.py:392 | main | Запускаем бота...
+2025-08-22 17:50:13 | RepitBot | INFO     | bot.py:153 | initialize_systems | Бот инициализирован
+2025-08-22 17:50:13 | RepitBot | INFO     | bot.py:157 | initialize_systems | Подключение к Telegram API установлено. Бот: @mathtestmathbot
+2025-08-22 17:50:13 | RepitBot | INFO     | bot.py:126 | start_scheduler | Планировщик запущен с задачами: напоминания об уроках, балансе и дедлайнах ДЗ
+2025-08-22 17:50:13 | RepitBot.HealthMonitor | INFO     | health_monitor.py:56 | add_check | Добавлена проверка здоровья: database_connection (интервал: 60с)
+2025-08-22 17:50:13 | RepitBot.HealthMonitor | INFO     | health_monitor.py:56 | add_check | Добавлена проверка здоровья: disk_space (интервал: 300с)
+2025-08-22 17:50:13 | RepitBot.HealthMonitor | INFO     | health_monitor.py:56 | add_check | Добавлена проверка здоровья: memory_usage (интервал: 120с)
+2025-08-22 17:50:13 | RepitBot.HealthMonitor | INFO     | health_monitor.py:266 | setup_default_checks | Стандартные проверки здоровья настроены
+2025-08-22 17:50:13 | RepitBot.HealthMonitor | INFO     | health_monitor.py:56 | add_check | Добавлена проверка здоровья: bot_connection (интервал: 120с)
+2025-08-22 17:50:13 | RepitBot.HealthMonitor | INFO     | health_monitor.py:99 | start_monitoring | Мониторинг здоровья запущен
+2025-08-22 17:50:13 | RepitBot | INFO     | bot.py:146 | start_health_monitoring | Система мониторинга здоровья запущена
+2025-08-22 17:50:22 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_library_grade_9
+2025-08-22 17:50:26 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: select_grade_9
+2025-08-22 17:54:09 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-22 17:54:09 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-22 17:54:44 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-22 17:54:44 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-22 17:55:38 | RepitBot | INFO     | bot.py:408 | main | Завершение работы бота
+2025-08-22 17:55:42 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-22 17:55:42 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-22 17:55:42 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-22 17:55:42 | RepitBot | INFO     | bot.py:170 | main | Database tables created/checked.
+2025-08-22 17:55:43 | RepitBot | INFO     | bot.py:392 | main | Запускаем бота...
+2025-08-22 17:55:44 | RepitBot | INFO     | bot.py:153 | initialize_systems | Бот инициализирован
+2025-08-22 17:55:44 | RepitBot | INFO     | bot.py:157 | initialize_systems | Подключение к Telegram API установлено. Бот: @mathtestmathbot
+2025-08-22 17:55:45 | RepitBot | INFO     | bot.py:126 | start_scheduler | Планировщик запущен с задачами: напоминания об уроках, балансе и дедлайнах ДЗ
+2025-08-22 17:55:45 | RepitBot.HealthMonitor | INFO     | health_monitor.py:56 | add_check | Добавлена проверка здоровья: database_connection (интервал: 60с)
+2025-08-22 17:55:45 | RepitBot.HealthMonitor | INFO     | health_monitor.py:56 | add_check | Добавлена проверка здоровья: disk_space (интервал: 300с)
+2025-08-22 17:55:45 | RepitBot.HealthMonitor | INFO     | health_monitor.py:56 | add_check | Добавлена проверка здоровья: memory_usage (интервал: 120с)
+2025-08-22 17:55:45 | RepitBot.HealthMonitor | INFO     | health_monitor.py:266 | setup_default_checks | Стандартные проверки здоровья настроены
+2025-08-22 17:55:45 | RepitBot.HealthMonitor | INFO     | health_monitor.py:56 | add_check | Добавлена проверка здоровья: bot_connection (интервал: 120с)
+2025-08-22 17:55:45 | RepitBot.HealthMonitor | INFO     | health_monitor.py:99 | start_monitoring | Мониторинг здоровья запущен
+2025-08-22 17:55:45 | RepitBot | INFO     | bot.py:146 | start_health_monitoring | Система мониторинга здоровья запущена
+2025-08-22 17:55:55 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_library_grade_9
+2025-08-22 17:58:11 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-22 17:58:11 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-22 18:02:41 | RepitBot | INFO     | bot.py:408 | main | Завершение работы бота
+2025-08-22 18:02:45 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-22 18:02:45 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-22 18:02:45 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-22 18:02:45 | RepitBot | INFO     | bot.py:170 | main | Database tables created/checked.
+2025-08-22 18:02:46 | RepitBot | INFO     | bot.py:395 | main | Запускаем бота...
+2025-08-22 18:02:47 | RepitBot | INFO     | bot.py:153 | initialize_systems | Бот инициализирован
+2025-08-22 18:02:47 | RepitBot | INFO     | bot.py:157 | initialize_systems | Подключение к Telegram API установлено. Бот: @mathtestmathbot
+2025-08-22 18:02:47 | RepitBot | INFO     | bot.py:126 | start_scheduler | Планировщик запущен с задачами: напоминания об уроках, балансе и дедлайнах ДЗ
+2025-08-22 18:02:47 | RepitBot.HealthMonitor | INFO     | health_monitor.py:56 | add_check | Добавлена проверка здоровья: database_connection (интервал: 60с)
+2025-08-22 18:02:47 | RepitBot.HealthMonitor | INFO     | health_monitor.py:56 | add_check | Добавлена проверка здоровья: disk_space (интервал: 300с)
+2025-08-22 18:02:47 | RepitBot.HealthMonitor | INFO     | health_monitor.py:56 | add_check | Добавлена проверка здоровья: memory_usage (интервал: 120с)
+2025-08-22 18:02:47 | RepitBot.HealthMonitor | INFO     | health_monitor.py:266 | setup_default_checks | Стандартные проверки здоровья настроены
+2025-08-22 18:02:47 | RepitBot.HealthMonitor | INFO     | health_monitor.py:56 | add_check | Добавлена проверка здоровья: bot_connection (интервал: 120с)
+2025-08-22 18:02:47 | RepitBot.HealthMonitor | INFO     | health_monitor.py:99 | start_monitoring | Мониторинг здоровья запущен
+2025-08-22 18:02:47 | RepitBot | INFO     | bot.py:146 | start_health_monitoring | Система мониторинга здоровья запущена
+2025-08-22 18:03:32 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_library_grade_9
+2025-08-22 18:04:33 | RepitBot | INFO     | bot.py:411 | main | Завершение работы бота
+2025-08-22 18:04:38 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-22 18:04:38 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-22 18:04:38 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-22 18:04:38 | RepitBot | INFO     | bot.py:170 | main | Database tables created/checked.
+2025-08-22 18:04:39 | RepitBot | INFO     | bot.py:395 | main | Запускаем бота...
+2025-08-22 18:04:43 | RepitBot | INFO     | bot.py:153 | initialize_systems | Бот инициализирован
+2025-08-22 18:04:43 | RepitBot | INFO     | bot.py:157 | initialize_systems | Подключение к Telegram API установлено. Бот: @mathtestmathbot
+2025-08-22 18:04:43 | RepitBot | INFO     | bot.py:126 | start_scheduler | Планировщик запущен с задачами: напоминания об уроках, балансе и дедлайнах ДЗ
+2025-08-22 18:04:43 | RepitBot.HealthMonitor | INFO     | health_monitor.py:56 | add_check | Добавлена проверка здоровья: database_connection (интервал: 60с)
+2025-08-22 18:04:43 | RepitBot.HealthMonitor | INFO     | health_monitor.py:56 | add_check | Добавлена проверка здоровья: disk_space (интервал: 300с)
+2025-08-22 18:04:43 | RepitBot.HealthMonitor | INFO     | health_monitor.py:56 | add_check | Добавлена проверка здоровья: memory_usage (интервал: 120с)
+2025-08-22 18:04:43 | RepitBot.HealthMonitor | INFO     | health_monitor.py:266 | setup_default_checks | Стандартные проверки здоровья настроены
+2025-08-22 18:04:43 | RepitBot.HealthMonitor | INFO     | health_monitor.py:56 | add_check | Добавлена проверка здоровья: bot_connection (интервал: 120с)
+2025-08-22 18:04:43 | RepitBot.HealthMonitor | INFO     | health_monitor.py:99 | start_monitoring | Мониторинг здоровья запущен
+2025-08-22 18:04:43 | RepitBot | INFO     | bot.py:146 | start_health_monitoring | Система мониторинга здоровья запущена
+2025-08-22 18:04:59 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_view_student_10
+2025-08-22 18:17:21 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.RemoteProtocolError: Server disconnected without sending a response.'}
+2025-08-22 18:17:22 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-22 18:17:24 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-22 18:17:26 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-22 18:17:30 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-22 18:17:35 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-22 18:17:42 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-22 18:17:54 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-22 18:18:11 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-22 18:18:48 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-22 18:18:59 | RepitBot.HealthMonitor | ERROR    | health_monitor.py:83 | run_check | Health check bot_connection timeout after 10s
+2025-08-22 18:18:59 | RepitBot.HealthMonitor | CRITICAL | health_monitor.py:139 | _handle_critical_failure | 🚨 CRITICAL: Health check bot_connection failed 1 times
+2025-08-22 18:19:05 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-22 18:19:06 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-22 18:19:07 | RepitBot.HealthMonitor | ERROR    | health_monitor.py:174 | _recover_bot_connection | ❌ Failed to recover bot connection: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+2025-08-22 18:19:07 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-22 18:19:09 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-22 18:19:13 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-22 18:19:30 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-22 18:19:41 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-22 18:19:42 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-22 18:19:43 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-22 18:19:46 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-22 18:19:49 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-22 18:19:54 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-22 18:20:07 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-22 18:20:08 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-22 18:20:09 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-22 18:20:11 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-22 18:20:15 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-22 18:20:20 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-22 18:20:28 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-22 18:20:39 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-22 18:20:56 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-22 18:20:57 | RepitBot.HealthMonitor | WARNING  | health_monitor.py:149 | _handle_warning | ⚠️ WARNING: Health check bot_connection failed 2 times
+2025-08-22 18:21:22 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-22 18:21:42 | RepitBot | INFO     | bot.py:406 | main | Получен сигнал завершения работы
+2025-08-22 18:21:42 | RepitBot | INFO     | bot.py:411 | main | Завершение работы бота
+2025-08-22 18:21:59 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-22 18:21:59 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-22 18:21:59 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-22 18:21:59 | RepitBot | INFO     | bot.py:171 | main | Database tables created/checked.
+2025-08-22 18:22:00 | RepitBot | INFO     | bot.py:400 | main | Запускаем бота...
+2025-08-22 18:22:00 | RepitBot | ERROR    | bot.py:413 | main | Критическая ошибка при запуске бота: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+2025-08-22 18:22:00 | RepitBot | INFO     | bot.py:416 | main | Завершение работы бота
+2025-08-22 18:24:09 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-22 18:24:09 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-22 18:24:09 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-22 18:24:09 | RepitBot | INFO     | bot.py:171 | main | Database tables created/checked.
+2025-08-22 18:24:10 | RepitBot | INFO     | bot.py:400 | main | Запускаем бота...
+2025-08-22 18:24:11 | RepitBot | INFO     | bot.py:154 | initialize_systems | Бот инициализирован
+2025-08-22 18:24:11 | RepitBot | INFO     | bot.py:158 | initialize_systems | Подключение к Telegram API установлено. Бот: @mathtestmathbot
+2025-08-22 18:24:12 | RepitBot | INFO     | bot.py:127 | start_scheduler | Планировщик запущен с задачами: напоминания об уроках, балансе и дедлайнах ДЗ
+2025-08-22 18:24:12 | RepitBot.HealthMonitor | INFO     | health_monitor.py:56 | add_check | Добавлена проверка здоровья: database_connection (интервал: 60с)
+2025-08-22 18:24:12 | RepitBot.HealthMonitor | INFO     | health_monitor.py:56 | add_check | Добавлена проверка здоровья: disk_space (интервал: 300с)
+2025-08-22 18:24:12 | RepitBot.HealthMonitor | INFO     | health_monitor.py:56 | add_check | Добавлена проверка здоровья: memory_usage (интервал: 120с)
+2025-08-22 18:24:12 | RepitBot.HealthMonitor | INFO     | health_monitor.py:266 | setup_default_checks | Стандартные проверки здоровья настроены
+2025-08-22 18:24:12 | RepitBot.HealthMonitor | INFO     | health_monitor.py:56 | add_check | Добавлена проверка здоровья: bot_connection (интервал: 120с)
+2025-08-22 18:24:12 | RepitBot.HealthMonitor | INFO     | health_monitor.py:99 | start_monitoring | Мониторинг здоровья запущен
+2025-08-22 18:24:12 | RepitBot | INFO     | bot.py:147 | start_health_monitoring | Система мониторинга здоровья запущена
+2025-08-22 18:24:17 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_view_student_12
+2025-08-22 18:24:58 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_view_student_19
+2025-08-22 18:25:01 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': 1229333908, 'message': 'Callback: parent_select_existing', 'error': "Parent instance <User at 0x16a2be734d0> is not bound to a Session; lazy load operation of attribute 'children' cannot proceed (Background on this error at: https://sqlalche.me/e/20/bhk3)"}
+2025-08-22 18:25:01 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - error_encountered | Parent instance <User at 0x16a2be734d0> is not bound to a Session; lazy load operation of attribute 
+2025-08-22 18:30:22 | RepitBot | INFO     | bot.py:416 | main | Завершение работы бота
+2025-08-22 18:30:27 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-22 18:30:27 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-22 18:30:27 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-22 18:30:27 | RepitBot | INFO     | bot.py:171 | main | Database tables created/checked.
+2025-08-22 18:30:28 | RepitBot | INFO     | bot.py:400 | main | Запускаем бота...
+2025-08-22 18:30:29 | RepitBot | INFO     | bot.py:154 | initialize_systems | Бот инициализирован
+2025-08-22 18:30:29 | RepitBot | INFO     | bot.py:158 | initialize_systems | Подключение к Telegram API установлено. Бот: @mathtestmathbot
+2025-08-22 18:30:29 | RepitBot | INFO     | bot.py:127 | start_scheduler | Планировщик запущен с задачами: напоминания об уроках, балансе и дедлайнах ДЗ
+2025-08-22 18:30:29 | RepitBot.HealthMonitor | INFO     | health_monitor.py:56 | add_check | Добавлена проверка здоровья: database_connection (интервал: 60с)
+2025-08-22 18:30:29 | RepitBot.HealthMonitor | INFO     | health_monitor.py:56 | add_check | Добавлена проверка здоровья: disk_space (интервал: 300с)
+2025-08-22 18:30:29 | RepitBot.HealthMonitor | INFO     | health_monitor.py:56 | add_check | Добавлена проверка здоровья: memory_usage (интервал: 120с)
+2025-08-22 18:30:29 | RepitBot.HealthMonitor | INFO     | health_monitor.py:266 | setup_default_checks | Стандартные проверки здоровья настроены
+2025-08-22 18:30:29 | RepitBot.HealthMonitor | INFO     | health_monitor.py:56 | add_check | Добавлена проверка здоровья: bot_connection (интервал: 120с)
+2025-08-22 18:30:29 | RepitBot.HealthMonitor | INFO     | health_monitor.py:99 | start_monitoring | Мониторинг здоровья запущен
+2025-08-22 18:30:29 | RepitBot | INFO     | bot.py:147 | start_health_monitoring | Система мониторинга здоровья запущена
+2025-08-22 18:32:40 | RepitBot.HealthMonitor | ERROR    | health_monitor.py:83 | run_check | Health check bot_connection timeout after 10s
+2025-08-22 18:32:40 | RepitBot.HealthMonitor | CRITICAL | health_monitor.py:139 | _handle_critical_failure | 🚨 CRITICAL: Health check bot_connection failed 1 times
+2025-08-22 18:32:41 | RepitBot.HealthMonitor | INFO     | health_monitor.py:171 | _recover_bot_connection | Bot connection recovered: mathtestmathbot
+2025-08-22 18:33:51 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': 1229333908, 'message': '🎓 Список учеников', 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-22 18:33:51 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - error_encountered | httpx.ConnectError: [Errno 11001] getaddrinfo failed
+2025-08-22 18:33:58 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_view_student_6
+2025-08-22 18:34:07 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_view_student_19
+2025-08-22 18:34:19 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': 1229333908, 'message': 'Callback: parent_select_16', 'error': 'Instance <User at 0x20027794bd0> is not bound to a Session; attribute refresh operation cannot proceed (Background on this error at: https://sqlalche.me/e/20/bhk3)'}
+2025-08-22 18:34:19 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - error_encountered | Instance <User at 0x20027794bd0> is not bound to a Session; attribute refresh operation cannot proce
+2025-08-22 18:35:54 | RepitBot | INFO     | bot.py:416 | main | Завершение работы бота
+2025-08-22 18:35:58 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-22 18:35:58 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-22 18:35:58 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-22 18:35:58 | RepitBot | INFO     | bot.py:171 | main | Database tables created/checked.
+2025-08-22 18:36:00 | RepitBot | INFO     | bot.py:400 | main | Запускаем бота...
+2025-08-22 18:36:00 | RepitBot | INFO     | bot.py:154 | initialize_systems | Бот инициализирован
+2025-08-22 18:36:01 | RepitBot | INFO     | bot.py:158 | initialize_systems | Подключение к Telegram API установлено. Бот: @mathtestmathbot
+2025-08-22 18:36:01 | RepitBot | INFO     | bot.py:127 | start_scheduler | Планировщик запущен с задачами: напоминания об уроках, балансе и дедлайнах ДЗ
+2025-08-22 18:36:01 | RepitBot.HealthMonitor | INFO     | health_monitor.py:56 | add_check | Добавлена проверка здоровья: database_connection (интервал: 60с)
+2025-08-22 18:36:01 | RepitBot.HealthMonitor | INFO     | health_monitor.py:56 | add_check | Добавлена проверка здоровья: disk_space (интервал: 300с)
+2025-08-22 18:36:01 | RepitBot.HealthMonitor | INFO     | health_monitor.py:56 | add_check | Добавлена проверка здоровья: memory_usage (интервал: 120с)
+2025-08-22 18:36:01 | RepitBot.HealthMonitor | INFO     | health_monitor.py:266 | setup_default_checks | Стандартные проверки здоровья настроены
+2025-08-22 18:36:01 | RepitBot.HealthMonitor | INFO     | health_monitor.py:56 | add_check | Добавлена проверка здоровья: bot_connection (интервал: 120с)
+2025-08-22 18:36:01 | RepitBot.HealthMonitor | INFO     | health_monitor.py:99 | start_monitoring | Мониторинг здоровья запущен
+2025-08-22 18:36:01 | RepitBot | INFO     | bot.py:147 | start_health_monitoring | Система мониторинга здоровья запущена
+2025-08-22 18:36:17 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_view_student_19
+2025-08-22 18:37:35 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_view_student_9
+2025-08-22 18:45:29 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-22 18:45:29 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-22 18:45:29 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-22 18:45:29 | RepitBot | INFO     | bot.py:174 | main | Database tables created/checked.
+2025-08-22 18:45:31 | RepitBot | INFO     | bot.py:416 | main | Запускаем бота...
+2025-08-22 18:45:32 | RepitBot | INFO     | bot.py:157 | initialize_systems | Бот инициализирован
+2025-08-22 18:45:32 | RepitBot | INFO     | bot.py:161 | initialize_systems | Подключение к Telegram API установлено. Бот: @mathtestmathbot
+2025-08-22 18:45:32 | RepitBot | INFO     | bot.py:130 | start_scheduler | Планировщик запущен с задачами: напоминания об уроках, балансе и дедлайнах ДЗ
+2025-08-22 18:45:32 | RepitBot.HealthMonitor | INFO     | health_monitor.py:56 | add_check | Добавлена проверка здоровья: database_connection (интервал: 60с)
+2025-08-22 18:45:32 | RepitBot.HealthMonitor | INFO     | health_monitor.py:56 | add_check | Добавлена проверка здоровья: disk_space (интервал: 300с)
+2025-08-22 18:45:32 | RepitBot.HealthMonitor | INFO     | health_monitor.py:56 | add_check | Добавлена проверка здоровья: memory_usage (интервал: 120с)
+2025-08-22 18:45:32 | RepitBot.HealthMonitor | INFO     | health_monitor.py:266 | setup_default_checks | Стандартные проверки здоровья настроены
+2025-08-22 18:45:32 | RepitBot.HealthMonitor | INFO     | health_monitor.py:56 | add_check | Добавлена проверка здоровья: bot_connection (интервал: 120с)
+2025-08-22 18:45:32 | RepitBot.HealthMonitor | INFO     | health_monitor.py:99 | start_monitoring | Мониторинг здоровья запущен
+2025-08-22 18:45:32 | RepitBot | INFO     | bot.py:150 | start_health_monitoring | Система мониторинга здоровья запущена
+2025-08-22 18:45:32 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'Conflict: terminated by other getUpdates request; make sure that only one bot instance is running'}
+2025-08-22 18:45:37 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'Conflict: terminated by other getUpdates request; make sure that only one bot instance is running'}
+2025-08-22 18:45:38 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'Conflict: terminated by other getUpdates request; make sure that only one bot instance is running'}
+2025-08-22 18:45:43 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'Conflict: terminated by other getUpdates request; make sure that only one bot instance is running'}
+2025-08-22 18:45:44 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'Conflict: terminated by other getUpdates request; make sure that only one bot instance is running'}
+2025-08-22 18:45:50 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'Conflict: terminated by other getUpdates request; make sure that only one bot instance is running'}
+2025-08-22 18:45:52 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'Conflict: terminated by other getUpdates request; make sure that only one bot instance is running'}
+2025-08-22 18:45:56 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'Conflict: terminated by other getUpdates request; make sure that only one bot instance is running'}
+2025-08-22 18:45:59 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'Conflict: terminated by other getUpdates request; make sure that only one bot instance is running'}
+2025-08-22 18:46:05 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'Conflict: terminated by other getUpdates request; make sure that only one bot instance is running'}
+2025-08-22 18:46:10 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'Conflict: terminated by other getUpdates request; make sure that only one bot instance is running'}
+2025-08-22 18:46:18 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'Conflict: terminated by other getUpdates request; make sure that only one bot instance is running'}
+2025-08-22 18:46:27 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'Conflict: terminated by other getUpdates request; make sure that only one bot instance is running'}
+2025-08-22 18:46:38 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'Conflict: terminated by other getUpdates request; make sure that only one bot instance is running'}
+2025-08-22 18:46:50 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'Conflict: terminated by other getUpdates request; make sure that only one bot instance is running'}
+2025-08-22 18:47:08 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'Conflict: terminated by other getUpdates request; make sure that only one bot instance is running'}
+2025-08-22 18:47:26 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'Conflict: terminated by other getUpdates request; make sure that only one bot instance is running'}
+2025-08-22 18:47:52 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'Conflict: terminated by other getUpdates request; make sure that only one bot instance is running'}
+2025-08-22 18:48:18 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'Conflict: terminated by other getUpdates request; make sure that only one bot instance is running'}
+2025-08-22 18:48:49 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'Conflict: terminated by other getUpdates request; make sure that only one bot instance is running'}
+2025-08-22 18:48:53 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'Conflict: terminated by other getUpdates request; make sure that only one bot instance is running'}
+2025-08-22 18:49:24 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'Conflict: terminated by other getUpdates request; make sure that only one bot instance is running'}
+2025-08-22 18:49:28 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'Conflict: terminated by other getUpdates request; make sure that only one bot instance is running'}
+2025-08-22 18:49:43 | RepitBot.HealthMonitor | ERROR    | health_monitor.py:83 | run_check | Health check bot_connection timeout after 10s
+2025-08-22 18:49:43 | RepitBot.HealthMonitor | CRITICAL | health_monitor.py:139 | _handle_critical_failure | 🚨 CRITICAL: Health check bot_connection failed 1 times
+2025-08-22 18:49:45 | RepitBot.HealthMonitor | INFO     | health_monitor.py:171 | _recover_bot_connection | Bot connection recovered: mathtestmathbot
+2025-08-22 18:50:00 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'Conflict: terminated by other getUpdates request; make sure that only one bot instance is running'}
+2025-08-22 18:50:05 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'Conflict: terminated by other getUpdates request; make sure that only one bot instance is running'}
+2025-08-22 18:50:35 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'Conflict: terminated by other getUpdates request; make sure that only one bot instance is running'}
+2025-08-22 18:50:39 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'Conflict: terminated by other getUpdates request; make sure that only one bot instance is running'}
+2025-08-22 18:51:10 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'Conflict: terminated by other getUpdates request; make sure that only one bot instance is running'}
+2025-08-22 18:51:14 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'Conflict: terminated by other getUpdates request; make sure that only one bot instance is running'}
+2025-08-22 18:51:45 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'Conflict: terminated by other getUpdates request; make sure that only one bot instance is running'}
+2025-08-22 18:51:49 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'Conflict: terminated by other getUpdates request; make sure that only one bot instance is running'}
+2025-08-22 18:52:19 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'Conflict: terminated by other getUpdates request; make sure that only one bot instance is running'}
+2025-08-22 18:52:23 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'Conflict: terminated by other getUpdates request; make sure that only one bot instance is running'}
+2025-08-22 18:52:54 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'Conflict: terminated by other getUpdates request; make sure that only one bot instance is running'}
+2025-08-22 18:52:58 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'Conflict: terminated by other getUpdates request; make sure that only one bot instance is running'}
+2025-08-22 18:53:29 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'Conflict: terminated by other getUpdates request; make sure that only one bot instance is running'}
+2025-08-22 18:53:33 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'Conflict: terminated by other getUpdates request; make sure that only one bot instance is running'}
+2025-08-22 18:54:03 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'Conflict: terminated by other getUpdates request; make sure that only one bot instance is running'}
+2025-08-22 18:54:08 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'Conflict: terminated by other getUpdates request; make sure that only one bot instance is running'}
+2025-08-22 18:54:38 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'Conflict: terminated by other getUpdates request; make sure that only one bot instance is running'}
+2025-08-22 18:54:42 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'Conflict: terminated by other getUpdates request; make sure that only one bot instance is running'}
+2025-08-22 18:55:13 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'Conflict: terminated by other getUpdates request; make sure that only one bot instance is running'}
+2025-08-22 18:55:17 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'Conflict: terminated by other getUpdates request; make sure that only one bot instance is running'}
+2025-08-22 18:55:48 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'Conflict: terminated by other getUpdates request; make sure that only one bot instance is running'}
+2025-08-22 18:55:52 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'Conflict: terminated by other getUpdates request; make sure that only one bot instance is running'}
+2025-08-22 18:56:23 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'Conflict: terminated by other getUpdates request; make sure that only one bot instance is running'}
+2025-08-22 18:56:27 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'Conflict: terminated by other getUpdates request; make sure that only one bot instance is running'}
+2025-08-22 18:56:57 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'Conflict: terminated by other getUpdates request; make sure that only one bot instance is running'}
+2025-08-22 18:57:01 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'Conflict: terminated by other getUpdates request; make sure that only one bot instance is running'}
+2025-08-22 18:57:32 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'Conflict: terminated by other getUpdates request; make sure that only one bot instance is running'}
+2025-08-22 18:57:36 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'Conflict: terminated by other getUpdates request; make sure that only one bot instance is running'}
+2025-08-22 18:57:50 | RepitBot | INFO     | bot.py:416 | main | Завершение работы бота
+2025-08-22 18:59:16 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-22 18:59:16 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-22 18:59:16 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-22 18:59:16 | RepitBot | INFO     | bot.py:174 | main | Database tables created/checked.
+2025-08-22 18:59:17 | RepitBot | INFO     | bot.py:416 | main | Запускаем бота...
+2025-08-22 18:59:18 | RepitBot | INFO     | bot.py:157 | initialize_systems | Бот инициализирован
+2025-08-22 18:59:18 | RepitBot | INFO     | bot.py:161 | initialize_systems | Подключение к Telegram API установлено. Бот: @mathtestmathbot
+2025-08-22 18:59:18 | RepitBot | INFO     | bot.py:130 | start_scheduler | Планировщик запущен с задачами: напоминания об уроках, балансе и дедлайнах ДЗ
+2025-08-22 18:59:18 | RepitBot.HealthMonitor | INFO     | health_monitor.py:56 | add_check | Добавлена проверка здоровья: database_connection (интервал: 60с)
+2025-08-22 18:59:18 | RepitBot.HealthMonitor | INFO     | health_monitor.py:56 | add_check | Добавлена проверка здоровья: disk_space (интервал: 300с)
+2025-08-22 18:59:18 | RepitBot.HealthMonitor | INFO     | health_monitor.py:56 | add_check | Добавлена проверка здоровья: memory_usage (интервал: 120с)
+2025-08-22 18:59:18 | RepitBot.HealthMonitor | INFO     | health_monitor.py:266 | setup_default_checks | Стандартные проверки здоровья настроены
+2025-08-22 18:59:18 | RepitBot.HealthMonitor | INFO     | health_monitor.py:56 | add_check | Добавлена проверка здоровья: bot_connection (интервал: 120с)
+2025-08-22 18:59:18 | RepitBot.HealthMonitor | INFO     | health_monitor.py:99 | start_monitoring | Мониторинг здоровья запущен
+2025-08-22 18:59:18 | RepitBot | INFO     | bot.py:150 | start_health_monitoring | Система мониторинга здоровья запущена
+2025-08-22 19:00:36 | RepitBot | INFO     | bot.py:427 | main | Получен сигнал завершения работы
+2025-08-22 19:00:36 | RepitBot | INFO     | bot.py:432 | main | Завершение работы бота
+2025-08-22 19:00:41 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-22 19:00:41 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-22 19:00:41 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-22 19:00:41 | RepitBot | INFO     | bot.py:174 | main | Database tables created/checked.
+2025-08-22 19:00:42 | RepitBot | INFO     | bot.py:416 | main | Запускаем бота...
+2025-08-22 19:00:44 | RepitBot | INFO     | bot.py:157 | initialize_systems | Бот инициализирован
+2025-08-22 19:00:44 | RepitBot | INFO     | bot.py:161 | initialize_systems | Подключение к Telegram API установлено. Бот: @mathtestmathbot
+2025-08-22 19:00:44 | RepitBot | INFO     | bot.py:130 | start_scheduler | Планировщик запущен с задачами: напоминания об уроках, балансе и дедлайнах ДЗ
+2025-08-22 19:00:44 | RepitBot.HealthMonitor | INFO     | health_monitor.py:56 | add_check | Добавлена проверка здоровья: database_connection (интервал: 60с)
+2025-08-22 19:00:44 | RepitBot.HealthMonitor | INFO     | health_monitor.py:56 | add_check | Добавлена проверка здоровья: disk_space (интервал: 300с)
+2025-08-22 19:00:44 | RepitBot.HealthMonitor | INFO     | health_monitor.py:56 | add_check | Добавлена проверка здоровья: memory_usage (интервал: 120с)
+2025-08-22 19:00:44 | RepitBot.HealthMonitor | INFO     | health_monitor.py:266 | setup_default_checks | Стандартные проверки здоровья настроены
+2025-08-22 19:00:44 | RepitBot.HealthMonitor | INFO     | health_monitor.py:56 | add_check | Добавлена проверка здоровья: bot_connection (интервал: 120с)
+2025-08-22 19:00:44 | RepitBot.HealthMonitor | INFO     | health_monitor.py:99 | start_monitoring | Мониторинг здоровья запущен
+2025-08-22 19:00:44 | RepitBot | INFO     | bot.py:150 | start_health_monitoring | Система мониторинга здоровья запущена
+2025-08-22 19:10:36 | RepitBot | INFO     | bot.py:432 | main | Завершение работы бота
+2025-08-22 21:17:27 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-22 21:17:27 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-22 21:17:27 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-22 21:17:27 | RepitBot | INFO     | bot.py:174 | main | Database tables created/checked.
+2025-08-22 21:17:29 | RepitBot | INFO     | bot.py:416 | main | Запускаем бота...
+2025-08-22 21:17:31 | RepitBot | INFO     | bot.py:157 | initialize_systems | Бот инициализирован
+2025-08-22 21:17:31 | RepitBot | INFO     | bot.py:161 | initialize_systems | Подключение к Telegram API установлено. Бот: @mathtestmathbot
+2025-08-22 21:17:31 | RepitBot | INFO     | bot.py:130 | start_scheduler | Планировщик запущен с задачами: напоминания об уроках, балансе и дедлайнах ДЗ
+2025-08-22 21:17:31 | RepitBot.HealthMonitor | INFO     | health_monitor.py:56 | add_check | Добавлена проверка здоровья: database_connection (интервал: 60с)
+2025-08-22 21:17:31 | RepitBot.HealthMonitor | INFO     | health_monitor.py:56 | add_check | Добавлена проверка здоровья: disk_space (интервал: 300с)
+2025-08-22 21:17:31 | RepitBot.HealthMonitor | INFO     | health_monitor.py:56 | add_check | Добавлена проверка здоровья: memory_usage (интервал: 120с)
+2025-08-22 21:17:31 | RepitBot.HealthMonitor | INFO     | health_monitor.py:266 | setup_default_checks | Стандартные проверки здоровья настроены
+2025-08-22 21:17:31 | RepitBot.HealthMonitor | INFO     | health_monitor.py:56 | add_check | Добавлена проверка здоровья: bot_connection (интервал: 120с)
+2025-08-22 21:17:31 | RepitBot.HealthMonitor | INFO     | health_monitor.py:99 | start_monitoring | Мониторинг здоровья запущен
+2025-08-22 21:17:31 | RepitBot | INFO     | bot.py:150 | start_health_monitoring | Система мониторинга здоровья запущена
+2025-08-22 21:18:04 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-22 21:18:04 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-22 21:18:14 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-22 21:18:14 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-22 21:18:54 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-22 21:18:54 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-22 21:18:54 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-22 21:18:54 | RepitBot | INFO     | bot.py:174 | main | Database tables created/checked.
+2025-08-22 21:18:55 | RepitBot | INFO     | bot.py:416 | main | Запускаем бота...
+2025-08-22 21:18:56 | RepitBot | INFO     | bot.py:157 | initialize_systems | Бот инициализирован
+2025-08-22 21:18:56 | RepitBot | INFO     | bot.py:161 | initialize_systems | Подключение к Telegram API установлено. Бот: @mathtestmathbot
+2025-08-22 21:18:56 | RepitBot | INFO     | bot.py:130 | start_scheduler | Планировщик запущен с задачами: напоминания об уроках, балансе и дедлайнах ДЗ
+2025-08-22 21:18:56 | RepitBot.HealthMonitor | INFO     | health_monitor.py:56 | add_check | Добавлена проверка здоровья: database_connection (интервал: 60с)
+2025-08-22 21:18:56 | RepitBot.HealthMonitor | INFO     | health_monitor.py:56 | add_check | Добавлена проверка здоровья: disk_space (интервал: 300с)
+2025-08-22 21:18:56 | RepitBot.HealthMonitor | INFO     | health_monitor.py:56 | add_check | Добавлена проверка здоровья: memory_usage (интервал: 120с)
+2025-08-22 21:18:56 | RepitBot.HealthMonitor | INFO     | health_monitor.py:266 | setup_default_checks | Стандартные проверки здоровья настроены
+2025-08-22 21:18:56 | RepitBot.HealthMonitor | INFO     | health_monitor.py:56 | add_check | Добавлена проверка здоровья: bot_connection (интервал: 120с)
+2025-08-22 21:18:56 | RepitBot.HealthMonitor | INFO     | health_monitor.py:99 | start_monitoring | Мониторинг здоровья запущен
+2025-08-22 21:18:56 | RepitBot | INFO     | bot.py:150 | start_health_monitoring | Система мониторинга здоровья запущена
+2025-08-22 21:19:11 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_view_student_19
+2025-08-22 21:19:13 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_lessons_list_19
+2025-08-22 21:19:15 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_view_student_19
+2025-08-22 21:19:41 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_view_student_19
+2025-08-22 21:19:44 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_lessons_list_19
+2025-08-22 21:19:46 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_lesson_details_77
+2025-08-22 21:19:51 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_edit_lesson_77
+2025-08-22 21:21:25 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-22 21:21:25 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-22 21:21:25 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-22 21:21:25 | RepitBot | INFO     | bot.py:174 | main | Database tables created/checked.
+2025-08-22 21:21:59 | RepitBot | INFO     | bot.py:432 | main | Завершение работы бота
+2025-08-22 21:22:03 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-22 21:22:03 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-22 21:22:03 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-22 21:22:03 | RepitBot | INFO     | bot.py:174 | main | Database tables created/checked.
+2025-08-22 21:23:03 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-22 21:23:03 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-22 21:23:03 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-22 21:23:16 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-22 21:23:16 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-22 21:23:16 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-22 21:23:16 | RepitBot | INFO     | bot.py:175 | main | Database tables created/checked.
+2025-08-22 21:23:37 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-22 21:23:37 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-22 21:23:37 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-22 21:23:37 | RepitBot | INFO     | bot.py:175 | main | Database tables created/checked.
+2025-08-22 21:23:38 | RepitBot | INFO     | bot.py:421 | main | Запускаем бота...
+2025-08-22 21:23:38 | RepitBot | INFO     | bot.py:158 | initialize_systems | Бот инициализирован
+2025-08-22 21:23:38 | RepitBot | INFO     | bot.py:162 | initialize_systems | Подключение к Telegram API установлено. Бот: @mathtestmathbot
+2025-08-22 21:23:39 | RepitBot | INFO     | bot.py:131 | start_scheduler | Планировщик запущен с задачами: напоминания об уроках, балансе и дедлайнах ДЗ
+2025-08-22 21:23:39 | RepitBot.HealthMonitor | INFO     | health_monitor.py:56 | add_check | Добавлена проверка здоровья: database_connection (интервал: 60с)
+2025-08-22 21:23:39 | RepitBot.HealthMonitor | INFO     | health_monitor.py:56 | add_check | Добавлена проверка здоровья: disk_space (интервал: 300с)
+2025-08-22 21:23:39 | RepitBot.HealthMonitor | INFO     | health_monitor.py:56 | add_check | Добавлена проверка здоровья: memory_usage (интервал: 120с)
+2025-08-22 21:23:39 | RepitBot.HealthMonitor | INFO     | health_monitor.py:266 | setup_default_checks | Стандартные проверки здоровья настроены
+2025-08-22 21:23:39 | RepitBot.HealthMonitor | INFO     | health_monitor.py:56 | add_check | Добавлена проверка здоровья: bot_connection (интервал: 120с)
+2025-08-22 21:23:39 | RepitBot.HealthMonitor | INFO     | health_monitor.py:99 | start_monitoring | Мониторинг здоровья запущен
+2025-08-22 21:23:39 | RepitBot | INFO     | bot.py:151 | start_health_monitoring | Система мониторинга здоровья запущена
+2025-08-22 21:23:45 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_view_student_19
+2025-08-22 21:23:51 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_lessons_list_19
+2025-08-22 21:23:53 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_lesson_details_77
+2025-08-22 21:24:00 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_edit_mastery_77
+2025-08-22 21:24:07 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_view_student_6
+2025-08-22 21:24:10 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_lessons_list_6
+2025-08-22 21:24:12 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_lesson_details_5
+2025-08-22 21:24:31 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_lessons_list_6
+2025-08-22 21:27:10 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-22 21:27:10 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-22 21:27:10 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-22 21:27:22 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-22 21:27:22 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-22 21:27:22 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-22 21:27:22 | RepitBot | INFO     | bot.py:175 | main | Database tables created/checked.
+2025-08-22 21:28:27 | RepitBot | INFO     | bot.py:437 | main | Завершение работы бота
+2025-08-22 21:28:31 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-22 21:28:31 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-22 21:28:31 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-22 21:28:31 | RepitBot | INFO     | bot.py:175 | main | Database tables created/checked.
+2025-08-22 21:28:32 | RepitBot | INFO     | bot.py:422 | main | Запускаем бота...
+2025-08-22 21:28:34 | RepitBot | INFO     | bot.py:158 | initialize_systems | Бот инициализирован
+2025-08-22 21:28:34 | RepitBot | INFO     | bot.py:162 | initialize_systems | Подключение к Telegram API установлено. Бот: @mathtestmathbot
+2025-08-22 21:28:35 | RepitBot | INFO     | bot.py:131 | start_scheduler | Планировщик запущен с задачами: напоминания об уроках, балансе и дедлайнах ДЗ
+2025-08-22 21:28:35 | RepitBot.HealthMonitor | INFO     | health_monitor.py:56 | add_check | Добавлена проверка здоровья: database_connection (интервал: 60с)
+2025-08-22 21:28:35 | RepitBot.HealthMonitor | INFO     | health_monitor.py:56 | add_check | Добавлена проверка здоровья: disk_space (интервал: 300с)
+2025-08-22 21:28:35 | RepitBot.HealthMonitor | INFO     | health_monitor.py:56 | add_check | Добавлена проверка здоровья: memory_usage (интервал: 120с)
+2025-08-22 21:28:35 | RepitBot.HealthMonitor | INFO     | health_monitor.py:266 | setup_default_checks | Стандартные проверки здоровья настроены
+2025-08-22 21:28:35 | RepitBot.HealthMonitor | INFO     | health_monitor.py:56 | add_check | Добавлена проверка здоровья: bot_connection (интервал: 120с)
+2025-08-22 21:28:35 | RepitBot.HealthMonitor | INFO     | health_monitor.py:99 | start_monitoring | Мониторинг здоровья запущен
+2025-08-22 21:28:35 | RepitBot | INFO     | bot.py:151 | start_health_monitoring | Система мониторинга здоровья запущена
+2025-08-22 21:29:06 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_lesson_details_12
+2025-08-22 21:29:21 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_set_mastery_12_mastered
+2025-08-22 21:30:27 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-22 21:30:27 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-22 21:30:27 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-22 21:30:37 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-22 21:30:37 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-22 21:30:37 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-22 21:30:37 | RepitBot | INFO     | bot.py:175 | main | Database tables created/checked.
+2025-08-22 21:31:11 | RepitBot | INFO     | bot.py:438 | main | Завершение работы бота
+2025-08-22 21:31:15 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-22 21:31:15 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-22 21:31:15 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-22 21:31:15 | RepitBot | INFO     | bot.py:175 | main | Database tables created/checked.
+2025-08-22 21:31:17 | RepitBot | INFO     | bot.py:422 | main | Запускаем бота...
+2025-08-22 21:31:17 | RepitBot | INFO     | bot.py:158 | initialize_systems | Бот инициализирован
+2025-08-22 21:31:18 | RepitBot | INFO     | bot.py:162 | initialize_systems | Подключение к Telegram API установлено. Бот: @mathtestmathbot
+2025-08-22 21:31:18 | RepitBot | INFO     | bot.py:131 | start_scheduler | Планировщик запущен с задачами: напоминания об уроках, балансе и дедлайнах ДЗ
+2025-08-22 21:31:18 | RepitBot.HealthMonitor | INFO     | health_monitor.py:56 | add_check | Добавлена проверка здоровья: database_connection (интервал: 60с)
+2025-08-22 21:31:18 | RepitBot.HealthMonitor | INFO     | health_monitor.py:56 | add_check | Добавлена проверка здоровья: disk_space (интервал: 300с)
+2025-08-22 21:31:18 | RepitBot.HealthMonitor | INFO     | health_monitor.py:56 | add_check | Добавлена проверка здоровья: memory_usage (интервал: 120с)
+2025-08-22 21:31:18 | RepitBot.HealthMonitor | INFO     | health_monitor.py:266 | setup_default_checks | Стандартные проверки здоровья настроены
+2025-08-22 21:31:18 | RepitBot.HealthMonitor | INFO     | health_monitor.py:56 | add_check | Добавлена проверка здоровья: bot_connection (интервал: 120с)
+2025-08-22 21:31:18 | RepitBot.HealthMonitor | INFO     | health_monitor.py:99 | start_monitoring | Мониторинг здоровья запущен
+2025-08-22 21:31:18 | RepitBot | INFO     | bot.py:151 | start_health_monitoring | Система мониторинга здоровья запущена
+2025-08-22 21:31:37 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_view_student_19
+2025-08-22 21:31:41 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_lessons_list_19
+2025-08-22 21:31:43 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_lesson_details_77
+2025-08-22 21:32:08 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_set_attendance_77_excused_absence
+2025-08-22 21:32:29 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_view_student_19
+2025-08-22 21:32:36 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_lessons_list_19
+2025-08-22 21:32:38 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_lesson_details_77
+2025-08-22 21:32:50 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_set_attendance_77_attended
+2025-08-22 21:32:58 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_lessons_list_19
+2025-08-22 21:33:02 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_lesson_details_77
+2025-08-22 21:33:22 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_lessons_list_19
+2025-08-22 21:33:24 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_lesson_details_77
+2025-08-22 21:34:57 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-22 21:34:57 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-22 21:34:57 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-22 21:35:07 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-22 21:35:07 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-22 21:35:07 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-22 21:35:07 | RepitBot | INFO     | bot.py:175 | main | Database tables created/checked.
+2025-08-22 21:35:37 | RepitBot | INFO     | bot.py:438 | main | Завершение работы бота
+2025-08-22 21:35:41 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-22 21:35:41 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-22 21:35:41 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-22 21:35:41 | RepitBot | INFO     | bot.py:175 | main | Database tables created/checked.
+2025-08-22 21:35:42 | RepitBot | INFO     | bot.py:423 | main | Запускаем бота...
+2025-08-22 21:35:43 | RepitBot | INFO     | bot.py:158 | initialize_systems | Бот инициализирован
+2025-08-22 21:35:43 | RepitBot | INFO     | bot.py:162 | initialize_systems | Подключение к Telegram API установлено. Бот: @mathtestmathbot
+2025-08-22 21:35:43 | RepitBot | INFO     | bot.py:131 | start_scheduler | Планировщик запущен с задачами: напоминания об уроках, балансе и дедлайнах ДЗ
+2025-08-22 21:35:43 | RepitBot.HealthMonitor | INFO     | health_monitor.py:56 | add_check | Добавлена проверка здоровья: database_connection (интервал: 60с)
+2025-08-22 21:35:43 | RepitBot.HealthMonitor | INFO     | health_monitor.py:56 | add_check | Добавлена проверка здоровья: disk_space (интервал: 300с)
+2025-08-22 21:35:43 | RepitBot.HealthMonitor | INFO     | health_monitor.py:56 | add_check | Добавлена проверка здоровья: memory_usage (интервал: 120с)
+2025-08-22 21:35:43 | RepitBot.HealthMonitor | INFO     | health_monitor.py:266 | setup_default_checks | Стандартные проверки здоровья настроены
+2025-08-22 21:35:43 | RepitBot.HealthMonitor | INFO     | health_monitor.py:56 | add_check | Добавлена проверка здоровья: bot_connection (интервал: 120с)
+2025-08-22 21:35:43 | RepitBot.HealthMonitor | INFO     | health_monitor.py:99 | start_monitoring | Мониторинг здоровья запущен
+2025-08-22 21:35:43 | RepitBot | INFO     | bot.py:151 | start_health_monitoring | Система мониторинга здоровья запущена
+2025-08-22 21:37:02 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': 1229333908, 'message': 'Callback: tutor_set_attendance_77_excused_absence', 'error': 'Message is not modified: specified new message content and reply markup are exactly the same as a current content and reply markup of the message'}
+2025-08-22 21:37:02 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - error_encountered | Message is not modified: specified new message content and reply markup are exactly the same as a cu
+2025-08-22 21:38:33 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-22 21:38:33 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-22 21:38:33 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-22 21:38:43 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-22 21:38:43 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-22 21:38:43 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-22 21:38:43 | RepitBot | INFO     | bot.py:175 | main | Database tables created/checked.
+2025-08-22 21:39:38 | RepitBot | INFO     | bot.py:439 | main | Завершение работы бота
+2025-08-22 21:39:42 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-22 21:39:42 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-22 21:39:42 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-22 21:39:42 | RepitBot | INFO     | bot.py:175 | main | Database tables created/checked.
+2025-08-22 21:39:43 | RepitBot | INFO     | bot.py:426 | main | Запускаем бота...
+2025-08-22 21:39:44 | RepitBot | INFO     | bot.py:158 | initialize_systems | Бот инициализирован
+2025-08-22 21:39:44 | RepitBot | INFO     | bot.py:162 | initialize_systems | Подключение к Telegram API установлено. Бот: @mathtestmathbot
+2025-08-22 21:39:44 | RepitBot | INFO     | bot.py:131 | start_scheduler | Планировщик запущен с задачами: напоминания об уроках, балансе и дедлайнах ДЗ
+2025-08-22 21:39:44 | RepitBot.HealthMonitor | INFO     | health_monitor.py:56 | add_check | Добавлена проверка здоровья: database_connection (интервал: 60с)
+2025-08-22 21:39:44 | RepitBot.HealthMonitor | INFO     | health_monitor.py:56 | add_check | Добавлена проверка здоровья: disk_space (интервал: 300с)
+2025-08-22 21:39:44 | RepitBot.HealthMonitor | INFO     | health_monitor.py:56 | add_check | Добавлена проверка здоровья: memory_usage (интервал: 120с)
+2025-08-22 21:39:44 | RepitBot.HealthMonitor | INFO     | health_monitor.py:266 | setup_default_checks | Стандартные проверки здоровья настроены
+2025-08-22 21:39:44 | RepitBot.HealthMonitor | INFO     | health_monitor.py:56 | add_check | Добавлена проверка здоровья: bot_connection (интервал: 120с)
+2025-08-22 21:39:44 | RepitBot.HealthMonitor | INFO     | health_monitor.py:99 | start_monitoring | Мониторинг здоровья запущен
+2025-08-22 21:39:44 | RepitBot | INFO     | bot.py:151 | start_health_monitoring | Система мониторинга здоровья запущена
+2025-08-22 21:39:51 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_view_student_19
+2025-08-22 21:39:59 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_view_student_19
+2025-08-22 21:40:22 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_view_student_19
+2025-08-22 21:40:34 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_lessons_list_19
+2025-08-22 21:40:36 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_lesson_details_79
+2025-08-22 21:40:47 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': 1229333908, 'message': 'Callback: tutor_set_attendance_79_excused_absence', 'error': 'Message is not modified: specified new message content and reply markup are exactly the same as a current content and reply markup of the message'}
+2025-08-22 21:40:47 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - error_encountered | Message is not modified: specified new message content and reply markup are exactly the same as a cu
+2025-08-22 21:40:55 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_view_student_19
+2025-08-22 21:40:57 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_lessons_list_19
+2025-08-22 21:40:59 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_lesson_details_77
+2025-08-22 21:41:13 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_view_student_14
+2025-08-22 21:41:18 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_lessons_list_14
+2025-08-22 21:41:20 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_view_student_14
+2025-08-22 21:41:24 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_view_student_6
+2025-08-22 21:41:28 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_lessons_list_6
+2025-08-22 21:41:30 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_lesson_details_6
+2025-08-22 21:44:42 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-22 21:44:42 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-22 21:44:42 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-22 21:44:53 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-22 21:44:53 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-22 21:44:53 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-22 21:44:53 | RepitBot | INFO     | bot.py:175 | main | Database tables created/checked.
+2025-08-22 21:45:32 | RepitBot | INFO     | bot.py:442 | main | Завершение работы бота
+2025-08-22 21:45:36 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-22 21:45:36 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-22 21:45:36 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-22 21:45:36 | RepitBot | INFO     | bot.py:175 | main | Database tables created/checked.
+2025-08-22 21:45:37 | RepitBot | INFO     | bot.py:426 | main | Запускаем бота...
+2025-08-22 21:45:38 | RepitBot | INFO     | bot.py:158 | initialize_systems | Бот инициализирован
+2025-08-22 21:45:38 | RepitBot | INFO     | bot.py:162 | initialize_systems | Подключение к Telegram API установлено. Бот: @mathtestmathbot
+2025-08-22 21:45:38 | RepitBot | INFO     | bot.py:131 | start_scheduler | Планировщик запущен с задачами: напоминания об уроках, балансе и дедлайнах ДЗ
+2025-08-22 21:45:38 | RepitBot.HealthMonitor | INFO     | health_monitor.py:56 | add_check | Добавлена проверка здоровья: database_connection (интервал: 60с)
+2025-08-22 21:45:38 | RepitBot.HealthMonitor | INFO     | health_monitor.py:56 | add_check | Добавлена проверка здоровья: disk_space (интервал: 300с)
+2025-08-22 21:45:38 | RepitBot.HealthMonitor | INFO     | health_monitor.py:56 | add_check | Добавлена проверка здоровья: memory_usage (интервал: 120с)
+2025-08-22 21:45:38 | RepitBot.HealthMonitor | INFO     | health_monitor.py:266 | setup_default_checks | Стандартные проверки здоровья настроены
+2025-08-22 21:45:38 | RepitBot.HealthMonitor | INFO     | health_monitor.py:56 | add_check | Добавлена проверка здоровья: bot_connection (интервал: 120с)
+2025-08-22 21:45:38 | RepitBot.HealthMonitor | INFO     | health_monitor.py:99 | start_monitoring | Мониторинг здоровья запущен
+2025-08-22 21:45:38 | RepitBot | INFO     | bot.py:151 | start_health_monitoring | Система мониторинга здоровья запущена
+2025-08-22 21:49:47 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_set_attendance_6_attended
+2025-08-22 21:49:50 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_lessons_list_6
+2025-08-22 21:49:53 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_view_student_6
+2025-08-22 21:50:09 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.RemoteProtocolError: Server disconnected without sending a response.'}
+2025-08-22 21:50:10 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: '}
+2025-08-22 21:50:12 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: '}
+2025-08-22 21:50:15 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: '}
+2025-08-22 21:50:18 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: '}
+2025-08-22 21:50:35 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: '}
+2025-08-22 21:50:39 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: '}
+2025-08-22 21:56:36 | RepitBot | INFO     | bot.py:442 | main | Завершение работы бота
+2025-08-22 21:56:40 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-22 21:56:40 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-22 21:56:40 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-22 21:56:40 | RepitBot | INFO     | bot.py:175 | main | Database tables created/checked.
+2025-08-22 21:56:41 | RepitBot | INFO     | bot.py:426 | main | Запускаем бота...
+2025-08-22 21:56:42 | RepitBot | INFO     | bot.py:158 | initialize_systems | Бот инициализирован
+2025-08-22 21:56:42 | RepitBot | INFO     | bot.py:162 | initialize_systems | Подключение к Telegram API установлено. Бот: @mathtestmathbot
+2025-08-22 21:56:42 | RepitBot | INFO     | bot.py:131 | start_scheduler | Планировщик запущен с задачами: напоминания об уроках, балансе и дедлайнах ДЗ
+2025-08-22 21:56:42 | RepitBot.HealthMonitor | INFO     | health_monitor.py:56 | add_check | Добавлена проверка здоровья: database_connection (интервал: 60с)
+2025-08-22 21:56:42 | RepitBot.HealthMonitor | INFO     | health_monitor.py:56 | add_check | Добавлена проверка здоровья: disk_space (интервал: 300с)
+2025-08-22 21:56:42 | RepitBot.HealthMonitor | INFO     | health_monitor.py:56 | add_check | Добавлена проверка здоровья: memory_usage (интервал: 120с)
+2025-08-22 21:56:42 | RepitBot.HealthMonitor | INFO     | health_monitor.py:266 | setup_default_checks | Стандартные проверки здоровья настроены
+2025-08-22 21:56:42 | RepitBot.HealthMonitor | INFO     | health_monitor.py:56 | add_check | Добавлена проверка здоровья: bot_connection (интервал: 120с)
+2025-08-22 21:56:42 | RepitBot.HealthMonitor | INFO     | health_monitor.py:99 | start_monitoring | Мониторинг здоровья запущен
+2025-08-22 21:56:42 | RepitBot | INFO     | bot.py:151 | start_health_monitoring | Система мониторинга здоровья запущена
+2025-08-22 22:15:45 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-22 22:15:45 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-22 22:15:45 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-22 22:15:58 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-22 22:15:58 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-22 22:15:58 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-22 22:15:58 | RepitBot | INFO     | bot.py:175 | main | Database tables created/checked.
+2025-08-22 22:16:31 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-22 22:16:31 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-22 22:16:31 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-22 22:16:31 | RepitBot | INFO     | bot.py:176 | main | Database tables created/checked.
+2025-08-22 22:16:32 | RepitBot | INFO     | bot.py:430 | main | Запускаем бота...
+2025-08-22 22:16:33 | RepitBot | INFO     | bot.py:159 | initialize_systems | Бот инициализирован
+2025-08-22 22:18:00 | RepitBot | INFO     | bot.py:442 | main | Завершение работы бота
+2025-08-22 22:18:04 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-22 22:18:04 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-22 22:18:04 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-22 22:18:04 | RepitBot | INFO     | bot.py:176 | main | Database tables created/checked.
+2025-08-22 22:18:05 | RepitBot | INFO     | bot.py:430 | main | Запускаем бота...
+2025-08-22 22:18:05 | RepitBot | INFO     | bot.py:159 | initialize_systems | Бот инициализирован
+2025-08-22 22:18:06 | RepitBot | INFO     | bot.py:163 | initialize_systems | Подключение к Telegram API установлено. Бот: @mathtestmathbot
+2025-08-22 22:18:06 | RepitBot | INFO     | bot.py:132 | start_scheduler | Планировщик запущен с задачами: напоминания об уроках, балансе и дедлайнах ДЗ
+2025-08-22 22:18:06 | RepitBot.HealthMonitor | INFO     | health_monitor.py:56 | add_check | Добавлена проверка здоровья: database_connection (интервал: 60с)
+2025-08-22 22:18:06 | RepitBot.HealthMonitor | INFO     | health_monitor.py:56 | add_check | Добавлена проверка здоровья: disk_space (интервал: 300с)
+2025-08-22 22:18:06 | RepitBot.HealthMonitor | INFO     | health_monitor.py:56 | add_check | Добавлена проверка здоровья: memory_usage (интервал: 120с)
+2025-08-22 22:18:06 | RepitBot.HealthMonitor | INFO     | health_monitor.py:266 | setup_default_checks | Стандартные проверки здоровья настроены
+2025-08-22 22:18:06 | RepitBot.HealthMonitor | INFO     | health_monitor.py:56 | add_check | Добавлена проверка здоровья: bot_connection (интервал: 120с)
+2025-08-22 22:18:06 | RepitBot.HealthMonitor | INFO     | health_monitor.py:99 | start_monitoring | Мониторинг здоровья запущен
+2025-08-22 22:18:06 | RepitBot | INFO     | bot.py:152 | start_health_monitoring | Система мониторинга здоровья запущена
+2025-08-22 22:20:16 | RepitBot.HealthMonitor | ERROR    | health_monitor.py:83 | run_check | Health check bot_connection timeout after 10s
+2025-08-22 22:20:16 | RepitBot.HealthMonitor | CRITICAL | health_monitor.py:139 | _handle_critical_failure | 🚨 CRITICAL: Health check bot_connection failed 1 times
+2025-08-22 22:20:17 | RepitBot.HealthMonitor | INFO     | health_monitor.py:171 | _recover_bot_connection | Bot connection recovered: mathtestmathbot
+2025-08-22 22:21:30 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_view_student_19

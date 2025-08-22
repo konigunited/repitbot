@@ -2,8 +2,14 @@
   "permissions": {
     "allow": [
       "Bash(python:*)",
-      "Bash(rm:*)"
+      "Bash(rm:*)",
+      "Bash(cd:*)",
+      "Bash(git add:*)",
+      "Bash(grep:*)"
     ],
-    "deny": []
+    "deny": [],
+    "additionalDirectories": [
+      "C:\\c\\Users\\F12$\\Desktop"
+    ]
   }
 }
