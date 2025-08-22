@@ -23,13 +23,17 @@ from src.handlers.tutor import (
     tutor_add_payment_start, tutor_get_payment_amount,
     tutor_add_lesson_start, tutor_get_lesson_topic, tutor_get_lesson_date, tutor_get_lesson_skills,
     tutor_edit_name_start, tutor_get_new_name, tutor_add_parent_start, tutor_get_parent_name,
+    tutor_select_parent_type, tutor_select_existing_parent,
+    tutor_add_second_parent_start, tutor_get_second_parent_name,
+    tutor_select_second_parent_type, tutor_select_existing_second_parent,
     tutor_delete_student_start, tutor_delete_student_confirm,
     tutor_mark_lesson_attended, tutor_set_lesson_attendance, tutor_check_homework,
     tutor_set_homework_status, tutor_edit_lesson_start, tutor_edit_lesson_get_status, tutor_edit_lesson_get_comment,
+    tutor_edit_attendance_status, tutor_edit_mastery_status, tutor_set_attendance_in_conversation,
     tutor_add_hw_start, tutor_get_hw_description, tutor_get_hw_deadline, tutor_get_hw_link, tutor_get_hw_photos,
     show_student_list, show_tutor_stats, show_tutor_dashboard,
     report_start, report_select_student, report_select_month_and_generate, report_cancel,
-    tutor_manage_library, tutor_add_material_start, tutor_get_material_title, 
+    tutor_manage_library, tutor_add_material_start, tutor_add_material_with_grade, tutor_get_material_grade, tutor_get_material_title, 
     tutor_get_material_link, tutor_get_material_description,
     broadcast_start, broadcast_get_message, broadcast_cancel, broadcast_send
 )
@@ -50,8 +54,9 @@ from src.handlers.parent import show_parent_dashboard
  EDIT_STUDENT_NAME, EDIT_LESSON_STATUS, EDIT_LESSON_COMMENT,
  ADD_HW_DESC, ADD_HW_DEADLINE, ADD_HW_LINK, ADD_HW_PHOTOS,
  SELECT_STUDENT_FOR_REPORT, SELECT_MONTH_FOR_REPORT,
- ADD_MATERIAL_TITLE, ADD_MATERIAL_LINK, ADD_MATERIAL_DESC,
- BROADCAST_MESSAGE, BROADCAST_CONFIRM) = range(22)
+ ADD_MATERIAL_GRADE, ADD_MATERIAL_TITLE, ADD_MATERIAL_LINK, ADD_MATERIAL_DESC,
+ BROADCAST_MESSAGE, BROADCAST_CONFIRM, SELECT_PARENT_TYPE, SELECT_EXISTING_PARENT,
+ SELECT_SECOND_PARENT_TYPE, SELECT_EXISTING_SECOND_PARENT, ADD_SECOND_PARENT_NAME) = range(28)
 from src.database import engine, Base
 from src.scheduler import send_reminders, send_payment_reminders, send_homework_deadline_reminders
 from src.admin_handlers import add_tutor, add_parent
@@ -222,7 +227,23 @@ def main() -> None:
     )
     add_parent_conv = ConversationHandler(
         entry_points=[CallbackQueryHandler(tutor_add_parent_start, pattern="^tutor_add_parent_")],
-        states={ADD_PARENT_NAME: [MessageHandler(filters.TEXT & ~filters.COMMAND, tutor_get_parent_name)]},
+        states={
+            SELECT_PARENT_TYPE: [CallbackQueryHandler(tutor_select_parent_type, pattern="^(parent_create_new|parent_select_existing|parent_back_to_choice|main_menu)$")],
+            SELECT_EXISTING_PARENT: [CallbackQueryHandler(tutor_select_existing_parent, pattern="^(parent_select_|parent_back_to_choice).*")],
+            ADD_PARENT_NAME: [MessageHandler(filters.TEXT & ~filters.COMMAND, tutor_get_parent_name)]
+        },
+        fallbacks=[CommandHandler("cancel", cancel_conversation)],
+        per_user=True,
+        per_chat=True,
+        per_message=False
+    )
+    add_second_parent_conv = ConversationHandler(
+        entry_points=[CallbackQueryHandler(tutor_add_second_parent_start, pattern="^tutor_add_second_parent_")],
+        states={
+            SELECT_SECOND_PARENT_TYPE: [CallbackQueryHandler(tutor_select_second_parent_type, pattern="^(second_parent_create_new|second_parent_select_existing|second_parent_back_to_choice|main_menu)$")],
+            SELECT_EXISTING_SECOND_PARENT: [CallbackQueryHandler(tutor_select_existing_second_parent, pattern="^(second_parent_select_|second_parent_back_to_choice).*")],
+            ADD_SECOND_PARENT_NAME: [MessageHandler(filters.TEXT & ~filters.COMMAND, tutor_get_second_parent_name)]
+        },
         fallbacks=[CommandHandler("cancel", cancel_conversation)],
         per_user=True,
         per_chat=True,
@@ -272,11 +293,15 @@ def main() -> None:
     )
 
     add_material_conv = ConversationHandler(
-        entry_points=[CallbackQueryHandler(tutor_add_material_start, pattern="^tutor_add_material$")],
+        entry_points=[
+            CallbackQueryHandler(tutor_add_material_start, pattern="^tutor_add_material$"),
+            CallbackQueryHandler(tutor_add_material_with_grade, pattern="^tutor_add_material_grade_")
+        ],
         states={
+            ADD_MATERIAL_GRADE: [CallbackQueryHandler(tutor_get_material_grade, pattern="^select_grade_")],
             ADD_MATERIAL_TITLE: [MessageHandler(filters.TEXT & ~filters.COMMAND, tutor_get_material_title)],
-            ADD_MATERIAL_LINK: [MessageHandler(filters.TEXT & ~filters.COMMAND, tutor_get_material_link)],
-            ADD_MATERIAL_DESC: [MessageHandler(filters.TEXT & ~filters.COMMAND, tutor_get_material_description)],
+            ADD_MATERIAL_LINK: [MessageHandler(filters.TEXT, tutor_get_material_link)],
+            ADD_MATERIAL_DESC: [MessageHandler(filters.TEXT, tutor_get_material_description)],
         },
         fallbacks=[CommandHandler("cancel", cancel_conversation)],
         per_user=True,
@@ -317,8 +342,16 @@ def main() -> None:
     edit_lesson_conv = ConversationHandler(
         entry_points=[CallbackQueryHandler(tutor_edit_lesson_start, pattern="^tutor_edit_lesson_")],
         states={
-            EDIT_LESSON_STATUS: [CallbackQueryHandler(tutor_edit_lesson_get_status, pattern="^tutor_set_mastery_")],
-            EDIT_LESSON_COMMENT: [MessageHandler(filters.TEXT & ~filters.COMMAND, tutor_edit_lesson_get_comment)],
+            EDIT_LESSON_STATUS: [
+                CallbackQueryHandler(tutor_edit_lesson_get_status, pattern="^tutor_set_mastery_"),
+                CallbackQueryHandler(tutor_edit_attendance_status, pattern="^tutor_edit_attendance_"),
+                CallbackQueryHandler(tutor_edit_mastery_status, pattern="^tutor_edit_mastery_"),
+                CallbackQueryHandler(tutor_set_attendance_in_conversation, pattern="^tutor_set_attendance_")
+            ],
+            EDIT_LESSON_COMMENT: [
+                MessageHandler(filters.TEXT, tutor_edit_lesson_get_comment),
+                CommandHandler("skip", tutor_edit_lesson_get_comment)
+            ],
         },
         fallbacks=[CommandHandler("cancel", cancel_conversation)],
         # Позволяет ConversationHandler работать в разных чатах одновременно
@@ -328,22 +361,21 @@ def main() -> None:
     )
 
     # --- Регистрация обработчиков ---
-    # ВАЖНО: CallbackQueryHandler должен быть зарегистрирован ПЕРЕД ConversationHandlers
+    # ВАЖНО: ConversationHandlers должны быть зарегистрированы ПЕРЕД общими CallbackQueryHandlers
     application.add_handler(CommandHandler("start", start))
     application.add_handler(CallbackQueryHandler(handle_calendar_selection, pattern="^calendar"))
-    # button_handler НЕ должен обрабатывать callback_data для ConversationHandlers
-    application.add_handler(CallbackQueryHandler(button_handler, pattern="^(?!(tutor_add_payment_|tutor_add_lesson_|tutor_add_parent_|tutor_edit_name_|tutor_add_hw_|student_submit_hw_|report_select_|broadcast_|add_student|tutor_add_material)).*"))
     
     # --- Admin Commands ---
     application.add_handler(CommandHandler("add_tutor", add_tutor))
     application.add_handler(CommandHandler("add_parent", add_parent))
     
-    # ConversationHandlers регистрируем ПОСЛЕ основных callback handlers
+    # ConversationHandlers регистрируем ПЕРЕД button_handler, чтобы они перехватывали свои callback'ы первыми
     application.add_handler(add_student_conv)
     application.add_handler(add_payment_conv)
     application.add_handler(add_lesson_conv)
     application.add_handler(edit_student_name_conv)
     application.add_handler(add_parent_conv)
+    application.add_handler(add_second_parent_conv)
     application.add_handler(edit_lesson_conv)
     application.add_handler(add_hw_conv)
     application.add_handler(chat_conv)
@@ -351,6 +383,9 @@ def main() -> None:
     application.add_handler(add_material_conv)
     application.add_handler(submit_hw_conv)
     application.add_handler(broadcast_conv)
+    
+    # button_handler обрабатывает все остальные callback'ы ПОСЛЕ ConversationHandlers
+    application.add_handler(CallbackQueryHandler(button_handler, pattern="^(?!(tutor_add_payment_|tutor_add_lesson_|tutor_add_parent_|tutor_add_second_parent_|tutor_edit_name_|tutor_edit_lesson_|tutor_edit_attendance_|tutor_edit_mastery_|tutor_set_mastery_|tutor_add_hw_|student_submit_hw_|report_select_|broadcast_|add_student|tutor_add_material|select_grade_|parent_|second_parent_)).*"))
 
     # Импортируем микросервисы
     from src.handlers.tutor import show_tutor_dashboard, show_student_list

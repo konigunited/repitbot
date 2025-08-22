@@ -60,8 +60,11 @@ class User(Base):
 
     # --- Связи Родитель <-> Ученик ---
     parent_id = Column(Integer, ForeignKey('users.id'))
+    second_parent_id = Column(Integer, ForeignKey('users.id'))
+    
     parent = relationship("User", remote_side=[id], foreign_keys=[parent_id], back_populates="children")
-    children = relationship("User", back_populates="parent")
+    second_parent = relationship("User", remote_side=[id], foreign_keys=[second_parent_id])
+    children = relationship("User", back_populates="parent", foreign_keys=[parent_id])
 
 
 class Lesson(Base):
@@ -119,8 +122,9 @@ class Material(Base):
     __tablename__ = 'materials'
     id = Column(Integer, primary_key=True, index=True)
     title = Column(String, nullable=False)
-    link = Column(String, nullable=False)
+    link = Column(String, nullable=True)
     description = Column(Text, nullable=True)
+    grade = Column(Integer, nullable=False, default=5)  # Класс 2-9
     created_at = Column(DateTime(timezone=True), server_default=func.now())
 
 # Модель для достижений студентов
@@ -211,7 +215,14 @@ def get_payments_for_student_by_month(student_id: int, year: int, month: int):
 def get_all_materials():
     """Возвращает все материалы из библиотеки."""
     db = SessionLocal()
-    materials = db.query(Material).order_by(Material.created_at.desc()).all()
+    materials = db.query(Material).order_by(Material.grade, Material.created_at.desc()).all()
+    db.close()
+    return materials
+
+def get_materials_by_grade(grade: int):
+    """Возвращает материалы для определённого класса."""
+    db = SessionLocal()
+    materials = db.query(Material).filter(Material.grade == grade).order_by(Material.created_at.desc()).all()
     db.close()
     return materials
 
@@ -230,6 +241,24 @@ def delete_material_by_id(material_id: int):
         db.delete(material)
         db.commit()
     db.close()
+
+def get_all_parents():
+    """Возвращает всех родителей с их детьми."""
+    db = SessionLocal()
+    # Используем joinedload для загрузки детей сразу
+    parents = db.query(User).options(joinedload(User.children)).filter(User.role == UserRole.PARENT).all()
+    # Принудительно загружаем все связанные данные пока сессия открыта
+    for parent in parents:
+        _ = parent.children  # Триггерим загрузку
+    db.close()
+    return parents
+
+def get_user_by_id(user_id: int):
+    """Возвращает пользователя по его ID."""
+    db = SessionLocal()
+    user = db.query(User).filter(User.id == user_id).first()
+    db.close()
+    return user
 
 def get_student_balance(student_id: int):
     """Рассчитывает баланс занятий для ученика."""

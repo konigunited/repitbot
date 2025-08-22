@@ -116,7 +116,7 @@ def tutor_student_list_keyboard(students):
     keyboard.append([InlineKeyboardButton("⬅️ Назад в главное меню", callback_data="main_menu")])
     return InlineKeyboardMarkup(keyboard)
 
-def tutor_student_profile_keyboard(student_id):
+def tutor_student_profile_keyboard(student_id, has_parent=False, has_second_parent=False):
     keyboard = [
         [InlineKeyboardButton("📚 Уроки ученика", callback_data=f"tutor_lessons_list_{student_id}")],
         [InlineKeyboardButton("📈 Аналитика прогресса", callback_data=f"tutor_analytics_{student_id}")],
@@ -124,15 +124,24 @@ def tutor_student_profile_keyboard(student_id):
             InlineKeyboardButton("➕ Добавить урок", callback_data=f"tutor_add_lesson_{student_id}"),
             InlineKeyboardButton("💰 Добавить оплату", callback_data=f"tutor_add_payment_{student_id}")
         ],
-        [
-            InlineKeyboardButton("✏️ Редактировать ФИО", callback_data=f"tutor_edit_name_{student_id}"),
-            InlineKeyboardButton("👨‍👩‍👧‍👦 Добавить родителя", callback_data=f"tutor_add_parent_{student_id}")
-        ],
-        [
-            InlineKeyboardButton("❌ Удалить ученика", callback_data=f"tutor_delete_student_{student_id}"),
-            InlineKeyboardButton("⬅️ К списку учеников", callback_data="tutor_student_list")
-        ]
+        [InlineKeyboardButton("✏️ Редактировать ФИО", callback_data=f"tutor_edit_name_{student_id}")],
     ]
+    
+    # Динамически добавляем кнопки родителей
+    parent_buttons = []
+    if not has_parent:
+        parent_buttons.append(InlineKeyboardButton("👨‍👩‍👧‍👦 Добавить родителя", callback_data=f"tutor_add_parent_{student_id}"))
+    elif not has_second_parent:
+        parent_buttons.append(InlineKeyboardButton("👨‍👩‍👧‍👦 Добавить 2-го родителя", callback_data=f"tutor_add_second_parent_{student_id}"))
+    
+    if parent_buttons:
+        keyboard.append(parent_buttons)
+    
+    keyboard.append([
+        InlineKeyboardButton("❌ Удалить ученика", callback_data=f"tutor_delete_student_{student_id}"),
+        InlineKeyboardButton("⬅️ К списку учеников", callback_data="tutor_student_list")
+    ])
+    
     return InlineKeyboardMarkup(keyboard)
 
 def tutor_lesson_list_keyboard(lessons, student_id):
@@ -226,11 +235,43 @@ def tutor_delete_confirm_keyboard(student_id):
     return InlineKeyboardMarkup(keyboard)
 
 def tutor_edit_lesson_status_keyboard(lesson_id):
+    """Клавиатура для выбора типа статуса (посещаемость или усвоение)."""
+    keyboard = [
+        [InlineKeyboardButton("👥 Изменить посещаемость", callback_data=f"tutor_edit_attendance_{lesson_id}")],
+        [InlineKeyboardButton("📚 Изменить усвоение темы", callback_data=f"tutor_edit_mastery_{lesson_id}")],
+        [InlineKeyboardButton("⬅️ Назад к уроку", callback_data=f"tutor_lesson_details_{lesson_id}")]
+    ]
+    return InlineKeyboardMarkup(keyboard)
+
+def tutor_edit_attendance_keyboard(lesson_id, current_status):
+    """Клавиатура для изменения статуса посещаемости урока."""
+    keyboard = []
+    
+    # Все возможные статусы посещаемости
+    status_options = [
+        (AttendanceStatus.ATTENDED, "✅ Проведен"),
+        (AttendanceStatus.EXCUSED_ABSENCE, "🏥 Отмена (уваж. причина)"),
+        (AttendanceStatus.UNEXCUSED_ABSENCE, "❌ Отмена (неуваж. причина)"),
+        (AttendanceStatus.RESCHEDULED, "📅 Перенесен")
+    ]
+    
+    for status, text in status_options:
+        if status != current_status:
+            keyboard.append([InlineKeyboardButton(text, callback_data=f"tutor_set_attendance_{lesson_id}_{status.value}")])
+        else:
+            # Показываем текущий статус с галочкой, но неактивный
+            keyboard.append([InlineKeyboardButton(f"🔘 {text} (текущий)", callback_data=f"noop")])
+    
+    keyboard.append([InlineKeyboardButton("⬅️ Назад к выбору статуса", callback_data=f"tutor_edit_lesson_{lesson_id}")])
+    return InlineKeyboardMarkup(keyboard)
+
+def tutor_edit_mastery_keyboard(lesson_id):
+    """Клавиатура для изменения уровня усвоения темы."""
     keyboard = [
         [InlineKeyboardButton("⚪️ Не усвоено", callback_data=f"tutor_set_mastery_{lesson_id}_{TopicMastery.NOT_LEARNED.value}")],
         [InlineKeyboardButton("🟡 Усвоено", callback_data=f"tutor_set_mastery_{lesson_id}_{TopicMastery.LEARNED.value}")],
         [InlineKeyboardButton("🟢 Закреплено", callback_data=f"tutor_set_mastery_{lesson_id}_{TopicMastery.MASTERED.value}")],
-        [InlineKeyboardButton("⬅️ Назад к уроку", callback_data=f"tutor_lesson_details_{lesson_id}")]
+        [InlineKeyboardButton("⬅️ Назад к выбору статуса", callback_data=f"tutor_edit_lesson_{lesson_id}")]
     ]
     return InlineKeyboardMarkup(keyboard)
 
@@ -258,22 +299,71 @@ def tutor_select_month_for_report_keyboard(student_id):
     return InlineKeyboardMarkup(keyboard)
 
 # --- Клавиатуры для библиотеки ---
-def tutor_library_management_keyboard(materials):
+def library_grade_selection_keyboard(is_tutor=True):
+    """Клавиатура для выбора класса в библиотеке."""
+    keyboard = []
+    # Добавляем кнопки для классов 2-9
+    row = []
+    for grade in range(2, 10):
+        callback_prefix = "tutor_library_grade" if is_tutor else "student_library_grade"
+        row.append(InlineKeyboardButton(f"{grade} кл", callback_data=f"{callback_prefix}_{grade}"))
+        if len(row) == 4:  # 4 кнопки в ряду
+            keyboard.append(row)
+            row = []
+    if row:  # Добавляем оставшиеся кнопки
+        keyboard.append(row)
+    
+    # Кнопка "Все классы"
+    callback_prefix = "tutor_library_grade" if is_tutor else "student_library_grade"
+    keyboard.append([InlineKeyboardButton("📚 Все классы", callback_data=f"{callback_prefix}_all")])
+    
+    # Кнопка "Назад"
+    keyboard.append([InlineKeyboardButton("⬅️ Назад в главное меню", callback_data="main_menu")])
+    
+    return InlineKeyboardMarkup(keyboard)
+
+def grade_selection_keyboard_for_add_material():
+    """Клавиатура для выбора класса при добавлении материала."""
+    keyboard = []
+    # Добавляем кнопки для классов 2-9
+    row = []
+    for grade in range(2, 10):
+        row.append(InlineKeyboardButton(f"{grade} кл", callback_data=f"select_grade_{grade}"))
+        if len(row) == 4:  # 4 кнопки в ряду
+            keyboard.append(row)
+            row = []
+    if row:  # Добавляем оставшиеся кнопки
+        keyboard.append(row)
+    
+    return InlineKeyboardMarkup(keyboard)
+
+def tutor_library_management_keyboard(materials, grade=None):
     """Клавиатура для управления библиотекой репетитора (просмотр, добавление, удаление)."""
     keyboard = []
-    # Список материалов
+    # Список материалов с указанием класса
     for material in materials:
         # Ограничиваем длину текста на кнопке
-        title = (material.title[:30] + '..') if len(material.title) > 30 else material.title
-        keyboard.append([InlineKeyboardButton(f"📖 {title}", callback_data=f"tutor_view_material_{material.id}")])
+        title = (material.title[:25] + '..') if len(material.title) > 25 else material.title
+        grade_text = f"[{material.grade}кл]" if hasattr(material, 'grade') else ""
+        keyboard.append([InlineKeyboardButton(f"📖 {grade_text} {title}", callback_data=f"tutor_view_material_{material.id}")])
     
     # Кнопки управления
+    if grade and grade != "all":
+        # Если мы в определенном классе, передаем его в callback
+        add_callback = f"tutor_add_material_grade_{grade}"
+    else:
+        add_callback = "tutor_add_material"
+        
     keyboard.append([
-        InlineKeyboardButton("➕ Добавить", callback_data="tutor_add_material"),
+        InlineKeyboardButton("➕ Добавить", callback_data=add_callback),
         InlineKeyboardButton("🗑️ Удалить", callback_data="tutor_delete_material_start")
     ])
     
-    keyboard.append([InlineKeyboardButton("⬅️ Назад в главное меню", callback_data="main_menu")])
+    # Кнопки навигации
+    if grade:
+        keyboard.append([InlineKeyboardButton("🔙 Выбор класса", callback_data="tutor_library")])
+    else:
+        keyboard.append([InlineKeyboardButton("⬅️ Назад в главное меню", callback_data="main_menu")])
     
     return InlineKeyboardMarkup(keyboard)
 
@@ -285,12 +375,20 @@ def tutor_select_material_to_delete_keyboard(materials):
     keyboard.append([InlineKeyboardButton("⬅️ Назад", callback_data="tutor_manage_library")])
     return InlineKeyboardMarkup(keyboard)
 
-def student_materials_list_keyboard(materials):
+def student_materials_list_keyboard(materials, grade=None):
     """Клавиатура со списком материалов для ученика."""
     keyboard = []
     for material in materials:
-        keyboard.append([InlineKeyboardButton(material.title, callback_data=f"student_view_material_{material.id}")])
-    keyboard.append([InlineKeyboardButton("⬅️ Назад в главное меню", callback_data="main_menu")])
+        # Ограничиваем длину текста на кнопке
+        title = (material.title[:25] + '..') if len(material.title) > 25 else material.title
+        grade_text = f"[{material.grade}кл]" if hasattr(material, 'grade') else ""
+        keyboard.append([InlineKeyboardButton(f"📖 {grade_text} {title}", callback_data=f"student_view_material_{material.id}")])
+    
+    # Кнопки навигации
+    if grade:
+        keyboard.append([InlineKeyboardButton("🔙 Выбор класса", callback_data="student_library")])
+    else:
+        keyboard.append([InlineKeyboardButton("⬅️ Назад в главное меню", callback_data="main_menu")])
     return InlineKeyboardMarkup(keyboard)
 
 def student_lesson_list_keyboard(lessons):
@@ -390,4 +488,32 @@ def broadcast_confirm_keyboard():
             InlineKeyboardButton("❌ Отмена", callback_data="broadcast_cancel")
         ]
     ]
+    return InlineKeyboardMarkup(keyboard)
+
+# --- Клавиатуры для родителей ---
+def parent_choice_keyboard():
+    """Клавиатура выбора: создать нового или выбрать существующего родителя."""
+    keyboard = [
+        [InlineKeyboardButton("👤 Создать нового", callback_data="parent_create_new")],
+        [InlineKeyboardButton("👥 Выбрать существующего", callback_data="parent_select_existing")],
+        [InlineKeyboardButton("❌ Отмена", callback_data="main_menu")]
+    ]
+    return InlineKeyboardMarkup(keyboard)
+
+def existing_parents_keyboard(parents):
+    """Клавиатура со списком существующих родителей."""
+    keyboard = []
+    for parent in parents:
+        # Показываем имя и количество детей
+        try:
+            children_count = len(parent.children) if hasattr(parent, 'children') and parent.children else 0
+        except:
+            children_count = 0
+            
+        text = f"{parent.full_name}"
+        if children_count > 0:
+            text += f" ({children_count} дет.)"
+        keyboard.append([InlineKeyboardButton(text, callback_data=f"parent_select_{parent.id}")])
+    
+    keyboard.append([InlineKeyboardButton("⬅️ Назад", callback_data="parent_back_to_choice")])
     return InlineKeyboardMarkup(keyboard)

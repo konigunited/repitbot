@@ -29,8 +29,8 @@ from ..database import (
 from ..keyboards import (
     tutor_main_keyboard, tutor_student_list_keyboard, tutor_student_profile_keyboard,
     tutor_lesson_list_keyboard, tutor_lesson_details_keyboard, tutor_cancel_confirmation_keyboard,
-    tutor_delete_confirm_keyboard, tutor_edit_lesson_status_keyboard,
-    tutor_check_homework_keyboard, tutor_select_student_for_report_keyboard,
+    tutor_delete_confirm_keyboard, tutor_edit_lesson_status_keyboard, tutor_edit_attendance_keyboard,
+    tutor_edit_mastery_keyboard, tutor_check_homework_keyboard, tutor_select_student_for_report_keyboard,
     tutor_select_month_for_report_keyboard, tutor_library_management_keyboard,
     tutor_select_material_to_delete_keyboard, broadcast_confirm_keyboard
 )
@@ -70,6 +70,11 @@ ATTENDANCE_STATUS_RU = {
 ADD_STUDENT_NAME = 0
 ADD_PARENT_CODE = 1  
 ADD_PARENT_NAME = 2
+SELECT_PARENT_TYPE = 23
+SELECT_EXISTING_PARENT = 24
+SELECT_SECOND_PARENT_TYPE = 25
+SELECT_EXISTING_SECOND_PARENT = 26
+ADD_SECOND_PARENT_NAME = 27
 ADD_PAYMENT_AMOUNT = 3
 ADD_LESSON_TOPIC = 4
 ADD_LESSON_DATE = 5
@@ -84,11 +89,12 @@ ADD_HW_LINK = 13
 ADD_HW_PHOTOS = 14
 SELECT_STUDENT_FOR_REPORT = 15
 SELECT_MONTH_FOR_REPORT = 16
-ADD_MATERIAL_TITLE = 17
-ADD_MATERIAL_LINK = 18
-ADD_MATERIAL_DESC = 19
-BROADCAST_MESSAGE = 20
-BROADCAST_CONFIRM = 21
+ADD_MATERIAL_GRADE = 17
+ADD_MATERIAL_TITLE = 18
+ADD_MATERIAL_LINK = 19
+ADD_MATERIAL_DESC = 20
+BROADCAST_MESSAGE = 21
+BROADCAST_CONFIRM = 22
 
 # --- Helper Functions ---
 def generate_access_code(length=8):
@@ -151,23 +157,39 @@ async def show_student_profile(update: Update, context: ContextTypes.DEFAULT_TYP
     """Показывает профиль конкретного ученика."""
     db = SessionLocal()
     try:
-        # Используем joinedload для "жадной" загрузки связанного родителя
-        student = db.query(User).options(joinedload(User.parent)).filter(User.id == student_id).first()
+        # Используем joinedload для "жадной" загрузки связанных родителей
+        student = db.query(User).options(
+            joinedload(User.parent), 
+            joinedload(User.second_parent)
+        ).filter(User.id == student_id).first()
         
         if not student:
             await update.callback_query.edit_message_text("Ученик не найден.")
             return
         
         balance = get_student_balance(student_id)
-        parent_info = student.parent.full_name if student.parent else "Не привязан"
+        
+        # Формируем информацию о родителях
+        parent_info = []
+        if student.parent:
+            parent_info.append(f"👨‍👩‍👧‍👦 Родитель 1: *{student.parent.full_name}*")
+        if student.second_parent:
+            parent_info.append(f"👨‍👩‍👧‍👦 Родитель 2: *{student.second_parent.full_name}*")
+        
+        parent_text = "\n".join(parent_info) if parent_info else "👨‍👩‍👧‍👦 Родители: не привязаны"
         
         text = (f"*Профиль ученика: {student.full_name}*\n\n"
                 f"🏅 *Баллы:* {student.points}\n"
-                f"- Код доступа: `{student.access_code}`\n"
-                f"- Остаток занятий: *{balance}*\n"
-                f"- Родитель: *{parent_info}*\n\n"
+                f"📱 Код доступа: `{student.access_code}`\n"
+                f"💰 Остаток занятий: *{balance}*\n"
+                f"{parent_text}\n\n"
                 "Выберите действие:")
-        keyboard = tutor_student_profile_keyboard(student_id)
+        
+        # Определяем есть ли родители
+        has_parent = student.parent_id is not None
+        has_second_parent = student.second_parent_id is not None
+        
+        keyboard = tutor_student_profile_keyboard(student_id, has_parent, has_second_parent)
         await update.callback_query.edit_message_text(text, reply_markup=keyboard, parse_mode='Markdown')
     finally:
         db.close()
@@ -291,8 +313,298 @@ async def tutor_add_parent_start(update: Update, context: ContextTypes.DEFAULT_T
         )
         return ConversationHandler.END
     
-    await query.edit_message_text(f"Введите ФИО родителя для ученика *{student.full_name}*:", parse_mode='Markdown')
-    return ADD_PARENT_NAME
+    # Предлагаем выбор: создать нового или выбрать существующего
+    from ..keyboards import parent_choice_keyboard
+    await query.edit_message_text(
+        f"Добавление родителя для ученика *{student.full_name}*:\n\n"
+        f"Выберите действие:",
+        parse_mode='Markdown',
+        reply_markup=parent_choice_keyboard()
+    )
+    return SELECT_PARENT_TYPE
+
+async def tutor_select_parent_type(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Обрабатывает выбор типа родителя: новый или существующий."""
+    query = update.callback_query
+    await query.answer()
+    
+    student_id = context.user_data.get('student_id_for_parent')
+    db = SessionLocal()
+    student = db.query(User).filter(User.id == student_id).first()
+    db.close()
+    
+    if query.data == "parent_create_new":
+        # Создаем нового родителя
+        await query.edit_message_text(f"Введите ФИО родителя для ученика *{student.full_name}*:", parse_mode='Markdown')
+        return ADD_PARENT_NAME
+    
+    elif query.data == "parent_select_existing":
+        # Показываем список существующих родителей
+        from ..database import get_all_parents
+        from ..keyboards import existing_parents_keyboard
+        
+        parents = get_all_parents()
+        if not parents:
+            await query.edit_message_text(
+                "❌ В системе нет ни одного родителя.\n\n"
+                "Создайте нового родителя:",
+                reply_markup=None
+            )
+            return ADD_PARENT_NAME
+        
+        await query.edit_message_text(
+            f"Выберите родителя для ученика *{student.full_name}*:",
+            parse_mode='Markdown',
+            reply_markup=existing_parents_keyboard(parents)
+        )
+        return SELECT_EXISTING_PARENT
+    
+    elif query.data == "parent_back_to_choice":
+        # Возврат к выбору типа родителя
+        from ..keyboards import parent_choice_keyboard
+        await query.edit_message_text(
+            f"Добавление родителя для ученика *{student.full_name}*:\n\n"
+            f"Выберите действие:",
+            parse_mode='Markdown',
+            reply_markup=parent_choice_keyboard()
+        )
+        return SELECT_PARENT_TYPE
+    
+    else:
+        # Отмена
+        await query.edit_message_text("❌ Добавление родителя отменено.")
+        context.user_data.clear()
+        return ConversationHandler.END
+
+async def tutor_select_existing_parent(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Привязывает существующего родителя к ученику."""
+    query = update.callback_query
+    await query.answer()
+    
+    if query.data == "parent_back_to_choice":
+        return await tutor_select_parent_type(update, context)
+    
+    # Извлекаем ID родителя
+    parent_id = int(query.data.split("_")[-1])
+    student_id = context.user_data.get('student_id_for_parent')
+    
+    db = SessionLocal()
+    try:
+        parent = db.query(User).filter(User.id == parent_id).first()
+        student = db.query(User).filter(User.id == student_id).first()
+        
+        if not parent or not student:
+            await query.edit_message_text("❌ Ошибка: родитель или ученик не найдены.")
+            context.user_data.clear()
+            return ConversationHandler.END
+        
+        # Сохраняем данные пока сессия активна
+        parent_name = parent.full_name
+        parent_code = parent.access_code
+        student_name = student.full_name
+        
+        # Привязываем родителя к ученику
+        student.parent_id = parent_id
+        db.commit()
+        
+        await query.edit_message_text(
+            f"✅ Ученик *{student_name}* успешно привязан к родителю *{parent_name}*!\n\n"
+            f"📱 Код доступа родителя: `{parent_code}`",
+            parse_mode='Markdown'
+        )
+        
+        context.user_data.clear()
+        return ConversationHandler.END
+        
+    except Exception as e:
+        await query.edit_message_text("❌ Произошла ошибка при привязке родителя.")
+        context.user_data.clear()
+        return ConversationHandler.END
+    finally:
+        db.close()
+
+# --- Функции для добавления второго родителя ---
+async def tutor_add_second_parent_start(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Начинает процесс добавления второго родителя к существующему ученику."""
+    query = update.callback_query
+    await query.answer()
+    
+    student_id = int(query.data.split("_")[-1])
+    context.user_data['student_id_for_second_parent'] = student_id
+    
+    db = SessionLocal()
+    student = db.query(User).filter(User.id == student_id).first()
+    db.close()
+    
+    if not student:
+        await query.edit_message_text("❌ Ученик не найден.")
+        return ConversationHandler.END
+    
+    if student.second_parent_id:
+        # У ученика уже есть второй родитель
+        second_parent = get_user_by_id(student.second_parent_id)
+        await query.edit_message_text(
+            f"⚠️ У ученика *{student.full_name}* уже есть второй родитель:\n"
+            f"👨‍👩‍👧‍👦 {second_parent.full_name}\n"
+            f"📱 Код: `{second_parent.access_code}`",
+            parse_mode='Markdown'
+        )
+        return ConversationHandler.END
+    
+    # Предлагаем выбор: создать нового или выбрать существующего
+    from ..keyboards import parent_choice_keyboard
+    await query.edit_message_text(
+        f"Добавление 2-го родителя для ученика *{student.full_name}*:\n\n"
+        f"Выберите действие:",
+        parse_mode='Markdown',
+        reply_markup=parent_choice_keyboard()
+    )
+    return SELECT_SECOND_PARENT_TYPE
+
+async def tutor_select_second_parent_type(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Обрабатывает выбор типа второго родителя: новый или существующий."""
+    query = update.callback_query
+    await query.answer()
+    
+    student_id = context.user_data.get('student_id_for_second_parent')
+    db = SessionLocal()
+    student = db.query(User).filter(User.id == student_id).first()
+    db.close()
+    
+    if query.data == "parent_create_new":
+        # Создаем нового родителя
+        await query.edit_message_text(f"Введите ФИО второго родителя для ученика *{student.full_name}*:", parse_mode='Markdown')
+        return ADD_SECOND_PARENT_NAME
+    
+    elif query.data == "parent_select_existing":
+        # Показываем список существующих родителей
+        from ..database import get_all_parents
+        from ..keyboards import existing_parents_keyboard
+        
+        parents = get_all_parents()
+        if not parents:
+            await query.edit_message_text(
+                "❌ В системе нет ни одного родителя.\n\n"
+                "Создайте нового родителя:",
+                reply_markup=None
+            )
+            return ADD_SECOND_PARENT_NAME
+        
+        await query.edit_message_text(
+            f"Выберите второго родителя для ученика *{student.full_name}*:",
+            parse_mode='Markdown',
+            reply_markup=existing_parents_keyboard(parents)
+        )
+        return SELECT_EXISTING_SECOND_PARENT
+    
+    elif query.data == "parent_back_to_choice":
+        # Возврат к выбору типа родителя
+        from ..keyboards import parent_choice_keyboard
+        await query.edit_message_text(
+            f"Добавление 2-го родителя для ученика *{student.full_name}*:\n\n"
+            f"Выберите действие:",
+            parse_mode='Markdown',
+            reply_markup=parent_choice_keyboard()
+        )
+        return SELECT_SECOND_PARENT_TYPE
+    
+    else:
+        # Отмена
+        await query.edit_message_text("❌ Добавление второго родителя отменено.")
+        context.user_data.clear()
+        return ConversationHandler.END
+
+async def tutor_select_existing_second_parent(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Привязывает существующего родителя как второго к ученику."""
+    query = update.callback_query
+    await query.answer()
+    
+    if query.data == "parent_back_to_choice":
+        return await tutor_select_second_parent_type(update, context)
+    
+    # Извлекаем ID родителя
+    parent_id = int(query.data.split("_")[-1])
+    student_id = context.user_data.get('student_id_for_second_parent')
+    
+    db = SessionLocal()
+    try:
+        parent = db.query(User).filter(User.id == parent_id).first()
+        student = db.query(User).filter(User.id == student_id).first()
+        
+        if not parent or not student:
+            await query.edit_message_text("❌ Ошибка: родитель или ученик не найдены.")
+            context.user_data.clear()
+            return ConversationHandler.END
+        
+        # Проверяем что это не тот же родитель что уже есть
+        if student.parent_id == parent_id:
+            await query.edit_message_text("❌ Этот родитель уже привязан как основной!")
+            context.user_data.clear()
+            return ConversationHandler.END
+        
+        # Сохраняем данные пока сессия активна
+        parent_name = parent.full_name
+        parent_code = parent.access_code
+        student_name = student.full_name
+        
+        # Привязываем родителя как второго к ученику
+        student.second_parent_id = parent_id
+        db.commit()
+        
+        await query.edit_message_text(
+            f"✅ Ученик *{student_name}* теперь имеет второго родителя *{parent_name}*!\n\n"
+            f"📱 Код доступа родителя: `{parent_code}`",
+            parse_mode='Markdown'
+        )
+        
+        context.user_data.clear()
+        return ConversationHandler.END
+        
+    except Exception as e:
+        await query.edit_message_text("❌ Произошла ошибка при привязке второго родителя.")
+        context.user_data.clear()
+        return ConversationHandler.END
+    finally:
+        db.close()
+
+async def tutor_get_second_parent_name(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Создает второго родителя и привязывает к ученику."""
+    parent_name = update.message.text.strip()
+    student_id = context.user_data.get('student_id_for_second_parent')
+    
+    db = SessionLocal()
+    student = db.query(User).filter(User.id == student_id).first()
+    
+    if not student:
+        await update.message.reply_text("❌ Ученик не найден.")
+        db.close()
+        context.user_data.clear()
+        return ConversationHandler.END
+    
+    # Создаем нового родителя
+    access_code = generate_access_code()
+    new_parent = User(
+        full_name=parent_name,
+        role=UserRole.PARENT,
+        access_code=access_code
+    )
+    db.add(new_parent)
+    db.flush()  # Получаем ID родителя
+    
+    # Привязываем как второго родителя
+    student.second_parent_id = new_parent.id
+    db.commit()
+    db.close()
+    
+    await update.message.reply_text(
+        f"✅ Второй родитель *{parent_name}* добавлен для ученика *{student.full_name}*!\n\n"
+        f"📱 Код доступа: `{access_code}`\n\n"
+        f"Родитель может войти в бота по этому коду.",
+        parse_mode='Markdown'
+    )
+    
+    context.user_data.clear()
+    return ConversationHandler.END
 
 async def tutor_get_parent_name(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Создает родителя и привязывает к ученику."""
@@ -472,17 +784,76 @@ async def tutor_get_lesson_skills(update: Update, context: ContextTypes.DEFAULT_
     return ConversationHandler.END
 
 async def tutor_edit_lesson_start(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    """Начинает диалог редактирования статуса и комментария урока."""
+    """Показывает меню выбора типа статуса для изменения."""
     query = update.callback_query
     lesson_id = int(query.data.split("_")[-1])
     context.user_data['lesson_id'] = lesson_id
     
     keyboard = tutor_edit_lesson_status_keyboard(lesson_id)
-    await query.edit_message_text("Выберите новый статус усвоения темы:", reply_markup=keyboard)
+    await query.edit_message_text(
+        "Выберите, что хотите изменить:",
+        reply_markup=keyboard
+    )
     return EDIT_LESSON_STATUS
 
+async def tutor_edit_attendance_status(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Показывает меню для изменения статуса посещаемости урока."""
+    query = update.callback_query
+    lesson_id = int(query.data.split("_")[-1])
+    
+    db = SessionLocal()
+    try:
+        lesson = db.query(Lesson).filter(Lesson.id == lesson_id).first()
+        if not lesson:
+            await query.edit_message_text("Урок не найден")
+            return
+        
+        keyboard = tutor_edit_attendance_keyboard(lesson_id, lesson.attendance_status)
+        await query.edit_message_text(
+            f"Текущий статус посещаемости: {ATTENDANCE_STATUS_RU.get(lesson.attendance_status, str(lesson.attendance_status))}\n\n"
+            "Выберите новый статус:",
+            reply_markup=keyboard
+        )
+        
+    except Exception as e:
+        await query.edit_message_text("Ошибка при загрузке данных урока")
+        print(f"Ошибка в tutor_edit_attendance_status: {e}")
+        return ConversationHandler.END
+    finally:
+        db.close()
+    
+    return EDIT_LESSON_STATUS
+
+async def tutor_edit_mastery_status(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Показывает меню для изменения уровня усвоения темы."""
+    query = update.callback_query
+    lesson_id = int(query.data.split("_")[-1])
+    context.user_data['lesson_id'] = lesson_id
+    
+    keyboard = tutor_edit_mastery_keyboard(lesson_id)
+    await query.edit_message_text(
+        "Выберите новый уровень усвоения темы:",
+        reply_markup=keyboard
+    )
+    return EDIT_LESSON_STATUS
+
+async def tutor_set_attendance_in_conversation(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Обработчик для установки статуса посещаемости в рамках ConversationHandler."""
+    query = update.callback_query
+    
+    # Извлекаем lesson_id и status из callback_data
+    prefix = "tutor_set_attendance_"
+    payload = query.data[len(prefix):]
+    lesson_id_status = payload
+    
+    # Используем существующую функцию для установки статуса
+    await tutor_set_lesson_attendance(update, context, lesson_id_status)
+    
+    # Завершаем ConversationHandler (show_lesson_details уже вызван в tutor_set_lesson_attendance)
+    return ConversationHandler.END
+
 async def tutor_edit_lesson_get_status(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    """Получает новый статус и спрашивает про комментарий."""
+    """Получает новый статус усвоения темы и спрашивает про комментарий."""
     query = update.callback_query
     # Извлекаем lesson_id и mastery_value из callback_data
     prefix = "tutor_set_mastery_"
@@ -495,7 +866,7 @@ async def tutor_edit_lesson_get_status(update: Update, context: ContextTypes.DEF
     context.user_data['lesson_id'] = lesson_id
     
     await query.edit_message_text(
-        "Статус выбран. Теперь введите комментарий к уровню усвоения.\n"
+        "Статус усвоения выбран. Теперь введите комментарий к уровню усвоения.\n"
         "Чтобы пропустить, введите /skip."
     )
     return EDIT_LESSON_COMMENT
@@ -599,6 +970,14 @@ async def tutor_set_lesson_attendance(update: Update, context: ContextTypes.DEFA
             return
         
         old_status = lesson.attendance_status
+        
+        # Проверяем, изменился ли статус
+        if old_status == new_status:
+            status_text = ATTENDANCE_STATUS_RU.get(new_status, str(new_status))
+            await update.callback_query.answer(f"Статус уже установлен: {status_text}")
+            db.close()
+            return
+            
         lesson.attendance_status = new_status
         
         # Обновляем is_attended для совместимости
@@ -1133,16 +1512,14 @@ async def report_cancel(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 # --- Material Library Management ---
 async def tutor_manage_library(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    """Показывает интерфейс управления библиотекой материалов."""
+    """Показывает выбор класса для библиотеки материалов."""
     if not check_user_role(update, UserRole.TUTOR):
         await update.message.reply_text("У вас нет доступа к этой функции.")
         return
         
-    materials = get_all_materials()
-    keyboard = tutor_library_management_keyboard(materials)
-    message = "📚 *Библиотека материалов*\n\nЗдесь вы можете просматривать, добавлять и удалять материалы."
-    if not materials:
-        message = "📚 *Библиотека материалов*\n\nВ библиотеке пока пусто. Добавьте первый материал."
+    from ..keyboards import library_grade_selection_keyboard
+    keyboard = library_grade_selection_keyboard(is_tutor=True)
+    message = "📚 *Библиотека материалов*\n\nВыберите класс для просмотра материалов:"
 
     # This handler can be called by a ReplyKeyboard button (no query) or an InlineKeyboard button (query)
     if update.callback_query:
@@ -1150,20 +1527,65 @@ async def tutor_manage_library(update: Update, context: ContextTypes.DEFAULT_TYP
     else:
         await update.message.reply_text(message, reply_markup=keyboard, parse_mode='Markdown')
 
+async def tutor_library_by_grade(update: Update, context: ContextTypes.DEFAULT_TYPE, grade=None):
+    """Показывает материалы для определённого класса или все материалы."""
+    if not check_user_role(update, UserRole.TUTOR):
+        await update.callback_query.answer("У вас нет доступа к этой функции.")
+        return
+        
+    if grade == "all":
+        materials = get_all_materials()
+        message = "📚 *Библиотека материалов - Все классы*\n\nВсе материалы:"
+    else:
+        from ..database import get_materials_by_grade
+        materials = get_materials_by_grade(int(grade))
+        message = f"📚 *Библиотека материалов - {grade} класс*\n\nМатериалы для {grade} класса:"
+    
+    if not materials:
+        if grade == "all":
+            message = "📚 *Библиотека материалов*\n\nВ библиотеке пока пусто. Добавьте первый материал."
+        else:
+            message = f"📚 *Библиотека материалов - {grade} класс*\n\nДля {grade} класса материалов пока нет."
+    
+    keyboard = tutor_library_management_keyboard(materials, grade)
+    await update.callback_query.edit_message_text(message, reply_markup=keyboard, parse_mode='Markdown')
+
 async def tutor_add_material_start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Начинает процесс добавления материала."""
-    await update.callback_query.edit_message_text("Введите название материала:")
+    from ..keyboards import grade_selection_keyboard_for_add_material
+    await update.callback_query.edit_message_text(
+        "Выберите класс для материала:",
+        reply_markup=grade_selection_keyboard_for_add_material()
+    )
+    return ADD_MATERIAL_GRADE
+
+async def tutor_add_material_with_grade(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Начинает добавление материала с предустановленным классом."""
+    # Извлекаем класс из callback_data: tutor_add_material_grade_5 -> 5
+    grade = int(update.callback_query.data.split('_')[-1])
+    context.user_data['material_grade'] = grade
+    await update.callback_query.edit_message_text(f"Класс: {grade}\n\nВведите название материала:")
+    return ADD_MATERIAL_TITLE
+
+async def tutor_get_material_grade(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Получает класс материала и запрашивает название."""
+    grade = int(update.callback_query.data.split('_')[-1])
+    context.user_data['material_grade'] = grade
+    await update.callback_query.edit_message_text(f"Класс: {grade}\n\nВведите название материала:")
     return ADD_MATERIAL_TITLE
 
 async def tutor_get_material_title(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Получает название материала и запрашивает ссылку."""
     context.user_data['material_title'] = update.message.text
-    await update.message.reply_text("Отправьте ссылку:")
+    await update.message.reply_text("Отправьте ссылку (или /skip для пропуска):")
     return ADD_MATERIAL_LINK
 
 async def tutor_get_material_link(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Получает ссылку на материал и запрашивает описание."""
-    context.user_data['material_link'] = update.message.text
+    if update.message.text.lower() == '/skip':
+        context.user_data['material_link'] = None
+    else:
+        context.user_data['material_link'] = update.message.text
     await update.message.reply_text("Введите описание (или /skip):")
     return ADD_MATERIAL_DESC
 
@@ -1176,7 +1598,8 @@ async def tutor_get_material_description(update: Update, context: ContextTypes.D
     new_material = Material(
         title=context.user_data['material_title'],
         link=context.user_data['material_link'],
-        description=desc
+        description=desc,
+        grade=context.user_data['material_grade']
     )
     db.add(new_material)
     db.commit()

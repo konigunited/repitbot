@@ -273,7 +273,7 @@ async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
     from .common import show_main_menu
     from .student import (show_my_progress, show_schedule, show_homework_menu, show_lesson_history,
                          show_payment_and_attendance, show_materials_library, show_student_achievements,
-                         student_view_homework, student_view_lesson_details)
+                         student_view_homework, student_view_lesson_details, student_library_by_grade)
     from .tutor import (show_student_list, show_student_profile, show_analytics_chart,
                        tutor_delete_student_start, tutor_delete_student_confirm, tutor_add_parent_start,
                        show_tutor_lessons, show_lesson_details, tutor_mark_lesson_attended,
@@ -281,8 +281,8 @@ async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
                        tutor_manage_library, tutor_add_material_start, tutor_delete_material_start,
                        tutor_delete_material_confirm, show_material_details, show_tutor_dashboard,
                        show_tutor_stats, tutor_edit_name_start, tutor_set_homework_status, 
-                       tutor_set_lesson_mastery, tutor_add_payment_start, tutor_add_lesson_start,
-                       tutor_confirm_lesson_cancellation)
+                       tutor_add_payment_start, tutor_add_lesson_start,
+                       tutor_confirm_lesson_cancellation, tutor_library_by_grade)
     from .parent import (show_parent_dashboard, show_child_menu, show_child_progress,
                         show_child_schedule, show_child_payments, parent_generate_chart,
                         show_child_homework, show_child_lessons, show_child_achievements)
@@ -321,10 +321,11 @@ async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
         "tutor_stats": (show_tutor_stats, None),
         # tutor_edit_name_ обрабатывается ConversationHandler
         "tutor_set_hw_status_": (tutor_set_homework_status, "hw_id_status"),
-        "tutor_set_mastery_": (tutor_set_lesson_mastery, "lesson_id_mastery"),
         "tutor_confirm_cancel_": (tutor_confirm_lesson_cancellation, "lesson_id_status"),
         "tutor_view_material_": (show_material_details, "material_id"),
         "student_view_material_": (show_material_details, "material_id"),
+        "tutor_library_grade_": (tutor_library_by_grade, "grade"),
+        "student_library_grade_": (student_library_by_grade, "grade"),
         "student_settings": (student_settings_handler, None),
         "select_child": (show_parent_dashboard, None),
         "parent_child_": (show_child_menu, None),
@@ -336,6 +337,7 @@ async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
         "parent_lessons_": (show_child_lessons, None),
         "parent_achievements_": (show_child_achievements, None),
         "parent_chart_": (parent_generate_chart, None),
+        "noop": (lambda update, context: update.callback_query.answer(), None),
     }
     
     # Попробуем найти подходящий обработчик
@@ -368,6 +370,10 @@ async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
                     # Для установки уровня усвоения урока
                     lesson_id_mastery = "_".join(data.split("_")[3:])  # Убираем префикс "tutor_set_mastery_"
                     await handler(update, context, lesson_id_mastery)
+                elif param_name == "grade":
+                    # Для выбора класса в библиотеке
+                    grade = data.split("_")[-1]  # Последняя часть после последнего "_"
+                    await handler(update, context, grade)
                 else:
                     await handler(update, context)
                     
