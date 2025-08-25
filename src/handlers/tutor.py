@@ -22,7 +22,7 @@ from ..database import (
     get_lesson_by_id, get_homework_by_id,
     get_lessons_for_student_by_month, get_payments_for_student_by_month,
     get_all_materials, get_material_by_id, delete_material_by_id,
-    get_dashboard_stats, HomeworkStatus, TopicMastery, AttendanceStatus, get_student_balance,
+    get_dashboard_stats, HomeworkStatus, TopicMastery, AttendanceStatus, LessonStatus, get_student_balance,
     get_student_achievements, award_achievement, update_study_streak, check_points_achievements,
     shift_lessons_after_cancellation
 )
@@ -30,7 +30,7 @@ from ..keyboards import (
     tutor_main_keyboard, tutor_student_list_keyboard, tutor_student_profile_keyboard,
     tutor_lesson_list_keyboard, tutor_lesson_details_keyboard, tutor_cancel_confirmation_keyboard,
     tutor_delete_confirm_keyboard, tutor_edit_lesson_status_keyboard, tutor_edit_attendance_keyboard,
-    tutor_edit_mastery_keyboard, tutor_check_homework_keyboard, tutor_select_student_for_report_keyboard,
+    tutor_edit_lesson_conduct_keyboard, tutor_edit_mastery_keyboard, tutor_check_homework_keyboard, tutor_select_student_for_report_keyboard,
     tutor_select_month_for_report_keyboard, tutor_library_management_keyboard,
     tutor_select_material_to_delete_keyboard, broadcast_confirm_keyboard,
     second_parent_choice_keyboard, existing_second_parents_keyboard
@@ -56,6 +56,11 @@ ATTENDANCE_STATUS_RU = {
     AttendanceStatus.EXCUSED_ABSENCE: "Отменен (уваж. причина)",
     AttendanceStatus.UNEXCUSED_ABSENCE: "Отменен (неуваж. причина)",
     AttendanceStatus.RESCHEDULED: "Перенесен",
+}
+
+LESSON_STATUS_RU = {
+    LessonStatus.NOT_CONDUCTED: "Не проведен",
+    LessonStatus.CONDUCTED: "Проведен",
 }
 
 # Состояния ConversationHandler - должны совпадать с bot.py
@@ -798,14 +803,14 @@ async def show_lesson_details(update: Update, context: ContextTypes.DEFAULT_TYPE
         date_str = escape_markdown(lesson.date.strftime('%d.%m.%Y'), version=2)
         comment = escape_markdown(lesson.mastery_comment or '', version=2)
 
-        attendance_status_ru = ATTENDANCE_STATUS_RU.get(lesson.attendance_status, "Неизвестно")
-        attendance_status = escape_markdown(attendance_status_ru, version=2)
+        lesson_status_ru = LESSON_STATUS_RU.get(lesson.lesson_status, "Неизвестно")
+        lesson_conduct_status = escape_markdown(lesson_status_ru, version=2)
         
         text = (f"📚 *Тема:* {topic}\n"
                 f"🗓️ *Дата:* {date_str}\n"
                 f"👍 *Навыки:* {skills}\n"
                 f"🎓 *Статус:* {mastery_level}\n"
-                f"👥 *Посещение:* {attendance_status}\n")
+                f"✅ *Проведение:* {lesson_conduct_status}\n")
         if comment:
             text += f"💬 *Комментарий:* {comment}\n"
 
@@ -852,7 +857,8 @@ async def tutor_get_lesson_skills(update: Update, context: ContextTypes.DEFAULT_
         student_id=student_id,
         topic=context.user_data.get('lesson_topic'),
         date=context.user_data.get('lesson_date'),
-        skills_developed=update.message.text
+        skills_developed=update.message.text,
+        lesson_status=LessonStatus.NOT_CONDUCTED  # Урок создается как "не проведен"
     )
     db.add(new_lesson)
     db.commit()
@@ -914,6 +920,78 @@ async def tutor_edit_mastery_status(update: Update, context: ContextTypes.DEFAUL
         reply_markup=keyboard
     )
     return EDIT_LESSON_STATUS
+
+async def tutor_edit_lesson_conduct_status(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Показывает меню для изменения статуса проведения урока."""
+    query = update.callback_query
+    lesson_id = int(query.data.split("_")[-1])
+    
+    db = SessionLocal()
+    try:
+        lesson = db.query(Lesson).filter(Lesson.id == lesson_id).first()
+        if not lesson:
+            await query.edit_message_text("Урок не найден")
+            return
+        
+        keyboard = tutor_edit_lesson_conduct_keyboard(lesson_id, lesson.lesson_status)
+        status_text = {
+            LessonStatus.NOT_CONDUCTED: "Не проведен",
+            LessonStatus.CONDUCTED: "Проведен"
+        }.get(lesson.lesson_status, str(lesson.lesson_status))
+        
+        await query.edit_message_text(
+            f"Текущий статус проведения урока: {status_text}\n\n"
+            "Выберите новый статус:",
+            reply_markup=keyboard
+        )
+        
+    except Exception as e:
+        await query.edit_message_text("Ошибка при загрузке данных урока")
+        print(f"Ошибка в tutor_edit_lesson_conduct_status: {e}")
+        return ConversationHandler.END
+    finally:
+        db.close()
+    
+    return EDIT_LESSON_STATUS
+
+async def tutor_set_lesson_conduct(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Устанавливает статус проведения урока."""
+    query = update.callback_query
+    
+    # Извлекаем lesson_id и status из callback_data  
+    prefix = "tutor_set_lesson_conduct_"
+    payload = query.data[len(prefix):]
+    lesson_id_str, status_value = payload.rsplit('_', 1)
+    lesson_id = int(lesson_id_str)
+    new_status = LessonStatus(status_value)
+    
+    db = SessionLocal()
+    try:
+        lesson = db.query(Lesson).filter(Lesson.id == lesson_id).first()
+        if not lesson:
+            await query.edit_message_text("Урок не найден")
+            return ConversationHandler.END
+        
+        lesson.lesson_status = new_status
+        db.commit()
+        
+        status_text = {
+            LessonStatus.NOT_CONDUCTED: "Не проведен",
+            LessonStatus.CONDUCTED: "Проведен"
+        }.get(new_status)
+        
+        await query.edit_message_text(f"✅ Статус проведения урока изменен на: {status_text}")
+        
+        # Возвращаемся к детальной информации об уроке
+        from . import show_lesson_details
+        await show_lesson_details(update, context, lesson_id)
+        
+    except Exception as e:
+        await query.edit_message_text(f"❌ Ошибка при изменении статуса: {e}")
+    finally:
+        db.close()
+    
+    return ConversationHandler.END
 
 async def tutor_set_attendance_in_conversation(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Обработчик для установки статуса посещаемости в рамках ConversationHandler."""

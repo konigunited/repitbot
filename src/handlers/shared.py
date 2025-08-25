@@ -119,27 +119,84 @@ async def forward_message_to_tutor(update: Update, context: ContextTypes.DEFAULT
     return ConversationHandler.END
 
 async def handle_tutor_reply(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    """Обрабатывает ответы репетитора на сообщения учеников/родителей"""
-    user = get_user_by_telegram_id(update.effective_user.id)
-    
-    # Проверяем, что это репетитор и что он отвечает на сообщение
-    if not user or user.role != UserRole.TUTOR:
-        return
-    
+    """Обрабатывает ответ репетитора на сообщение пользователя."""
+    # Проверяем, что это действительно ответ
     if not update.message.reply_to_message:
         return
     
-    # Пытаемся найти получателя по тексту исходного сообщения
-    original_text = update.message.reply_to_message.text or update.message.reply_to_message.caption
+    # Проверяем, что отвечающий - репетитор
+    user = get_user_by_telegram_id(update.effective_user.id)
+    if not user or user.role != UserRole.TUTOR:
+        return
+
+    tutor_reply_text = update.message.text
+    original_message = update.message.reply_to_message
+
+    # --- Вариант 1: Ответ на пересланное сообщение ---
+    if hasattr(original_message, 'forward_from') and original_message.forward_from:
+        user_to_reply_id = original_message.forward_from.id
+        try:
+            await context.bot.send_message(
+                chat_id=user_to_reply_id,
+                text=f"📩 Сообщение от репетитора:\n\n{tutor_reply_text}"
+            )
+            await update.message.reply_text("✅ Ответ успешно отправлен.")
+        except Forbidden:
+            await update.message.reply_text("❌ Не удалось отправить ответ: пользователь заблокировал бота.")
+        except Exception as e:
+            await update.message.reply_text(f"❌ Ошибка при отправке ответа: {e}")
+        return
+
+    # --- Вариант 2: Ответ на сообщение с подписью (содержит ID) ---
+    original_text = original_message.text or original_message.caption
+    if original_text and "ID для ответа:" in original_text:
+        import re
+        try:
+            # Ищем ID в тексте разными способами
+            user_to_reply_id = None
+            text = original_text
+            
+            # Способ 1: между ` символами
+            if "`" in text:
+                parts = text.split("`")
+                for part in parts:
+                    if part.isdigit():
+                        user_to_reply_id = int(part)
+                        break
+            
+            # Способ 2: после "ID для ответа:"
+            if not user_to_reply_id and "ID для ответа:" in text:
+                match = re.search(r'ID для ответа:\s*(\d+)', text)
+                if match:
+                    user_to_reply_id = int(match.group(1))
+            
+            if user_to_reply_id:
+                await context.bot.send_message(
+                    chat_id=user_to_reply_id,
+                    text=f"📩 Сообщение от репетитора:\n\n{tutor_reply_text}"
+                )
+                await update.message.reply_text("✅ Ответ успешно отправлен.")
+            else:
+                await update.message.reply_text("❌ Не удалось извлечь ID пользователя из сообщения.")
+                
+        except Forbidden:
+            await update.message.reply_text("❌ Не удалось отправить ответ: пользователь заблокировал бота.")
+        except Exception as e:
+            await update.message.reply_text(f"❌ Ошибка при отправке ответа: {e}")
+        return
+
+    # --- Вариант 3: Ответ на сообщение с заголовком (содержит имя пользователя) ---
     if not original_text:
         return
     
     # Ищем имя отправителя в заголовке
     lines = original_text.split('\n')
     if len(lines) < 1:
+        print(f"DEBUG: No lines in original message")
         return
     
     header = lines[0]
+    print(f"DEBUG: Processing tutor reply. Header: '{header}'")
     
     # Извлекаем имя из заголовка (формат: "👨‍🎓 *Ученик:* Имя Фамилия")
     try:
@@ -165,8 +222,9 @@ async def handle_tutor_reply(update: Update, context: ContextTypes.DEFAULT_TYPE)
     
     if not recipient:
         await update.message.reply_text(
-            "❌ Не удалось найти получателя. Возможно, он не активировал бота."
+            f"❌ Не удалось найти получателя с именем '{full_name}' и ролью {role_filter.value}. Возможно, он не активировал бота."
         )
+        print(f"DEBUG: Could not find recipient: name='{full_name}', role={role_filter.value}")
         return
     
     # Отправляем ответ
@@ -283,7 +341,9 @@ async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
                        show_tutor_stats, tutor_edit_name_start, tutor_set_homework_status, 
                        tutor_add_payment_start, tutor_add_lesson_start,
                        tutor_confirm_lesson_cancellation, tutor_library_by_grade,
-                       tutor_remove_second_parent, tutor_replace_second_parent)
+                       tutor_remove_second_parent, tutor_replace_second_parent,
+                       tutor_edit_lesson_start, tutor_edit_attendance_status, tutor_edit_mastery_status,
+                       tutor_edit_lesson_conduct_status, tutor_set_lesson_conduct)
     from .parent import (show_parent_dashboard, show_child_menu, show_child_progress,
                         show_child_schedule, show_child_payments, parent_generate_chart,
                         show_child_homework, show_child_lessons, show_child_achievements)
@@ -307,6 +367,11 @@ async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
         "tutor_mark_attended_": (tutor_mark_lesson_attended, "lesson_id"),
         "tutor_set_attendance_": (tutor_set_lesson_attendance, "lesson_id_status"),
         "tutor_reschedule_lesson_": (tutor_reschedule_lesson_start, "lesson_id"),
+        "tutor_edit_lesson_": (tutor_edit_lesson_start, "lesson_id"),
+        "tutor_edit_attendance_": (tutor_edit_attendance_status, "lesson_id"),
+        "tutor_edit_lesson_conduct_": (tutor_edit_lesson_conduct_status, "lesson_id"),
+        "tutor_set_lesson_conduct_": (tutor_set_lesson_conduct, "lesson_id_status"),
+        "tutor_edit_mastery_": (tutor_edit_mastery_status, "lesson_id"),
         "tutor_check_hw_": (tutor_check_homework, "lesson_id"),
         "tutor_manage_library": (tutor_manage_library, None),
         "tutor_add_material": (tutor_add_material_start, None),
@@ -329,10 +394,10 @@ async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
         "student_library_grade_": (student_library_by_grade, "grade"),
         "student_settings": (student_settings_handler, None),
         "select_child": (show_parent_dashboard, None),
-        "parent_child_": (show_child_menu, None),
-        "parent_progress_": (show_child_progress, None),
-        "parent_schedule_": (show_child_schedule, None), 
-        "parent_payments_": (show_child_payments, None),
+        "parent_child_": (show_child_menu, "child_id"),
+        "parent_progress_": (show_child_progress, "child_id"),
+        "parent_schedule_": (show_child_schedule, "child_id"), 
+        "parent_payments_": (show_child_payments, "child_id"),
         "parent_chat_with_tutor_": (chat_with_tutor_start, None),
         "parent_homework_": (show_child_homework, None),
         "parent_lessons_": (show_child_lessons, None),
@@ -347,14 +412,21 @@ async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
     handler_found = False
     for prefix, (handler, param_name) in action_map.items():
         if data == prefix or data.startswith(prefix):
+            print(f"DEBUG: Found handler for prefix '{prefix}', handler='{handler.__name__}', param='{param_name}'")
             handler_found = True
             try:
                 if param_name is None:
+                    print(f"DEBUG: Calling {handler.__name__} with no params")
                     # Вызываем без параметров
                     await handler(update, context)
                 elif param_name == "student_id":
                     student_id = int(data.split("_")[-1])
+                    print(f"DEBUG: Calling {handler.__name__} with student_id={student_id}")
                     await handler(update, context, student_id)
+                elif param_name == "child_id":
+                    child_id = int(data.split("_")[-1])
+                    print(f"DEBUG: Calling {handler.__name__} with child_id={child_id}")
+                    await handler(update, context, child_id)
                 elif param_name == "lesson_id":
                     lesson_id = int(data.split("_")[-1])
                     await handler(update, context, lesson_id)

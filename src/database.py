@@ -39,6 +39,10 @@ class AttendanceStatus(enum.Enum):
     UNEXCUSED_ABSENCE = "unexcused_absence"
     RESCHEDULED = "rescheduled"
 
+class LessonStatus(enum.Enum):
+    NOT_CONDUCTED = "not_conducted"  # Урок не проведен (по умолчанию для будущих уроков)
+    CONDUCTED = "conducted"          # Урок проведен
+
 # --- Models ---
 class User(Base):
     __tablename__ = 'users'
@@ -77,6 +81,7 @@ class Lesson(Base):
     mastery_comment = Column(Text, nullable=True)
     is_attended = Column(Boolean, default=False, nullable=False) # <-- Старое поле для совместимости
     attendance_status = Column(SAEnum(AttendanceStatus), default=AttendanceStatus.ATTENDED, nullable=False) # <-- Новое поле для статуса посещения
+    lesson_status = Column(SAEnum(LessonStatus), default=LessonStatus.NOT_CONDUCTED, nullable=False) # <-- Статус проведения урока
     original_date = Column(DateTime, nullable=True) # <-- Оригинальная дата урока (если был перенос)
     is_rescheduled = Column(Boolean, default=False, nullable=False) # <-- Флаг переноса
     created_at = Column(DateTime(timezone=True), server_default=func.now())

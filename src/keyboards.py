@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, ReplyKeyboardMarkup
-from .database import TopicMastery, HomeworkStatus, AttendanceStatus
+from .database import TopicMastery, HomeworkStatus, AttendanceStatus, LessonStatus
 
 # --- Общие клавиатуры ---
 def main_menu_keyboard(user_role):
@@ -243,9 +243,10 @@ def tutor_delete_confirm_keyboard(student_id):
     return InlineKeyboardMarkup(keyboard)
 
 def tutor_edit_lesson_status_keyboard(lesson_id):
-    """Клавиатура для выбора типа статуса (посещаемость или усвоение)."""
+    """Клавиатура для выбора типа статуса (посещаемость, проведение или усвоение)."""
     keyboard = [
         [InlineKeyboardButton("👥 Изменить посещаемость", callback_data=f"tutor_edit_attendance_{lesson_id}")],
+        [InlineKeyboardButton("🎯 Изменить статус проведения", callback_data=f"tutor_edit_lesson_conduct_{lesson_id}")],
         [InlineKeyboardButton("📚 Изменить усвоение темы", callback_data=f"tutor_edit_mastery_{lesson_id}")],
         [InlineKeyboardButton("⬅️ Назад к уроку", callback_data=f"tutor_lesson_details_{lesson_id}")]
     ]
@@ -266,6 +267,26 @@ def tutor_edit_attendance_keyboard(lesson_id, current_status):
     for status, text in status_options:
         if status != current_status:
             keyboard.append([InlineKeyboardButton(text, callback_data=f"tutor_set_attendance_{lesson_id}_{status.value}")])
+        else:
+            # Показываем текущий статус с галочкой, но неактивный
+            keyboard.append([InlineKeyboardButton(f"🔘 {text} (текущий)", callback_data=f"noop")])
+    
+    keyboard.append([InlineKeyboardButton("⬅️ Назад к выбору статуса", callback_data=f"tutor_edit_lesson_{lesson_id}")])
+    return InlineKeyboardMarkup(keyboard)
+
+def tutor_edit_lesson_conduct_keyboard(lesson_id, current_status):
+    """Клавиатура для изменения статуса проведения урока."""
+    keyboard = []
+    
+    # Все возможные статусы проведения урока
+    status_options = [
+        (LessonStatus.NOT_CONDUCTED, "⚪️ Не проведен"),
+        (LessonStatus.CONDUCTED, "✅ Проведен")
+    ]
+    
+    for status, text in status_options:
+        if status != current_status:
+            keyboard.append([InlineKeyboardButton(text, callback_data=f"tutor_set_lesson_conduct_{lesson_id}_{status.value}")])
         else:
             # Показываем текущий статус с галочкой, но неактивный
             keyboard.append([InlineKeyboardButton(f"🔘 {text} (текущий)", callback_data=f"noop")])
@@ -534,6 +555,7 @@ def existing_parents_keyboard(parents):
     
     keyboard.append([InlineKeyboardButton("⬅️ Назад", callback_data="parent_back_to_choice")])
     return InlineKeyboardMarkup(keyboard)
+
 
 def existing_second_parents_keyboard(parents, current_parent_id=None):
     """Клавиатура со списком существующих родителей для выбора второго родителя."""

@@ -6,7 +6,7 @@ from .database import SessionLocal, Lesson, User, UserRole, Payment, get_student
 from sqlalchemy import func
 
 # --- Константы ---
-LOW_BALANCE_THRESHOLD = 2 # Порог для напоминания об оплате
+LOW_BALANCE_THRESHOLD = 1 # Напоминание только когда остается 1 урок
 
 async def send_reminders(application: Application):
     """Отправляет напоминания о предстоящих уроках за 24 часа."""
@@ -54,7 +54,7 @@ async def send_payment_reminders(application: Application):
         for student in students:
             balance = get_student_balance(student.id)
 
-            if 0 < balance <= LOW_BALANCE_THRESHOLD:
+            if balance == LOW_BALANCE_THRESHOLD:
                 # Определяем, кому отправлять сообщение
                 target_user = student.parent if student.parent and student.parent.telegram_id else student
                 
@@ -63,7 +63,7 @@ async def send_payment_reminders(application: Application):
 
                 message = (
                     f"💰 *Напоминание о балансе*\n\n"
-                    f"У ученика *{student.full_name}* осталось *{balance}* оплаченных занятия.\n\n"
+                    f"У ученика *{student.full_name}* остался *{balance}* оплаченный урок.\n\n"
                     "Пожалуйста, не забудьте пополнить баланс для продолжения обучения."
                 )
                 

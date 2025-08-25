@@ -31,6 +31,7 @@ from src.handlers.tutor import (
     tutor_mark_lesson_attended, tutor_set_lesson_attendance, tutor_check_homework,
     tutor_set_homework_status, tutor_edit_lesson_start, tutor_edit_lesson_get_status, tutor_edit_lesson_get_comment,
     tutor_edit_attendance_status, tutor_edit_mastery_status, tutor_set_attendance_in_conversation,
+    tutor_edit_lesson_conduct_status, tutor_set_lesson_conduct,
     tutor_add_hw_start, tutor_get_hw_description, tutor_get_hw_deadline, tutor_get_hw_link, tutor_get_hw_photos,
     show_student_list, show_tutor_stats, show_tutor_dashboard,
     report_start, report_select_student, report_select_month_and_generate, report_cancel,
@@ -350,6 +351,8 @@ def main() -> None:
                 CallbackQueryHandler(tutor_edit_lesson_get_status, pattern="^tutor_set_mastery_"),
                 CallbackQueryHandler(tutor_edit_attendance_status, pattern="^tutor_edit_attendance_"),
                 CallbackQueryHandler(tutor_edit_mastery_status, pattern="^tutor_edit_mastery_"),
+                CallbackQueryHandler(tutor_edit_lesson_conduct_status, pattern="^tutor_edit_lesson_conduct_"),
+                CallbackQueryHandler(tutor_set_lesson_conduct, pattern="^tutor_set_lesson_conduct_"),
                 CallbackQueryHandler(tutor_set_attendance_in_conversation, pattern="^tutor_set_attendance_")
             ],
             EDIT_LESSON_COMMENT: [
@@ -389,7 +392,7 @@ def main() -> None:
     application.add_handler(broadcast_conv)
     
     # button_handler обрабатывает все остальные callback'ы ПОСЛЕ ConversationHandlers
-    application.add_handler(CallbackQueryHandler(button_handler, pattern="^(?!(tutor_add_payment_|tutor_add_lesson_|tutor_add_parent_|tutor_add_second_parent_|tutor_edit_name_|tutor_edit_lesson_|tutor_edit_attendance_|tutor_edit_mastery_|tutor_set_mastery_|tutor_add_hw_|student_submit_hw_|report_select_|broadcast_|add_student|tutor_add_material|select_grade_|parent_|second_parent_)).*"))
+    application.add_handler(CallbackQueryHandler(button_handler, pattern="^(?!(tutor_add_payment_|tutor_add_lesson_|tutor_add_parent_|tutor_add_second_parent_|tutor_edit_name_|tutor_edit_lesson_|tutor_edit_attendance_|tutor_edit_mastery_|tutor_set_mastery_|tutor_add_hw_|student_submit_hw_|report_select_|broadcast_|add_student|tutor_add_material|select_grade_|second_parent_)).*"))
 
     # Импортируем микросервисы
     from src.handlers.tutor import show_tutor_dashboard, show_student_list
