@@ -26,30 +26,20 @@ CHAT_WITH_TUTOR = 1
 
 async def safe_edit_or_reply(update, text, reply_markup=None, parse_mode=None):
     """Безопасно редактирует сообщение или отправляет новое, если редактирование невозможно"""
-    print(f"DEBUG: safe_edit_or_reply called")
     try:
         if update.callback_query.message.text:
-            print(f"DEBUG: Editing message text")
             await update.callback_query.edit_message_text(text, reply_markup=reply_markup, parse_mode=parse_mode)
-            print(f"DEBUG: Message text edited successfully")
         else:
-            print(f"DEBUG: Message has no text, deleting and sending new")
             # Если сообщение содержит фото или другой контент, отправляем новое сообщение
             await update.callback_query.message.delete()
             await update.callback_query.message.reply_text(text, reply_markup=reply_markup, parse_mode=parse_mode)
-            print(f"DEBUG: New message sent")
     except Exception as e:
-        print(f"DEBUG: Exception in safe_edit_or_reply: {e}")
         # Если не удается отредактировать, отправляем новое сообщение
         try:
-            print(f"DEBUG: Trying to reply with new message")
             await update.callback_query.message.reply_text(text, reply_markup=reply_markup, parse_mode=parse_mode)
-            print(f"DEBUG: New reply message sent")
-        except Exception as e2:
-            print(f"DEBUG: Second exception: {e2}, trying send_message")
+        except:
             # Крайний случай - отправляем в чат
             await update.effective_chat.send_message(text, reply_markup=reply_markup, parse_mode=parse_mode)
-            print(f"DEBUG: Fallback message sent")
 
 # --- Словари для перевода статусов ---
 TOPIC_MASTERY_RU = {
@@ -300,21 +290,15 @@ async def parent_generate_chart(update: Update, context: ContextTypes.DEFAULT_TY
 
 async def show_child_menu(update: Update, context: ContextTypes.DEFAULT_TYPE, child_id: int):
     """Показывает меню для конкретного ребенка"""
-    print(f"DEBUG: show_child_menu called with child_id={child_id}")
     query = update.callback_query
-    print(f"DEBUG: callback_data={query.data}")
     await query.answer()  # Сразу отвечаем на callback
-    print(f"DEBUG: query.answer() completed")
     
     parent = check_parent_access(update)
-    print(f"DEBUG: parent check result: {parent}")
     if not parent:
-        print(f"DEBUG: Parent access denied")
         await query.edit_message_text("❌ Доступ запрещен")
         return
     
     student_id = child_id
-    print(f"DEBUG: Processing student_id={student_id}")
     
     log_user_action(parent.telegram_id, "child_menu_view", f"Просмотр меню ребенка ID:{student_id}")
     
@@ -376,12 +360,9 @@ async def show_child_menu(update: Update, context: ContextTypes.DEFAULT_TYPE, ch
         ]
         
         reply_markup = InlineKeyboardMarkup(keyboard)
-        print(f"DEBUG: About to call safe_edit_or_reply")
         await safe_edit_or_reply(update, text, reply_markup, 'Markdown')
-        print(f"DEBUG: safe_edit_or_reply completed successfully")
     
     finally:
-        print(f"DEBUG: show_child_menu finally block")
         db.close()
 
 

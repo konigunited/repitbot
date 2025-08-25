@@ -412,20 +412,16 @@ async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
     handler_found = False
     for prefix, (handler, param_name) in action_map.items():
         if data == prefix or data.startswith(prefix):
-            print(f"DEBUG: Found handler for prefix '{prefix}', handler='{handler.__name__}', param='{param_name}'")
             handler_found = True
             try:
                 if param_name is None:
-                    print(f"DEBUG: Calling {handler.__name__} with no params")
                     # Вызываем без параметров
                     await handler(update, context)
                 elif param_name == "student_id":
                     student_id = int(data.split("_")[-1])
-                    print(f"DEBUG: Calling {handler.__name__} with student_id={student_id}")
                     await handler(update, context, student_id)
                 elif param_name == "child_id":
                     child_id = int(data.split("_")[-1])
-                    print(f"DEBUG: Calling {handler.__name__} with child_id={child_id}")
                     await handler(update, context, child_id)
                 elif param_name == "lesson_id":
                     lesson_id = int(data.split("_")[-1])
