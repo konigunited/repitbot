@@ -198,7 +198,37 @@ async def student_view_homework(update: Update, context: ContextTypes.DEFAULT_TY
         [InlineKeyboardButton("⬅️ К домашним заданиям", callback_data="homework")]
     ])
     
-    await query.edit_message_text(message, reply_markup=keyboard, parse_mode='Markdown')
+    # Проверяем есть ли фото домашнего задания
+    if hw.photo_file_ids:
+        import json
+        try:
+            photo_ids = json.loads(hw.photo_file_ids)
+            if photo_ids:
+                # Отправляем фото с подписью
+                await query.edit_message_text("📝 *Домашнее задание с фотографиями:*", parse_mode='Markdown')
+                
+                # Отправляем все фото
+                for i, photo_id in enumerate(photo_ids):
+                    caption = message if i == 0 else ""  # Подпись только к первому фото
+                    reply_markup = keyboard if i == len(photo_ids) - 1 else None  # Кнопки только к последнему фото
+                    
+                    await context.bot.send_photo(
+                        chat_id=query.message.chat_id,
+                        photo=photo_id,
+                        caption=caption,
+                        parse_mode='Markdown',
+                        reply_markup=reply_markup
+                    )
+            else:
+                # Если массив пустой, показываем только текст
+                await query.edit_message_text(message, reply_markup=keyboard, parse_mode='Markdown')
+        except (json.JSONDecodeError, Exception) as e:
+            # Если ошибка с JSON, показываем только текст
+            print(f"Error parsing homework photo_file_ids: {e}")
+            await query.edit_message_text(message, reply_markup=keyboard, parse_mode='Markdown')
+    else:
+        # Если нет фото, показываем только текст
+        await query.edit_message_text(message, reply_markup=keyboard, parse_mode='Markdown')
     
     # Отправляем фото отдельными сообщениями, если есть
     if hw.submission_photo_file_ids:

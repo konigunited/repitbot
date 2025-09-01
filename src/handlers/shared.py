@@ -66,7 +66,7 @@ async def forward_message_to_tutor(update: Update, context: ContextTypes.DEFAULT
     # Формируем заголовок сообщения
     role_emoji = "👨‍🎓" if user.role == UserRole.STUDENT else "👨‍👩‍👧‍👦"
     role_text = "Ученик" if user.role == UserRole.STUDENT else "Родитель"
-    header = f"{role_emoji} *{role_text}:* {user.full_name}\n\n"
+    header = f"{role_emoji} *{role_text}:* {user.full_name}\nID для ответа: `{user.telegram_id}`\n\n"
     
     try:
         # Отправляем разные типы сообщений
