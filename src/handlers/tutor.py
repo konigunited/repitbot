@@ -954,14 +954,12 @@ async def tutor_edit_lesson_conduct_status(update: Update, context: ContextTypes
     
     return EDIT_LESSON_STATUS
 
-async def tutor_set_lesson_conduct(update: Update, context: ContextTypes.DEFAULT_TYPE):
+async def tutor_set_lesson_conduct(update: Update, context: ContextTypes.DEFAULT_TYPE, lesson_id_status: str):
     """Устанавливает статус проведения урока."""
     query = update.callback_query
     
-    # Извлекаем lesson_id и status из callback_data  
-    prefix = "tutor_set_lesson_conduct_"
-    payload = query.data[len(prefix):]
-    lesson_id_str, status_value = payload.rsplit('_', 1)
+    # Извлекаем lesson_id и status из параметра lesson_id_status
+    lesson_id_str, status_value = lesson_id_status.rsplit('_', 1)
     lesson_id = int(lesson_id_str)
     new_status = LessonStatus(status_value)
     
@@ -980,10 +978,9 @@ async def tutor_set_lesson_conduct(update: Update, context: ContextTypes.DEFAULT
             LessonStatus.CONDUCTED: "Проведен"
         }.get(new_status)
         
-        await query.edit_message_text(f"✅ Статус проведения урока изменен на: {status_text}")
+        await query.answer(f"✅ Статус изменен на: {status_text}")
         
         # Возвращаемся к детальной информации об уроке
-        from . import show_lesson_details
         await show_lesson_details(update, context, lesson_id)
         
     except Exception as e:

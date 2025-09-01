@@ -430,8 +430,13 @@ async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
                     material_id = int(data.split("_")[-1])
                     await handler(update, context, material_id)
                 elif param_name == "lesson_id_status":
-                    # Для установки посещаемости урока
-                    lesson_id_status = "_".join(data.split("_")[3:])  # Убираем префикс "tutor_set_attendance_"
+                    # Для установки посещаемости урока или статуса проведения
+                    if data.startswith("tutor_set_attendance_"):
+                        lesson_id_status = "_".join(data.split("_")[3:])  # Убираем префикс "tutor_set_attendance_"
+                    elif data.startswith("tutor_set_lesson_conduct_"):
+                        lesson_id_status = "_".join(data.split("_")[4:])  # Убираем префикс "tutor_set_lesson_conduct_"
+                    else:
+                        lesson_id_status = "_".join(data.split("_")[3:])  # Дефолт для других случаев
                     await handler(update, context, lesson_id_status)
                 elif param_name == "hw_id_status":
                     # Для установки статуса домашнего задания
