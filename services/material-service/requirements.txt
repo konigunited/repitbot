@@ -50,4 +50,4 @@ passlib[bcrypt]==1.7.4
 # Utilities
 python-dateutil==2.8.2
 pytz==2023.3
-mimetypes==1.0.0
+# mimetypes is built-in Python module - removed
