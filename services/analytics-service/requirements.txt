@@ -11,7 +11,6 @@ alembic==1.12.1
 # Authentication and security
 python-jose[cryptography]==3.3.0
 passlib[bcrypt]==1.7.4
-python-multipart==0.0.6
 
 # Message queue
 aio-pika==9.3.1
@@ -36,7 +35,7 @@ kaleido==0.2.1
 # Report generation
 jinja2==3.1.2
 weasyprint==60.2
-xlswriter==3.1.9
+xlsxwriter==3.1.9
 
 # Date/time handling
 python-dateutil==2.8.2
@@ -53,4 +52,3 @@ structlog==23.2.0
 pytest==7.4.3
 pytest-asyncio==0.21.1
 pytest-cov==4.1.0
-httpx==0.25.2
