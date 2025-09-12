@@ -361,10 +361,9 @@ def main() -> None:
             ],
         },
         fallbacks=[CommandHandler("cancel", cancel_conversation)],
-        # Позволяет ConversationHandler работать в разных чатах одновременно
         per_user=True,
         per_chat=True,
-        per_message=False
+        per_message=True
     )
 
     # --- Регистрация обработчиков ---
