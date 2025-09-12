@@ -2591,3 +2591,602 @@
 2025-08-23 02:21:59 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
 2025-08-23 02:22:00 | RepitBot.HealthMonitor | WARNING  | health_monitor.py:149 | _handle_warning | ⚠️ WARNING: Health check bot_connection failed 1 times
 2025-08-23 02:22:14 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-23 02:27:01 | RepitBot.HealthMonitor | CRITICAL | health_monitor.py:139 | _handle_critical_failure | 🚨 CRITICAL: Health check disk_space failed 28 times
+2025-08-23 02:32:02 | RepitBot.HealthMonitor | CRITICAL | health_monitor.py:139 | _handle_critical_failure | 🚨 CRITICAL: Health check disk_space failed 29 times
+2025-08-23 02:37:10 | RepitBot.HealthMonitor | CRITICAL | health_monitor.py:139 | _handle_critical_failure | 🚨 CRITICAL: Health check disk_space failed 30 times
+2025-08-23 02:40:21 | RepitBot.HealthMonitor | ERROR    | health_monitor.py:83 | run_check | Health check bot_connection timeout after 10s
+2025-08-23 02:40:21 | RepitBot.HealthMonitor | CRITICAL | health_monitor.py:139 | _handle_critical_failure | 🚨 CRITICAL: Health check bot_connection failed 1 times
+2025-08-23 02:40:22 | RepitBot.HealthMonitor | ERROR    | health_monitor.py:174 | _recover_bot_connection | ❌ Failed to recover bot connection: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+2025-08-23 02:41:31 | RepitBot | INFO     | bot.py:446 | main | Завершение работы бота
+2025-08-23 20:43:51 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-23 20:43:51 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-23 20:43:51 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-23 20:43:51 | RepitBot | INFO     | bot.py:176 | main | Database tables created/checked.
+2025-08-23 20:43:53 | RepitBot | INFO     | bot.py:430 | main | Запускаем бота...
+2025-08-23 20:43:54 | RepitBot | INFO     | bot.py:159 | initialize_systems | Бот инициализирован
+2025-08-23 20:43:54 | RepitBot | INFO     | bot.py:163 | initialize_systems | Подключение к Telegram API установлено. Бот: @mathtestmathbot
+2025-08-23 20:44:00 | RepitBot | INFO     | bot.py:132 | start_scheduler | Планировщик запущен с задачами: напоминания об уроках, балансе и дедлайнах ДЗ
+2025-08-23 20:44:00 | RepitBot.HealthMonitor | INFO     | health_monitor.py:56 | add_check | Добавлена проверка здоровья: database_connection (интервал: 60с)
+2025-08-23 20:44:00 | RepitBot.HealthMonitor | INFO     | health_monitor.py:56 | add_check | Добавлена проверка здоровья: disk_space (интервал: 300с)
+2025-08-23 20:44:00 | RepitBot.HealthMonitor | INFO     | health_monitor.py:56 | add_check | Добавлена проверка здоровья: memory_usage (интервал: 120с)
+2025-08-23 20:44:00 | RepitBot.HealthMonitor | INFO     | health_monitor.py:266 | setup_default_checks | Стандартные проверки здоровья настроены
+2025-08-23 20:44:00 | RepitBot.HealthMonitor | INFO     | health_monitor.py:56 | add_check | Добавлена проверка здоровья: bot_connection (интервал: 120с)
+2025-08-23 20:44:00 | RepitBot.HealthMonitor | INFO     | health_monitor.py:99 | start_monitoring | Мониторинг здоровья запущен
+2025-08-23 20:44:00 | RepitBot | INFO     | bot.py:152 | start_health_monitoring | Система мониторинга здоровья запущена
+2025-08-23 20:44:00 | RepitBot.HealthMonitor | WARNING  | health_monitor.py:149 | _handle_warning | ⚠️ WARNING: Health check disk_space failed 1 times
+2025-08-23 20:44:00 | RepitBot.HealthMonitor | WARNING  | health_monitor.py:149 | _handle_warning | ⚠️ WARNING: Health check memory_usage failed 1 times
+2025-08-23 20:44:03 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_view_student_19
+2025-08-23 20:44:07 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': 1229333908, 'message': 'Callback: tutor_replace_second_parent_19', 'error': "tutor_replace_second_parent() missing 1 required positional argument: 'student_id'"}
+2025-08-23 20:44:07 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - error_encountered | tutor_replace_second_parent() missing 1 required positional argument: 'student_id'
+2025-08-23 20:44:08 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_remove_second_parent_19
+2025-08-23 20:44:30 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_view_student_20
+2025-08-23 20:44:48 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_view_student_7
+2025-08-23 20:44:57 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_view_student_10
+2025-08-23 20:48:01 | RepitBot.HealthMonitor | WARNING  | health_monitor.py:149 | _handle_warning | ⚠️ WARNING: Health check memory_usage failed 1 times
+2025-08-23 20:49:03 | RepitBot.HealthMonitor | WARNING  | health_monitor.py:149 | _handle_warning | ⚠️ WARNING: Health check disk_space failed 2 times
+2025-08-23 20:54:06 | RepitBot.HealthMonitor | CRITICAL | health_monitor.py:139 | _handle_critical_failure | 🚨 CRITICAL: Health check disk_space failed 3 times
+2025-08-23 20:56:07 | RepitBot.HealthMonitor | WARNING  | health_monitor.py:149 | _handle_warning | ⚠️ WARNING: Health check memory_usage failed 1 times
+2025-08-23 21:07:25 | RepitBot.HealthMonitor | CRITICAL | health_monitor.py:139 | _handle_critical_failure | 🚨 CRITICAL: Health check disk_space failed 4 times
+2025-08-23 21:07:27 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-23 21:07:29 | RepitBot.HealthMonitor | WARNING  | health_monitor.py:149 | _handle_warning | ⚠️ WARNING: Health check bot_connection failed 1 times
+2025-08-23 21:07:42 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-23 23:24:07 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-23 23:24:07 | RepitBot.HealthMonitor | CRITICAL | health_monitor.py:139 | _handle_critical_failure | 🚨 CRITICAL: Health check disk_space failed 5 times
+2025-08-23 23:24:08 | RepitBot.HealthMonitor | WARNING  | health_monitor.py:149 | _handle_warning | ⚠️ WARNING: Health check bot_connection failed 2 times
+2025-08-23 23:24:08 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-23 23:24:10 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-23 23:24:13 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-23 23:24:28 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-23 23:24:53 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-23 23:24:54 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-23 23:24:56 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-23 23:24:58 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-23 23:25:14 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-23 23:25:25 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-23 23:25:26 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-23 23:25:27 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-23 23:25:30 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-23 23:25:33 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-23 23:25:38 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-23 23:25:51 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-23 23:25:52 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-23 23:25:58 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-23 23:26:02 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-23 23:26:05 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-23 23:26:09 | RepitBot.HealthMonitor | WARNING  | health_monitor.py:149 | _handle_warning | ⚠️ WARNING: Health check memory_usage failed 1 times
+2025-08-23 23:26:09 | RepitBot.HealthMonitor | CRITICAL | health_monitor.py:139 | _handle_critical_failure | 🚨 CRITICAL: Health check bot_connection failed 3 times
+2025-08-23 23:26:09 | RepitBot.HealthMonitor | ERROR    | health_monitor.py:174 | _recover_bot_connection | ❌ Failed to recover bot connection: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+2025-08-23 23:26:10 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-23 23:26:18 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-23 23:26:29 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-23 23:26:46 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-23 23:27:12 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-23 23:28:04 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-23 23:28:09 | RepitBot.HealthMonitor | WARNING  | health_monitor.py:149 | _handle_warning | ⚠️ WARNING: Health check memory_usage failed 2 times
+2025-08-23 23:28:09 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-23 23:28:09 | RepitBot.HealthMonitor | CRITICAL | health_monitor.py:139 | _handle_critical_failure | 🚨 CRITICAL: Health check bot_connection failed 4 times
+2025-08-23 23:28:09 | RepitBot.HealthMonitor | ERROR    | health_monitor.py:174 | _recover_bot_connection | ❌ Failed to recover bot connection: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+2025-08-23 23:28:11 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-23 23:28:13 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-23 23:28:34 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-23 23:28:45 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-23 23:28:46 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-23 23:28:47 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-23 23:28:50 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-23 23:28:53 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-23 23:28:58 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-23 23:29:10 | RepitBot.HealthMonitor | CRITICAL | health_monitor.py:139 | _handle_critical_failure | 🚨 CRITICAL: Health check disk_space failed 6 times
+2025-08-23 23:29:11 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-23 23:29:12 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-23 23:29:13 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-23 23:29:16 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-23 23:29:19 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-23 23:29:24 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-23 23:29:32 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-23 23:29:43 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-23 23:30:00 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-23 23:30:10 | RepitBot.HealthMonitor | CRITICAL | health_monitor.py:139 | _handle_critical_failure | 🚨 CRITICAL: Health check bot_connection failed 5 times
+2025-08-23 23:30:10 | RepitBot.HealthMonitor | ERROR    | health_monitor.py:174 | _recover_bot_connection | ❌ Failed to recover bot connection: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+2025-08-23 23:30:38 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-23 23:30:52 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-23 23:31:05 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-23 23:31:18 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-23 23:31:31 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-23 23:31:44 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-23 23:31:57 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-23 23:32:11 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-23 23:32:20 | RepitBot.HealthMonitor | ERROR    | health_monitor.py:83 | run_check | Health check bot_connection timeout after 10s
+2025-08-23 23:32:20 | RepitBot.HealthMonitor | CRITICAL | health_monitor.py:139 | _handle_critical_failure | 🚨 CRITICAL: Health check bot_connection failed 6 times
+2025-08-23 23:32:23 | RepitBot.HealthMonitor | ERROR    | health_monitor.py:174 | _recover_bot_connection | ❌ Failed to recover bot connection: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+2025-08-23 23:32:39 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-23 23:33:07 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-23 23:33:20 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-23 23:34:13 | RepitBot.HealthMonitor | CRITICAL | health_monitor.py:139 | _handle_critical_failure | 🚨 CRITICAL: Health check disk_space failed 7 times
+2025-08-23 23:34:19 | RepitBot.HealthMonitor | CRITICAL | health_monitor.py:139 | _handle_critical_failure | 🚨 CRITICAL: Health check bot_connection failed 7 times
+2025-08-23 23:34:31 | RepitBot.HealthMonitor | ERROR    | health_monitor.py:174 | _recover_bot_connection | ❌ Failed to recover bot connection: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+2025-08-23 23:34:31 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-23 23:34:44 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-23 23:35:12 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-23 23:35:40 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-23 23:35:53 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-23 23:36:06 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-23 23:36:19 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-23 23:36:21 | RepitBot.HealthMonitor | WARNING  | health_monitor.py:149 | _handle_warning | ⚠️ WARNING: Health check memory_usage failed 1 times
+2025-08-23 23:36:31 | RepitBot.HealthMonitor | ERROR    | health_monitor.py:83 | run_check | Health check bot_connection timeout after 10s
+2025-08-23 23:36:31 | RepitBot.HealthMonitor | CRITICAL | health_monitor.py:139 | _handle_critical_failure | 🚨 CRITICAL: Health check bot_connection failed 8 times
+2025-08-23 23:36:32 | RepitBot.HealthMonitor | ERROR    | health_monitor.py:174 | _recover_bot_connection | ❌ Failed to recover bot connection: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+2025-08-23 23:36:32 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-23 23:36:45 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-23 23:36:58 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-23 23:37:11 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-23 23:37:24 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-23 23:38:32 | RepitBot.HealthMonitor | ERROR    | health_monitor.py:83 | run_check | Health check bot_connection timeout after 10s
+2025-08-23 23:38:32 | RepitBot.HealthMonitor | CRITICAL | health_monitor.py:139 | _handle_critical_failure | 🚨 CRITICAL: Health check bot_connection failed 9 times
+2025-08-23 23:38:38 | RepitBot.HealthMonitor | ERROR    | health_monitor.py:174 | _recover_bot_connection | ❌ Failed to recover bot connection: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+2025-08-23 23:38:38 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-23 23:38:51 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-23 23:39:04 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-23 23:39:17 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-23 23:39:18 | RepitBot.HealthMonitor | CRITICAL | health_monitor.py:139 | _handle_critical_failure | 🚨 CRITICAL: Health check disk_space failed 8 times
+2025-08-23 23:39:45 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-23 23:40:13 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-23 23:40:38 | RepitBot.HealthMonitor | ERROR    | health_monitor.py:83 | run_check | Health check bot_connection timeout after 10s
+2025-08-23 23:40:38 | RepitBot.HealthMonitor | CRITICAL | health_monitor.py:139 | _handle_critical_failure | 🚨 CRITICAL: Health check bot_connection failed 10 times
+2025-08-23 23:40:40 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-23 23:40:40 | RepitBot.HealthMonitor | ERROR    | health_monitor.py:174 | _recover_bot_connection | ❌ Failed to recover bot connection: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+2025-08-23 23:40:53 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-23 23:41:06 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-23 23:41:19 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-23 23:41:32 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-23 23:41:45 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-23 23:41:58 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-23 23:42:11 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-23 23:42:24 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-23 23:42:37 | RepitBot.HealthMonitor | CRITICAL | health_monitor.py:139 | _handle_critical_failure | 🚨 CRITICAL: Health check bot_connection failed 11 times
+2025-08-23 23:42:37 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-23 23:42:49 | RepitBot.HealthMonitor | ERROR    | health_monitor.py:174 | _recover_bot_connection | ❌ Failed to recover bot connection: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+2025-08-23 23:42:50 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-23 23:43:03 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-23 23:43:16 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-23 23:43:29 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-23 23:43:57 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-23 23:44:10 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-23 23:44:19 | RepitBot.HealthMonitor | CRITICAL | health_monitor.py:139 | _handle_critical_failure | 🚨 CRITICAL: Health check disk_space failed 9 times
+2025-08-23 23:44:23 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-23 23:44:36 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-23 23:44:39 | RepitBot.HealthMonitor | WARNING  | health_monitor.py:149 | _handle_warning | ⚠️ WARNING: Health check memory_usage failed 1 times
+2025-08-23 23:44:49 | RepitBot.HealthMonitor | ERROR    | health_monitor.py:83 | run_check | Health check bot_connection timeout after 10s
+2025-08-23 23:44:49 | RepitBot.HealthMonitor | CRITICAL | health_monitor.py:139 | _handle_critical_failure | 🚨 CRITICAL: Health check bot_connection failed 12 times
+2025-08-23 23:44:50 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-23 23:44:50 | RepitBot.HealthMonitor | ERROR    | health_monitor.py:174 | _recover_bot_connection | ❌ Failed to recover bot connection: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+2025-08-23 23:45:03 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-23 23:45:16 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-23 23:45:29 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-23 23:45:42 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-23 23:45:55 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-23 23:46:08 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-23 23:46:50 | RepitBot.HealthMonitor | ERROR    | health_monitor.py:83 | run_check | Health check bot_connection timeout after 10s
+2025-08-23 23:46:50 | RepitBot.HealthMonitor | CRITICAL | health_monitor.py:139 | _handle_critical_failure | 🚨 CRITICAL: Health check bot_connection failed 13 times
+2025-08-23 23:46:56 | RepitBot.HealthMonitor | ERROR    | health_monitor.py:174 | _recover_bot_connection | ❌ Failed to recover bot connection: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+2025-08-23 23:48:21 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-23 23:48:34 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-23 23:48:47 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-23 23:48:47 | RepitBot.HealthMonitor | CRITICAL | health_monitor.py:139 | _handle_critical_failure | 🚨 CRITICAL: Health check bot_connection failed 14 times
+2025-08-23 23:48:59 | RepitBot.HealthMonitor | ERROR    | health_monitor.py:174 | _recover_bot_connection | ❌ Failed to recover bot connection: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+2025-08-23 23:48:59 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-23 23:49:13 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-23 23:49:19 | RepitBot.HealthMonitor | CRITICAL | health_monitor.py:139 | _handle_critical_failure | 🚨 CRITICAL: Health check disk_space failed 10 times
+2025-08-23 23:49:26 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-23 23:49:39 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-23 23:49:52 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-23 23:50:05 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-23 23:50:18 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-23 23:50:31 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-23 23:50:44 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-23 23:50:57 | RepitBot.HealthMonitor | CRITICAL | health_monitor.py:139 | _handle_critical_failure | 🚨 CRITICAL: Health check bot_connection failed 15 times
+2025-08-23 23:50:57 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-23 23:51:09 | RepitBot.HealthMonitor | ERROR    | health_monitor.py:174 | _recover_bot_connection | ❌ Failed to recover bot connection: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+2025-08-23 23:51:09 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-23 23:51:22 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-23 23:51:35 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-23 23:51:48 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-23 23:52:01 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-23 23:52:14 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-23 23:52:27 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-23 23:52:40 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-23 23:52:53 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-23 23:53:09 | RepitBot.HealthMonitor | ERROR    | health_monitor.py:83 | run_check | Health check bot_connection timeout after 10s
+2025-08-23 23:53:09 | RepitBot.HealthMonitor | CRITICAL | health_monitor.py:139 | _handle_critical_failure | 🚨 CRITICAL: Health check bot_connection failed 16 times
+2025-08-23 23:53:21 | RepitBot.HealthMonitor | ERROR    | health_monitor.py:174 | _recover_bot_connection | ❌ Failed to recover bot connection: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+2025-08-23 23:54:21 | RepitBot.HealthMonitor | CRITICAL | health_monitor.py:139 | _handle_critical_failure | 🚨 CRITICAL: Health check disk_space failed 11 times
+2025-08-23 23:54:37 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-23 23:54:50 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-23 23:55:01 | RepitBot.HealthMonitor | WARNING  | health_monitor.py:149 | _handle_warning | ⚠️ WARNING: Health check memory_usage failed 1 times
+2025-08-23 23:55:08 | RepitBot.HealthMonitor | CRITICAL | health_monitor.py:139 | _handle_critical_failure | 🚨 CRITICAL: Health check bot_connection failed 17 times
+2025-08-23 23:55:18 | RepitBot.HealthMonitor | ERROR    | health_monitor.py:174 | _recover_bot_connection | ❌ Failed to recover bot connection: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+2025-08-23 23:55:20 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-23 23:55:33 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-23 23:55:46 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-23 23:55:59 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-23 23:56:12 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-23 23:56:25 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-23 23:56:38 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-23 23:56:51 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-23 23:57:04 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-23 23:57:17 | RepitBot.HealthMonitor | CRITICAL | health_monitor.py:139 | _handle_critical_failure | 🚨 CRITICAL: Health check bot_connection failed 18 times
+2025-08-23 23:57:17 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-23 23:57:29 | RepitBot.HealthMonitor | ERROR    | health_monitor.py:174 | _recover_bot_connection | ❌ Failed to recover bot connection: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+2025-08-23 23:57:29 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-23 23:57:43 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-23 23:57:56 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-23 23:58:09 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-23 23:58:22 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-23 23:58:35 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-23 23:58:48 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-23 23:59:01 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-23 23:59:14 | RepitBot.HealthMonitor | CRITICAL | health_monitor.py:139 | _handle_critical_failure | 🚨 CRITICAL: Health check bot_connection failed 19 times
+2025-08-23 23:59:14 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-23 23:59:26 | RepitBot.HealthMonitor | ERROR    | health_monitor.py:174 | _recover_bot_connection | ❌ Failed to recover bot connection: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+2025-08-23 23:59:26 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-23 23:59:36 | RepitBot.HealthMonitor | CRITICAL | health_monitor.py:139 | _handle_critical_failure | 🚨 CRITICAL: Health check disk_space failed 12 times
+2025-08-23 23:59:39 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-23 23:59:52 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-24 00:00:05 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-24 00:00:18 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-24 00:00:31 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-24 00:00:44 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-24 00:00:57 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-24 00:01:10 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-24 00:01:23 | RepitBot.HealthMonitor | CRITICAL | health_monitor.py:139 | _handle_critical_failure | 🚨 CRITICAL: Health check bot_connection failed 20 times
+2025-08-24 00:01:23 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-24 00:01:36 | RepitBot.HealthMonitor | ERROR    | health_monitor.py:174 | _recover_bot_connection | ❌ Failed to recover bot connection: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+2025-08-24 00:01:36 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-24 00:01:49 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-24 00:02:02 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-24 00:02:15 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-24 00:02:28 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-24 00:02:41 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-24 00:02:54 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-24 00:03:07 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-24 00:03:35 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-24 00:03:36 | RepitBot.HealthMonitor | ERROR    | health_monitor.py:83 | run_check | Health check bot_connection timeout after 10s
+2025-08-24 00:03:36 | RepitBot.HealthMonitor | CRITICAL | health_monitor.py:139 | _handle_critical_failure | 🚨 CRITICAL: Health check bot_connection failed 21 times
+2025-08-24 00:03:48 | RepitBot.HealthMonitor | ERROR    | health_monitor.py:174 | _recover_bot_connection | ❌ Failed to recover bot connection: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+2025-08-24 00:03:48 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-24 00:04:01 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-24 00:04:29 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-24 00:04:38 | RepitBot.HealthMonitor | CRITICAL | health_monitor.py:139 | _handle_critical_failure | 🚨 CRITICAL: Health check disk_space failed 13 times
+2025-08-24 00:05:12 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-24 00:05:25 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-24 00:05:38 | RepitBot.HealthMonitor | ERROR    | health_monitor.py:83 | run_check | Health check bot_connection timeout after 10s
+2025-08-24 00:05:38 | RepitBot.HealthMonitor | CRITICAL | health_monitor.py:139 | _handle_critical_failure | 🚨 CRITICAL: Health check bot_connection failed 22 times
+2025-08-24 00:05:38 | RepitBot.HealthMonitor | ERROR    | health_monitor.py:174 | _recover_bot_connection | ❌ Failed to recover bot connection: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+2025-08-24 00:05:38 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-24 00:05:51 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-24 00:06:04 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-24 00:06:17 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-24 00:06:30 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-24 00:06:43 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-24 00:07:26 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-24 00:07:38 | RepitBot.HealthMonitor | ERROR    | health_monitor.py:83 | run_check | Health check bot_connection timeout after 10s
+2025-08-24 00:07:38 | RepitBot.HealthMonitor | CRITICAL | health_monitor.py:139 | _handle_critical_failure | 🚨 CRITICAL: Health check bot_connection failed 23 times
+2025-08-24 00:07:39 | RepitBot.HealthMonitor | ERROR    | health_monitor.py:174 | _recover_bot_connection | ❌ Failed to recover bot connection: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+2025-08-24 00:07:39 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-24 00:07:53 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-24 00:08:06 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-24 00:08:19 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-24 00:09:17 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-24 00:09:30 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-24 00:09:30 | RepitBot.HealthMonitor | CRITICAL | health_monitor.py:139 | _handle_critical_failure | 🚨 CRITICAL: Health check bot_connection failed 24 times
+2025-08-24 00:09:42 | RepitBot.HealthMonitor | ERROR    | health_monitor.py:174 | _recover_bot_connection | ❌ Failed to recover bot connection: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+2025-08-24 00:09:42 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-24 00:09:52 | RepitBot.HealthMonitor | CRITICAL | health_monitor.py:139 | _handle_critical_failure | 🚨 CRITICAL: Health check disk_space failed 14 times
+2025-08-24 00:09:55 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-24 00:10:38 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-24 00:10:51 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-24 00:11:04 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-24 00:11:17 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-24 00:11:30 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-24 00:11:42 | RepitBot.HealthMonitor | ERROR    | health_monitor.py:83 | run_check | Health check bot_connection timeout after 10s
+2025-08-24 00:11:42 | RepitBot.HealthMonitor | CRITICAL | health_monitor.py:139 | _handle_critical_failure | 🚨 CRITICAL: Health check bot_connection failed 25 times
+2025-08-24 00:11:43 | RepitBot.HealthMonitor | ERROR    | health_monitor.py:174 | _recover_bot_connection | ❌ Failed to recover bot connection: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+2025-08-24 00:11:43 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-24 00:11:56 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-24 00:12:09 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-24 00:12:22 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-24 00:12:36 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-24 00:12:49 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-24 00:13:02 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-24 00:13:15 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-24 00:13:28 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-24 00:13:43 | RepitBot.HealthMonitor | ERROR    | health_monitor.py:83 | run_check | Health check bot_connection timeout after 10s
+2025-08-24 00:13:43 | RepitBot.HealthMonitor | CRITICAL | health_monitor.py:139 | _handle_critical_failure | 🚨 CRITICAL: Health check bot_connection failed 26 times
+2025-08-24 00:13:55 | RepitBot.HealthMonitor | ERROR    | health_monitor.py:174 | _recover_bot_connection | ❌ Failed to recover bot connection: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+2025-08-24 00:14:26 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-24 00:14:56 | RepitBot.HealthMonitor | CRITICAL | health_monitor.py:139 | _handle_critical_failure | 🚨 CRITICAL: Health check disk_space failed 15 times
+2025-08-24 00:15:09 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-24 00:15:22 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-24 00:15:36 | RepitBot.HealthMonitor | WARNING  | health_monitor.py:149 | _handle_warning | ⚠️ WARNING: Health check memory_usage failed 1 times
+2025-08-24 00:15:46 | RepitBot.HealthMonitor | ERROR    | health_monitor.py:83 | run_check | Health check bot_connection timeout after 10s
+2025-08-24 00:15:46 | RepitBot.HealthMonitor | CRITICAL | health_monitor.py:139 | _handle_critical_failure | 🚨 CRITICAL: Health check bot_connection failed 27 times
+2025-08-24 00:15:48 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-24 00:15:48 | RepitBot.HealthMonitor | ERROR    | health_monitor.py:174 | _recover_bot_connection | ❌ Failed to recover bot connection: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+2025-08-24 00:16:01 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-24 00:16:14 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-24 00:16:27 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-24 00:16:40 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-24 00:16:53 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-24 00:17:06 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-24 00:17:19 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-24 00:17:32 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-24 00:17:45 | RepitBot.HealthMonitor | CRITICAL | health_monitor.py:139 | _handle_critical_failure | 🚨 CRITICAL: Health check bot_connection failed 28 times
+2025-08-24 00:17:45 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-24 00:17:57 | RepitBot.HealthMonitor | ERROR    | health_monitor.py:174 | _recover_bot_connection | ❌ Failed to recover bot connection: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+2025-08-24 00:17:57 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-24 00:18:10 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-24 00:18:24 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-24 00:18:37 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-24 00:19:35 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-24 00:19:48 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-24 00:19:48 | RepitBot.HealthMonitor | CRITICAL | health_monitor.py:139 | _handle_critical_failure | 🚨 CRITICAL: Health check bot_connection failed 29 times
+2025-08-24 00:20:00 | RepitBot.HealthMonitor | ERROR    | health_monitor.py:174 | _recover_bot_connection | ❌ Failed to recover bot connection: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+2025-08-24 00:20:00 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-24 00:20:12 | RepitBot.HealthMonitor | CRITICAL | health_monitor.py:139 | _handle_critical_failure | 🚨 CRITICAL: Health check disk_space failed 16 times
+2025-08-24 00:20:14 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-24 00:20:27 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-24 00:20:56 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-24 00:21:09 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-24 00:21:22 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-24 00:21:36 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-24 00:21:49 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-24 00:22:02 | RepitBot.HealthMonitor | CRITICAL | health_monitor.py:139 | _handle_critical_failure | 🚨 CRITICAL: Health check bot_connection failed 30 times
+2025-08-24 00:22:14 | RepitBot.HealthMonitor | ERROR    | health_monitor.py:174 | _recover_bot_connection | ❌ Failed to recover bot connection: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+2025-08-24 00:22:14 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-24 00:22:27 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-24 00:22:40 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-24 00:22:53 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-24 00:23:06 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-24 00:23:19 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-24 00:23:32 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-25 19:19:10 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-25 19:19:10 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-25 19:19:11 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-25 19:19:11 | RepitBot | INFO     | bot.py:177 | main | Database tables created/checked.
+2025-08-25 19:19:12 | RepitBot | INFO     | bot.py:433 | main | Запускаем бота...
+2025-08-25 19:19:13 | RepitBot | INFO     | bot.py:160 | initialize_systems | Бот инициализирован
+2025-08-25 19:19:14 | RepitBot | INFO     | bot.py:164 | initialize_systems | Подключение к Telegram API установлено. Бот: @mathtestmathbot
+2025-08-25 19:19:14 | RepitBot | INFO     | bot.py:133 | start_scheduler | Планировщик запущен с задачами: напоминания об уроках, балансе и дедлайнах ДЗ
+2025-08-25 19:19:14 | RepitBot.HealthMonitor | INFO     | health_monitor.py:56 | add_check | Добавлена проверка здоровья: database_connection (интервал: 60с)
+2025-08-25 19:19:14 | RepitBot.HealthMonitor | INFO     | health_monitor.py:56 | add_check | Добавлена проверка здоровья: disk_space (интервал: 300с)
+2025-08-25 19:19:14 | RepitBot.HealthMonitor | INFO     | health_monitor.py:56 | add_check | Добавлена проверка здоровья: memory_usage (интервал: 120с)
+2025-08-25 19:19:14 | RepitBot.HealthMonitor | INFO     | health_monitor.py:266 | setup_default_checks | Стандартные проверки здоровья настроены
+2025-08-25 19:19:14 | RepitBot.HealthMonitor | INFO     | health_monitor.py:56 | add_check | Добавлена проверка здоровья: bot_connection (интервал: 120с)
+2025-08-25 19:19:14 | RepitBot.HealthMonitor | INFO     | health_monitor.py:99 | start_monitoring | Мониторинг здоровья запущен
+2025-08-25 19:19:14 | RepitBot | INFO     | bot.py:153 | start_health_monitoring | Система мониторинга здоровья запущена
+2025-08-25 19:19:24 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_view_student_20
+2025-08-25 19:19:28 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_view_student_19
+2025-08-25 19:19:55 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_view_student_25
+2025-08-25 19:19:58 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_library_grade_2
+2025-08-25 19:20:20 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': 1229333908, 'message': '📈 Статистика', 'error': "(sqlite3.OperationalError) no such column: lessons.lesson_status\n[SQL: SELECT count(*) AS count_1 \nFROM (SELECT lessons.id AS lessons_id, lessons.topic AS lessons_topic, lessons.date AS lessons_date, lessons.skills_developed AS lessons_skills_developed, lessons.mastery_level AS lessons_mastery_level, lessons.mastery_comment AS lessons_mastery_comment, lessons.is_attended AS lessons_is_attended, lessons.attendance_status AS lessons_attendance_status, lessons.lesson_status AS lessons_lesson_status, lessons.original_date AS lessons_original_date, lessons.is_rescheduled AS lessons_is_rescheduled, lessons.created_at AS lessons_created_at, lessons.student_id AS lessons_student_id \nFROM lessons \nWHERE lessons.attendance_status = ? AND CAST(STRFTIME('%Y', lessons.date) AS INTEGER) = ? AND CAST(STRFTIME('%m', lessons.date) AS INTEGER) = ?) AS anon_1]\n[parameters: ('ATTENDED', 2025, 8)]\n(Background on this error at: https://sqlalche.me/e/20/e3q8)"}
+2025-08-25 19:20:20 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - error_encountered | (sqlite3.OperationalError) no such column: lessons.lesson_status
+[SQL: SELECT count(*) AS count_1 
+F
+2025-08-25 19:20:25 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': 1229333908, 'message': 'Callback: report_select_month_20_0', 'error': "(sqlite3.OperationalError) no such column: lessons.lesson_status\n[SQL: SELECT lessons.id AS lessons_id, lessons.topic AS lessons_topic, lessons.date AS lessons_date, lessons.skills_developed AS lessons_skills_developed, lessons.mastery_level AS lessons_mastery_level, lessons.mastery_comment AS lessons_mastery_comment, lessons.is_attended AS lessons_is_attended, lessons.attendance_status AS lessons_attendance_status, lessons.lesson_status AS lessons_lesson_status, lessons.original_date AS lessons_original_date, lessons.is_rescheduled AS lessons_is_rescheduled, lessons.created_at AS lessons_created_at, lessons.student_id AS lessons_student_id \nFROM lessons \nWHERE lessons.student_id = ? AND CAST(STRFTIME('%Y', lessons.date) AS INTEGER) = ? AND CAST(STRFTIME('%m', lessons.date) AS INTEGER) = ? ORDER BY lessons.date]\n[parameters: (20, 2025, 8)]\n(Background on this error at: https://sqlalche.me/e/20/e3q8)"}
+2025-08-25 19:20:25 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - error_encountered | (sqlite3.OperationalError) no such column: lessons.lesson_status
+[SQL: SELECT lessons.id AS lessons_
+2025-08-25 19:21:08 | RepitBot | INFO     | bot.py:449 | main | Завершение работы бота
+2025-08-25 19:21:18 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-25 19:21:18 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-25 19:21:18 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-25 19:21:18 | RepitBot | INFO     | bot.py:177 | main | Database tables created/checked.
+2025-08-25 19:21:19 | RepitBot | INFO     | bot.py:433 | main | Запускаем бота...
+2025-08-25 19:21:20 | RepitBot | INFO     | bot.py:160 | initialize_systems | Бот инициализирован
+2025-08-25 19:21:21 | RepitBot | INFO     | bot.py:164 | initialize_systems | Подключение к Telegram API установлено. Бот: @mathtestmathbot
+2025-08-25 19:21:21 | RepitBot | INFO     | bot.py:133 | start_scheduler | Планировщик запущен с задачами: напоминания об уроках, балансе и дедлайнах ДЗ
+2025-08-25 19:21:21 | RepitBot.HealthMonitor | INFO     | health_monitor.py:56 | add_check | Добавлена проверка здоровья: database_connection (интервал: 60с)
+2025-08-25 19:21:21 | RepitBot.HealthMonitor | INFO     | health_monitor.py:56 | add_check | Добавлена проверка здоровья: disk_space (интервал: 300с)
+2025-08-25 19:21:21 | RepitBot.HealthMonitor | INFO     | health_monitor.py:56 | add_check | Добавлена проверка здоровья: memory_usage (интервал: 120с)
+2025-08-25 19:21:21 | RepitBot.HealthMonitor | INFO     | health_monitor.py:266 | setup_default_checks | Стандартные проверки здоровья настроены
+2025-08-25 19:21:21 | RepitBot.HealthMonitor | INFO     | health_monitor.py:56 | add_check | Добавлена проверка здоровья: bot_connection (интервал: 120с)
+2025-08-25 19:21:21 | RepitBot.HealthMonitor | INFO     | health_monitor.py:99 | start_monitoring | Мониторинг здоровья запущен
+2025-08-25 19:21:21 | RepitBot | INFO     | bot.py:153 | start_health_monitoring | Система мониторинга здоровья запущена
+2025-08-25 19:21:24 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_view_student_18
+2025-08-25 19:21:27 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_analytics_18
+2025-08-25 19:21:32 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_view_student_7
+2025-08-25 19:21:34 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_lessons_list_7
+2025-08-25 19:21:41 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_view_student_6
+2025-08-25 19:21:43 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_lessons_list_6
+2025-08-25 19:21:55 | RepitBot | INFO     | bot.py:444 | main | Получен сигнал завершения работы
+2025-08-25 19:21:55 | RepitBot | INFO     | bot.py:449 | main | Завершение работы бота
+2025-08-25 19:24:14 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-25 19:24:14 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-25 19:24:14 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-25 19:24:14 | RepitBot | INFO     | bot.py:177 | main | Database tables created/checked.
+2025-08-25 19:24:16 | RepitBot | INFO     | bot.py:433 | main | Запускаем бота...
+2025-08-25 19:24:17 | RepitBot | INFO     | bot.py:160 | initialize_systems | Бот инициализирован
+2025-08-25 19:24:17 | RepitBot | INFO     | bot.py:164 | initialize_systems | Подключение к Telegram API установлено. Бот: @mathtestmathbot
+2025-08-25 19:24:17 | RepitBot | INFO     | bot.py:133 | start_scheduler | Планировщик запущен с задачами: напоминания об уроках, балансе и дедлайнах ДЗ
+2025-08-25 19:24:17 | RepitBot.HealthMonitor | INFO     | health_monitor.py:56 | add_check | Добавлена проверка здоровья: database_connection (интервал: 60с)
+2025-08-25 19:24:17 | RepitBot.HealthMonitor | INFO     | health_monitor.py:56 | add_check | Добавлена проверка здоровья: disk_space (интервал: 300с)
+2025-08-25 19:24:17 | RepitBot.HealthMonitor | INFO     | health_monitor.py:56 | add_check | Добавлена проверка здоровья: memory_usage (интервал: 120с)
+2025-08-25 19:24:17 | RepitBot.HealthMonitor | INFO     | health_monitor.py:266 | setup_default_checks | Стандартные проверки здоровья настроены
+2025-08-25 19:24:17 | RepitBot.HealthMonitor | INFO     | health_monitor.py:56 | add_check | Добавлена проверка здоровья: bot_connection (интервал: 120с)
+2025-08-25 19:24:17 | RepitBot.HealthMonitor | INFO     | health_monitor.py:99 | start_monitoring | Мониторинг здоровья запущен
+2025-08-25 19:24:17 | RepitBot | INFO     | bot.py:153 | start_health_monitoring | Система мониторинга здоровья запущена
+2025-08-25 19:24:21 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_view_student_20
+2025-08-25 19:24:26 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_lessons_list_20
+2025-08-25 19:24:27 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_view_student_20
+2025-08-25 19:24:29 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_schedule_lessons_20
+2025-08-25 19:24:52 | RepitBot | INFO     | bot.py:449 | main | Завершение работы бота
+2025-08-25 19:27:42 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-25 19:27:42 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-25 19:27:42 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-25 19:27:42 | RepitBot | INFO     | bot.py:177 | main | Database tables created/checked.
+2025-08-25 19:27:43 | RepitBot | INFO     | bot.py:433 | main | Запускаем бота...
+2025-08-25 19:27:44 | RepitBot | INFO     | bot.py:160 | initialize_systems | Бот инициализирован
+2025-08-25 19:27:44 | RepitBot | INFO     | bot.py:164 | initialize_systems | Подключение к Telegram API установлено. Бот: @mathtestmathbot
+2025-08-25 19:27:44 | RepitBot | INFO     | bot.py:133 | start_scheduler | Планировщик запущен с задачами: напоминания об уроках, балансе и дедлайнах ДЗ
+2025-08-25 19:27:44 | RepitBot.HealthMonitor | INFO     | health_monitor.py:56 | add_check | Добавлена проверка здоровья: database_connection (интервал: 60с)
+2025-08-25 19:27:44 | RepitBot.HealthMonitor | INFO     | health_monitor.py:56 | add_check | Добавлена проверка здоровья: disk_space (интервал: 300с)
+2025-08-25 19:27:44 | RepitBot.HealthMonitor | INFO     | health_monitor.py:56 | add_check | Добавлена проверка здоровья: memory_usage (интервал: 120с)
+2025-08-25 19:27:44 | RepitBot.HealthMonitor | INFO     | health_monitor.py:266 | setup_default_checks | Стандартные проверки здоровья настроены
+2025-08-25 19:27:44 | RepitBot.HealthMonitor | INFO     | health_monitor.py:56 | add_check | Добавлена проверка здоровья: bot_connection (интервал: 120с)
+2025-08-25 19:27:44 | RepitBot.HealthMonitor | INFO     | health_monitor.py:99 | start_monitoring | Мониторинг здоровья запущен
+2025-08-25 19:27:44 | RepitBot | INFO     | bot.py:153 | start_health_monitoring | Система мониторинга здоровья запущена
+2025-08-25 19:27:47 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_view_student_10
+2025-08-25 19:27:50 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_view_student_6
+2025-08-25 19:27:54 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_schedule_lessons_6
+2025-08-25 19:27:56 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_schedule_period_6_1
+2025-08-25 19:28:46 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_view_student_7
+2025-08-25 19:29:01 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_analytics_7
+2025-08-25 19:29:06 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_analytics_7
+2025-08-25 19:29:09 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_lessons_list_7
+2025-08-25 19:29:09 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_analytics_7
+2025-08-25 19:30:41 | RepitBot | INFO     | bot.py:449 | main | Завершение работы бота
+2025-08-25 19:33:15 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-25 19:33:15 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-25 19:33:15 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-25 19:33:15 | RepitBot | INFO     | bot.py:177 | main | Database tables created/checked.
+2025-08-25 19:33:16 | RepitBot | INFO     | bot.py:433 | main | Запускаем бота...
+2025-08-25 19:33:17 | RepitBot | INFO     | bot.py:160 | initialize_systems | Бот инициализирован
+2025-08-25 19:33:18 | RepitBot | INFO     | bot.py:164 | initialize_systems | Подключение к Telegram API установлено. Бот: @mathtestmathbot
+2025-08-25 19:33:18 | RepitBot | INFO     | bot.py:133 | start_scheduler | Планировщик запущен с задачами: напоминания об уроках, балансе и дедлайнах ДЗ
+2025-08-25 19:33:18 | RepitBot.HealthMonitor | INFO     | health_monitor.py:56 | add_check | Добавлена проверка здоровья: database_connection (интервал: 60с)
+2025-08-25 19:33:18 | RepitBot.HealthMonitor | INFO     | health_monitor.py:56 | add_check | Добавлена проверка здоровья: disk_space (интервал: 300с)
+2025-08-25 19:33:18 | RepitBot.HealthMonitor | INFO     | health_monitor.py:56 | add_check | Добавлена проверка здоровья: memory_usage (интервал: 120с)
+2025-08-25 19:33:18 | RepitBot.HealthMonitor | INFO     | health_monitor.py:266 | setup_default_checks | Стандартные проверки здоровья настроены
+2025-08-25 19:33:18 | RepitBot.HealthMonitor | INFO     | health_monitor.py:56 | add_check | Добавлена проверка здоровья: bot_connection (интервал: 120с)
+2025-08-25 19:33:18 | RepitBot.HealthMonitor | INFO     | health_monitor.py:99 | start_monitoring | Мониторинг здоровья запущен
+2025-08-25 19:33:18 | RepitBot | INFO     | bot.py:153 | start_health_monitoring | Система мониторинга здоровья запущена
+2025-08-25 19:33:19 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 7722156884 - parent_dashboard | Просмотр дашборда родителя
+2025-08-25 19:36:47 | RepitBot | INFO     | bot.py:449 | main | Завершение работы бота
+2025-08-25 19:36:50 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-25 19:36:50 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-25 19:36:50 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-25 19:36:50 | RepitBot | INFO     | bot.py:177 | main | Database tables created/checked.
+2025-08-25 19:36:51 | RepitBot | INFO     | bot.py:433 | main | Запускаем бота...
+2025-08-25 19:36:52 | RepitBot | INFO     | bot.py:160 | initialize_systems | Бот инициализирован
+2025-08-25 19:36:52 | RepitBot | INFO     | bot.py:164 | initialize_systems | Подключение к Telegram API установлено. Бот: @mathtestmathbot
+2025-08-25 19:36:52 | RepitBot | INFO     | bot.py:133 | start_scheduler | Планировщик запущен с задачами: напоминания об уроках, балансе и дедлайнах ДЗ
+2025-08-25 19:36:52 | RepitBot.HealthMonitor | INFO     | health_monitor.py:56 | add_check | Добавлена проверка здоровья: database_connection (интервал: 60с)
+2025-08-25 19:36:52 | RepitBot.HealthMonitor | INFO     | health_monitor.py:56 | add_check | Добавлена проверка здоровья: disk_space (интервал: 300с)
+2025-08-25 19:36:52 | RepitBot.HealthMonitor | INFO     | health_monitor.py:56 | add_check | Добавлена проверка здоровья: memory_usage (интервал: 120с)
+2025-08-25 19:36:52 | RepitBot.HealthMonitor | INFO     | health_monitor.py:266 | setup_default_checks | Стандартные проверки здоровья настроены
+2025-08-25 19:36:52 | RepitBot.HealthMonitor | INFO     | health_monitor.py:56 | add_check | Добавлена проверка здоровья: bot_connection (интервал: 120с)
+2025-08-25 19:36:52 | RepitBot.HealthMonitor | INFO     | health_monitor.py:99 | start_monitoring | Мониторинг здоровья запущен
+2025-08-25 19:36:52 | RepitBot | INFO     | bot.py:153 | start_health_monitoring | Система мониторинга здоровья запущена
+2025-08-25 19:37:23 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 7722156884 - parent_dashboard | Просмотр дашборда родителя
+2025-08-25 19:38:05 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_view_student_6
+2025-08-25 19:38:12 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_student_list
+2025-08-25 19:40:52 | RepitBot | INFO     | bot.py:449 | main | Завершение работы бота
+2025-08-25 19:40:55 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-25 19:40:55 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-25 19:40:55 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-25 19:40:55 | RepitBot | INFO     | bot.py:177 | main | Database tables created/checked.
+2025-08-25 19:40:57 | RepitBot | INFO     | bot.py:433 | main | Запускаем бота...
+2025-08-25 19:40:59 | RepitBot | INFO     | bot.py:160 | initialize_systems | Бот инициализирован
+2025-08-25 19:40:59 | RepitBot | INFO     | bot.py:164 | initialize_systems | Подключение к Telegram API установлено. Бот: @mathtestmathbot
+2025-08-25 19:40:59 | RepitBot | INFO     | bot.py:133 | start_scheduler | Планировщик запущен с задачами: напоминания об уроках, балансе и дедлайнах ДЗ
+2025-08-25 19:40:59 | RepitBot.HealthMonitor | INFO     | health_monitor.py:56 | add_check | Добавлена проверка здоровья: database_connection (интервал: 60с)
+2025-08-25 19:40:59 | RepitBot.HealthMonitor | INFO     | health_monitor.py:56 | add_check | Добавлена проверка здоровья: disk_space (интервал: 300с)
+2025-08-25 19:40:59 | RepitBot.HealthMonitor | INFO     | health_monitor.py:56 | add_check | Добавлена проверка здоровья: memory_usage (интервал: 120с)
+2025-08-25 19:40:59 | RepitBot.HealthMonitor | INFO     | health_monitor.py:266 | setup_default_checks | Стандартные проверки здоровья настроены
+2025-08-25 19:40:59 | RepitBot.HealthMonitor | INFO     | health_monitor.py:56 | add_check | Добавлена проверка здоровья: bot_connection (интервал: 120с)
+2025-08-25 19:40:59 | RepitBot.HealthMonitor | INFO     | health_monitor.py:99 | start_monitoring | Мониторинг здоровья запущен
+2025-08-25 19:40:59 | RepitBot | INFO     | bot.py:153 | start_health_monitoring | Система мониторинга здоровья запущена
+2025-08-25 19:41:08 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 7722156884 - parent_dashboard | Просмотр дашборда родителя
+2025-08-25 19:45:14 | RepitBot | INFO     | bot.py:444 | main | Получен сигнал завершения работы
+2025-08-25 19:45:14 | RepitBot | INFO     | bot.py:449 | main | Завершение работы бота
+2025-08-25 19:45:17 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-25 19:45:17 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-25 19:45:17 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-25 19:45:17 | RepitBot | INFO     | bot.py:177 | main | Database tables created/checked.
+2025-08-25 19:45:18 | RepitBot | INFO     | bot.py:433 | main | Запускаем бота...
+2025-08-25 19:45:20 | RepitBot | INFO     | bot.py:160 | initialize_systems | Бот инициализирован
+2025-08-25 19:45:20 | RepitBot | INFO     | bot.py:164 | initialize_systems | Подключение к Telegram API установлено. Бот: @mathtestmathbot
+2025-08-25 19:45:20 | RepitBot | INFO     | bot.py:133 | start_scheduler | Планировщик запущен с задачами: напоминания об уроках, балансе и дедлайнах ДЗ
+2025-08-25 19:45:20 | RepitBot.HealthMonitor | INFO     | health_monitor.py:56 | add_check | Добавлена проверка здоровья: database_connection (интервал: 60с)
+2025-08-25 19:45:20 | RepitBot.HealthMonitor | INFO     | health_monitor.py:56 | add_check | Добавлена проверка здоровья: disk_space (интервал: 300с)
+2025-08-25 19:45:20 | RepitBot.HealthMonitor | INFO     | health_monitor.py:56 | add_check | Добавлена проверка здоровья: memory_usage (интервал: 120с)
+2025-08-25 19:45:20 | RepitBot.HealthMonitor | INFO     | health_monitor.py:266 | setup_default_checks | Стандартные проверки здоровья настроены
+2025-08-25 19:45:20 | RepitBot.HealthMonitor | INFO     | health_monitor.py:56 | add_check | Добавлена проверка здоровья: bot_connection (интервал: 120с)
+2025-08-25 19:45:20 | RepitBot.HealthMonitor | INFO     | health_monitor.py:99 | start_monitoring | Мониторинг здоровья запущен
+2025-08-25 19:45:20 | RepitBot | INFO     | bot.py:153 | start_health_monitoring | Система мониторинга здоровья запущена
+2025-08-25 19:45:58 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 7722156884 - parent_dashboard | Просмотр дашборда родителя
+2025-08-25 20:02:15 | RepitBot.HealthMonitor | WARNING  | health_monitor.py:149 | _handle_warning | ⚠️ WARNING: Health check bot_connection failed 1 times
+2025-08-25 20:02:16 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-25 20:02:16 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-25 20:02:18 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-25 20:02:34 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-25 20:02:50 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-25 20:02:51 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-25 20:02:53 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-25 20:02:55 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-25 20:02:58 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-25 20:03:15 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-25 20:03:27 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-25 20:03:28 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-25 20:03:29 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-25 20:03:31 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-08-25 20:05:18 | RepitBot | INFO     | bot.py:449 | main | Завершение работы бота
+2025-08-25 20:05:22 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-25 20:05:22 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-25 20:05:22 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-25 20:05:22 | RepitBot | INFO     | bot.py:177 | main | Database tables created/checked.
+2025-08-25 20:05:23 | RepitBot | INFO     | bot.py:433 | main | Запускаем бота...
+2025-08-25 20:05:24 | RepitBot | INFO     | bot.py:160 | initialize_systems | Бот инициализирован
+2025-08-25 20:05:24 | RepitBot | INFO     | bot.py:164 | initialize_systems | Подключение к Telegram API установлено. Бот: @mathtestmathbot
+2025-08-25 20:05:24 | RepitBot | INFO     | bot.py:133 | start_scheduler | Планировщик запущен с задачами: напоминания об уроках, балансе и дедлайнах ДЗ
+2025-08-25 20:05:24 | RepitBot.HealthMonitor | INFO     | health_monitor.py:56 | add_check | Добавлена проверка здоровья: database_connection (интервал: 60с)
+2025-08-25 20:05:24 | RepitBot.HealthMonitor | INFO     | health_monitor.py:56 | add_check | Добавлена проверка здоровья: disk_space (интервал: 300с)
+2025-08-25 20:05:24 | RepitBot.HealthMonitor | INFO     | health_monitor.py:56 | add_check | Добавлена проверка здоровья: memory_usage (интервал: 120с)
+2025-08-25 20:05:24 | RepitBot.HealthMonitor | INFO     | health_monitor.py:266 | setup_default_checks | Стандартные проверки здоровья настроены
+2025-08-25 20:05:24 | RepitBot.HealthMonitor | INFO     | health_monitor.py:56 | add_check | Добавлена проверка здоровья: bot_connection (интервал: 120с)
+2025-08-25 20:05:24 | RepitBot.HealthMonitor | INFO     | health_monitor.py:99 | start_monitoring | Мониторинг здоровья запущен
+2025-08-25 20:05:24 | RepitBot | INFO     | bot.py:153 | start_health_monitoring | Система мониторинга здоровья запущена
+2025-08-25 20:05:31 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 7722156884 - parent_dashboard | Просмотр дашборда родителя
+2025-08-25 20:05:33 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 7722156884 - BUTTON_CLICK: parent_child_6
+2025-08-25 20:05:33 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 7722156884 - child_menu_view | Просмотр меню ребенка ID:6
+2025-08-25 20:05:35 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 7722156884 - BUTTON_CLICK: parent_progress_6
+2025-08-25 20:05:35 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 7722156884 - child_progress_view | Просмотр прогресса ребенка ID:6
+2025-08-25 20:05:36 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 7722156884 - BUTTON_CLICK: parent_child_6
+2025-08-25 20:05:36 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 7722156884 - child_menu_view | Просмотр меню ребенка ID:6
+2025-08-25 20:05:38 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 7722156884 - BUTTON_CLICK: parent_schedule_6
+2025-08-25 20:05:40 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 7722156884 - BUTTON_CLICK: parent_dashboard
+2025-08-25 20:05:40 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 7722156884 - parent_dashboard | Просмотр дашборда родителя
+2025-08-25 20:06:04 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_view_student_6
+2025-08-25 20:06:07 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_view_student_6
+2025-08-25 20:06:08 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_lessons_list_6
+2025-08-25 20:06:12 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_lesson_details_81
+2025-08-25 20:06:16 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_lessons_list_6
+2025-08-25 20:06:18 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_view_student_6
+2025-08-25 20:06:39 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_view_student_6
+2025-08-25 20:06:43 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_lessons_list_6
+2025-08-25 20:06:46 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_lesson_details_82
+2025-08-25 20:11:53 | RepitBot | INFO     | bot.py:449 | main | Завершение работы бота
+2025-08-25 20:11:56 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-25 20:11:56 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-25 20:11:56 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-08-25 20:11:56 | RepitBot | INFO     | bot.py:177 | main | Database tables created/checked.
+2025-08-25 20:11:57 | RepitBot | INFO     | bot.py:433 | main | Запускаем бота...
+2025-08-25 20:11:59 | RepitBot | INFO     | bot.py:160 | initialize_systems | Бот инициализирован
+2025-08-25 20:11:59 | RepitBot | INFO     | bot.py:164 | initialize_systems | Подключение к Telegram API установлено. Бот: @mathtestmathbot
+2025-08-25 20:11:59 | RepitBot | INFO     | bot.py:133 | start_scheduler | Планировщик запущен с задачами: напоминания об уроках, балансе и дедлайнах ДЗ
+2025-08-25 20:11:59 | RepitBot.HealthMonitor | INFO     | health_monitor.py:56 | add_check | Добавлена проверка здоровья: database_connection (интервал: 60с)
+2025-08-25 20:11:59 | RepitBot.HealthMonitor | INFO     | health_monitor.py:56 | add_check | Добавлена проверка здоровья: disk_space (интервал: 300с)
+2025-08-25 20:11:59 | RepitBot.HealthMonitor | INFO     | health_monitor.py:56 | add_check | Добавлена проверка здоровья: memory_usage (интервал: 120с)
+2025-08-25 20:11:59 | RepitBot.HealthMonitor | INFO     | health_monitor.py:266 | setup_default_checks | Стандартные проверки здоровья настроены
+2025-08-25 20:11:59 | RepitBot.HealthMonitor | INFO     | health_monitor.py:56 | add_check | Добавлена проверка здоровья: bot_connection (интервал: 120с)
+2025-08-25 20:11:59 | RepitBot.HealthMonitor | INFO     | health_monitor.py:99 | start_monitoring | Мониторинг здоровья запущен
+2025-08-25 20:11:59 | RepitBot | INFO     | bot.py:153 | start_health_monitoring | Система мониторинга здоровья запущена
+2025-08-25 20:12:04 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_view_student_6
+2025-08-25 20:12:06 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_lessons_list_6
+2025-08-25 20:12:08 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_lesson_details_13
+2025-08-25 20:12:15 | RepitBot | INFO     | bot.py:449 | main | Завершение работы бота
+2025-09-01 16:38:42 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-09-01 16:38:42 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-09-01 16:38:42 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-09-01 16:38:42 | RepitBot | INFO     | bot.py:177 | main | Database tables created/checked.
+2025-09-01 16:38:43 | RepitBot | INFO     | bot.py:433 | main | Запускаем бота...
+2025-09-01 16:38:45 | RepitBot | INFO     | bot.py:160 | initialize_systems | Бот инициализирован
+2025-09-01 16:38:45 | RepitBot | INFO     | bot.py:164 | initialize_systems | Подключение к Telegram API установлено. Бот: @mathtestmathbot

@@ -1239,3 +1239,189 @@
 2025-08-22 22:21:30 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_view_student_19
 2025-08-22 22:21:30 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_view_student_19
 2025-08-22 22:21:30 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_view_student_19
+2025-08-23 20:44:03 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_view_student_19
+2025-08-23 20:44:03 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_view_student_19
+2025-08-23 20:44:03 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_view_student_19
+2025-08-23 20:44:07 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - error_encountered | tutor_replace_second_parent() missing 1 required positional argument: 'student_id'
+2025-08-23 20:44:07 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - error_encountered | tutor_replace_second_parent() missing 1 required positional argument: 'student_id'
+2025-08-23 20:44:07 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - error_encountered | tutor_replace_second_parent() missing 1 required positional argument: 'student_id'
+2025-08-23 20:44:08 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_remove_second_parent_19
+2025-08-23 20:44:08 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_remove_second_parent_19
+2025-08-23 20:44:08 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_remove_second_parent_19
+2025-08-23 20:44:30 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_view_student_20
+2025-08-23 20:44:30 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_view_student_20
+2025-08-23 20:44:30 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_view_student_20
+2025-08-23 20:44:48 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_view_student_7
+2025-08-23 20:44:48 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_view_student_7
+2025-08-23 20:44:48 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_view_student_7
+2025-08-23 20:44:57 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_view_student_10
+2025-08-23 20:44:57 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_view_student_10
+2025-08-23 20:44:57 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_view_student_10
+2025-08-25 19:19:24 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_view_student_20
+2025-08-25 19:19:24 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_view_student_20
+2025-08-25 19:19:24 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_view_student_20
+2025-08-25 19:19:28 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_view_student_19
+2025-08-25 19:19:28 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_view_student_19
+2025-08-25 19:19:28 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_view_student_19
+2025-08-25 19:19:55 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_view_student_25
+2025-08-25 19:19:55 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_view_student_25
+2025-08-25 19:19:55 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_view_student_25
+2025-08-25 19:19:58 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_library_grade_2
+2025-08-25 19:19:58 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_library_grade_2
+2025-08-25 19:19:58 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_library_grade_2
+2025-08-25 19:20:20 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - error_encountered | (sqlite3.OperationalError) no such column: lessons.lesson_status
+[SQL: SELECT count(*) AS count_1 
+F
+2025-08-25 19:20:20 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - error_encountered | (sqlite3.OperationalError) no such column: lessons.lesson_status
+[SQL: SELECT count(*) AS count_1 
+F
+2025-08-25 19:20:20 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - error_encountered | (sqlite3.OperationalError) no such column: lessons.lesson_status
+[SQL: SELECT count(*) AS count_1 
+F
+2025-08-25 19:20:25 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - error_encountered | (sqlite3.OperationalError) no such column: lessons.lesson_status
+[SQL: SELECT lessons.id AS lessons_
+2025-08-25 19:20:25 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - error_encountered | (sqlite3.OperationalError) no such column: lessons.lesson_status
+[SQL: SELECT lessons.id AS lessons_
+2025-08-25 19:20:25 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - error_encountered | (sqlite3.OperationalError) no such column: lessons.lesson_status
+[SQL: SELECT lessons.id AS lessons_
+2025-08-25 19:21:24 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_view_student_18
+2025-08-25 19:21:24 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_view_student_18
+2025-08-25 19:21:24 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_view_student_18
+2025-08-25 19:21:27 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_analytics_18
+2025-08-25 19:21:27 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_analytics_18
+2025-08-25 19:21:27 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_analytics_18
+2025-08-25 19:21:32 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_view_student_7
+2025-08-25 19:21:32 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_view_student_7
+2025-08-25 19:21:32 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_view_student_7
+2025-08-25 19:21:34 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_lessons_list_7
+2025-08-25 19:21:34 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_lessons_list_7
+2025-08-25 19:21:34 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_lessons_list_7
+2025-08-25 19:21:41 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_view_student_6
+2025-08-25 19:21:41 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_view_student_6
+2025-08-25 19:21:41 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_view_student_6
+2025-08-25 19:21:43 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_lessons_list_6
+2025-08-25 19:21:43 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_lessons_list_6
+2025-08-25 19:21:43 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_lessons_list_6
+2025-08-25 19:24:21 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_view_student_20
+2025-08-25 19:24:21 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_view_student_20
+2025-08-25 19:24:21 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_view_student_20
+2025-08-25 19:24:26 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_lessons_list_20
+2025-08-25 19:24:26 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_lessons_list_20
+2025-08-25 19:24:26 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_lessons_list_20
+2025-08-25 19:24:27 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_view_student_20
+2025-08-25 19:24:27 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_view_student_20
+2025-08-25 19:24:27 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_view_student_20
+2025-08-25 19:24:29 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_schedule_lessons_20
+2025-08-25 19:24:29 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_schedule_lessons_20
+2025-08-25 19:24:29 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_schedule_lessons_20
+2025-08-25 19:27:47 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_view_student_10
+2025-08-25 19:27:47 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_view_student_10
+2025-08-25 19:27:47 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_view_student_10
+2025-08-25 19:27:50 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_view_student_6
+2025-08-25 19:27:50 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_view_student_6
+2025-08-25 19:27:50 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_view_student_6
+2025-08-25 19:27:54 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_schedule_lessons_6
+2025-08-25 19:27:54 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_schedule_lessons_6
+2025-08-25 19:27:54 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_schedule_lessons_6
+2025-08-25 19:27:56 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_schedule_period_6_1
+2025-08-25 19:27:56 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_schedule_period_6_1
+2025-08-25 19:27:56 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_schedule_period_6_1
+2025-08-25 19:28:46 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_view_student_7
+2025-08-25 19:28:46 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_view_student_7
+2025-08-25 19:28:46 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_view_student_7
+2025-08-25 19:29:01 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_analytics_7
+2025-08-25 19:29:01 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_analytics_7
+2025-08-25 19:29:01 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_analytics_7
+2025-08-25 19:29:06 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_analytics_7
+2025-08-25 19:29:06 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_analytics_7
+2025-08-25 19:29:06 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_analytics_7
+2025-08-25 19:29:09 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_lessons_list_7
+2025-08-25 19:29:09 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_lessons_list_7
+2025-08-25 19:29:09 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_lessons_list_7
+2025-08-25 19:29:09 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_analytics_7
+2025-08-25 19:29:09 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_analytics_7
+2025-08-25 19:29:09 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_analytics_7
+2025-08-25 19:33:19 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 7722156884 - parent_dashboard | Просмотр дашборда родителя
+2025-08-25 19:33:19 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 7722156884 - parent_dashboard | Просмотр дашборда родителя
+2025-08-25 19:33:19 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 7722156884 - parent_dashboard | Просмотр дашборда родителя
+2025-08-25 19:37:23 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 7722156884 - parent_dashboard | Просмотр дашборда родителя
+2025-08-25 19:37:23 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 7722156884 - parent_dashboard | Просмотр дашборда родителя
+2025-08-25 19:37:23 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 7722156884 - parent_dashboard | Просмотр дашборда родителя
+2025-08-25 19:38:05 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_view_student_6
+2025-08-25 19:38:05 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_view_student_6
+2025-08-25 19:38:05 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_view_student_6
+2025-08-25 19:38:12 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_student_list
+2025-08-25 19:38:12 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_student_list
+2025-08-25 19:38:12 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_student_list
+2025-08-25 19:41:08 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 7722156884 - parent_dashboard | Просмотр дашборда родителя
+2025-08-25 19:41:08 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 7722156884 - parent_dashboard | Просмотр дашборда родителя
+2025-08-25 19:41:08 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 7722156884 - parent_dashboard | Просмотр дашборда родителя
+2025-08-25 19:45:58 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 7722156884 - parent_dashboard | Просмотр дашборда родителя
+2025-08-25 19:45:58 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 7722156884 - parent_dashboard | Просмотр дашборда родителя
+2025-08-25 19:45:58 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 7722156884 - parent_dashboard | Просмотр дашборда родителя
+2025-08-25 20:05:31 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 7722156884 - parent_dashboard | Просмотр дашборда родителя
+2025-08-25 20:05:31 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 7722156884 - parent_dashboard | Просмотр дашборда родителя
+2025-08-25 20:05:31 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 7722156884 - parent_dashboard | Просмотр дашборда родителя
+2025-08-25 20:05:33 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 7722156884 - BUTTON_CLICK: parent_child_6
+2025-08-25 20:05:33 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 7722156884 - BUTTON_CLICK: parent_child_6
+2025-08-25 20:05:33 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 7722156884 - BUTTON_CLICK: parent_child_6
+2025-08-25 20:05:33 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 7722156884 - child_menu_view | Просмотр меню ребенка ID:6
+2025-08-25 20:05:33 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 7722156884 - child_menu_view | Просмотр меню ребенка ID:6
+2025-08-25 20:05:33 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 7722156884 - child_menu_view | Просмотр меню ребенка ID:6
+2025-08-25 20:05:35 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 7722156884 - BUTTON_CLICK: parent_progress_6
+2025-08-25 20:05:35 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 7722156884 - BUTTON_CLICK: parent_progress_6
+2025-08-25 20:05:35 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 7722156884 - BUTTON_CLICK: parent_progress_6
+2025-08-25 20:05:35 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 7722156884 - child_progress_view | Просмотр прогресса ребенка ID:6
+2025-08-25 20:05:35 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 7722156884 - child_progress_view | Просмотр прогресса ребенка ID:6
+2025-08-25 20:05:35 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 7722156884 - child_progress_view | Просмотр прогресса ребенка ID:6
+2025-08-25 20:05:36 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 7722156884 - BUTTON_CLICK: parent_child_6
+2025-08-25 20:05:36 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 7722156884 - BUTTON_CLICK: parent_child_6
+2025-08-25 20:05:36 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 7722156884 - BUTTON_CLICK: parent_child_6
+2025-08-25 20:05:36 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 7722156884 - child_menu_view | Просмотр меню ребенка ID:6
+2025-08-25 20:05:36 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 7722156884 - child_menu_view | Просмотр меню ребенка ID:6
+2025-08-25 20:05:36 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 7722156884 - child_menu_view | Просмотр меню ребенка ID:6
+2025-08-25 20:05:38 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 7722156884 - BUTTON_CLICK: parent_schedule_6
+2025-08-25 20:05:38 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 7722156884 - BUTTON_CLICK: parent_schedule_6
+2025-08-25 20:05:38 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 7722156884 - BUTTON_CLICK: parent_schedule_6
+2025-08-25 20:05:40 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 7722156884 - BUTTON_CLICK: parent_dashboard
+2025-08-25 20:05:40 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 7722156884 - BUTTON_CLICK: parent_dashboard
+2025-08-25 20:05:40 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 7722156884 - BUTTON_CLICK: parent_dashboard
+2025-08-25 20:05:40 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 7722156884 - parent_dashboard | Просмотр дашборда родителя
+2025-08-25 20:05:40 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 7722156884 - parent_dashboard | Просмотр дашборда родителя
+2025-08-25 20:05:40 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 7722156884 - parent_dashboard | Просмотр дашборда родителя
+2025-08-25 20:06:04 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_view_student_6
+2025-08-25 20:06:04 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_view_student_6
+2025-08-25 20:06:04 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_view_student_6
+2025-08-25 20:06:07 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_view_student_6
+2025-08-25 20:06:07 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_view_student_6
+2025-08-25 20:06:07 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_view_student_6
+2025-08-25 20:06:08 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_lessons_list_6
+2025-08-25 20:06:08 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_lessons_list_6
+2025-08-25 20:06:08 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_lessons_list_6
+2025-08-25 20:06:12 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_lesson_details_81
+2025-08-25 20:06:12 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_lesson_details_81
+2025-08-25 20:06:12 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_lesson_details_81
+2025-08-25 20:06:16 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_lessons_list_6
+2025-08-25 20:06:16 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_lessons_list_6
+2025-08-25 20:06:16 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_lessons_list_6
+2025-08-25 20:06:18 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_view_student_6
+2025-08-25 20:06:18 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_view_student_6
+2025-08-25 20:06:18 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_view_student_6
+2025-08-25 20:06:39 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_view_student_6
+2025-08-25 20:06:39 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_view_student_6
+2025-08-25 20:06:39 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_view_student_6
+2025-08-25 20:06:43 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_lessons_list_6
+2025-08-25 20:06:43 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_lessons_list_6
+2025-08-25 20:06:43 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_lessons_list_6
+2025-08-25 20:06:46 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_lesson_details_82
+2025-08-25 20:06:46 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_lesson_details_82
+2025-08-25 20:06:46 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_lesson_details_82
+2025-08-25 20:12:04 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_view_student_6
+2025-08-25 20:12:04 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_view_student_6
+2025-08-25 20:12:04 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_view_student_6
+2025-08-25 20:12:06 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_lessons_list_6
+2025-08-25 20:12:06 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_lessons_list_6
+2025-08-25 20:12:06 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_lessons_list_6
+2025-08-25 20:12:08 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_lesson_details_13
+2025-08-25 20:12:08 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_lesson_details_13
+2025-08-25 20:12:08 | RepitBot.UserActions | INFO     | logger.py:129 | log_user_action | User 1229333908 - BUTTON_CLICK: tutor_lesson_details_13

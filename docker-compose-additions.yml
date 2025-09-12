@@ -1,0 +1,109 @@
+# Additional services for docker-compose.microservices.yml
+
+  # Student Service
+  student-service:
+    build:
+      context: ./services/student-service
+      dockerfile: Dockerfile
+    container_name: repitbot_student_service
+    environment:
+      - DATABASE_URL=postgresql+asyncpg://repitbot:repitbot_password@postgres:5432/student_service
+      - RABBITMQ_URL=amqp://repitbot:repitbot_password@rabbitmq:5672/
+      - REDIS_URL=redis://redis:6379/5
+      - USER_SERVICE_URL=http://user-service:8001
+      - LESSON_SERVICE_URL=http://lesson-service:8002
+      - HOMEWORK_SERVICE_URL=http://homework-service:8003
+      - NOTIFICATION_SERVICE_URL=http://notification-service:8006
+      - DEFAULT_LEVEL_XP_THRESHOLD=1000
+      - XP_MULTIPLIER=1.5
+      - MAX_LEVEL=100
+      - ENABLE_ACHIEVEMENTS=true
+      - ENABLE_GAMIFICATION=true
+      - ENABLE_RECOMMENDATIONS=true
+      - ENABLE_SOCIAL_FEATURES=true
+      - EVENT_PROCESSING_ENABLED=true
+      - DEBUG=false
+      - JWT_SECRET_KEY=your-super-secret-jwt-key-change-in-production
+    volumes:
+      - student_service_data:/app/data
+    ports:
+      - "8008:8008"
+    networks:
+      - repitbot_network
+    depends_on:
+      postgres:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      user-service:
+        condition: service_healthy
+      lesson-service:
+        condition: service_healthy
+      homework-service:
+        condition: service_healthy
+      notification-service:
+        condition: service_healthy
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8008/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  # API Gateway
+  api-gateway:
+    build:
+      context: ./services/api-gateway
+      dockerfile: Dockerfile
+    container_name: repitbot_api_gateway
+    environment:
+      - HOST=0.0.0.0
+      - PORT=8000
+      - DEBUG=false
+      - ENVIRONMENT=production
+      - JWT_SECRET_KEY=your-super-secret-jwt-key-change-in-production
+      - RATE_LIMIT_PER_MINUTE=100
+      - RATE_LIMIT_BURST=20
+      - REQUEST_TIMEOUT=30
+      - CONNECT_TIMEOUT=5
+      - CIRCUIT_BREAKER_FAILURE_THRESHOLD=5
+      - CIRCUIT_BREAKER_RECOVERY_TIMEOUT=60
+      - LOAD_BALANCER_STRATEGY=round_robin
+      - HEALTH_CHECK_INTERVAL=30
+      - ENABLE_CORS=true
+      - ENABLE_REQUEST_LOGGING=true
+      - ENABLE_RATE_LIMITING=true
+      - ENABLE_CIRCUIT_BREAKER=true
+    ports:
+      - "8000:8000"
+    networks:
+      - repitbot_network
+    depends_on:
+      user-service:
+        condition: service_healthy
+      lesson-service:
+        condition: service_healthy
+      homework-service:
+        condition: service_healthy
+      payment-service:
+        condition: service_healthy
+      material-service:
+        condition: service_healthy
+      notification-service:
+        condition: service_healthy
+      analytics-service:
+        condition: service_healthy
+      student-service:
+        condition: service_healthy
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+# Additional volumes
+  student_service_data:
+    name: repitbot_student_service_data

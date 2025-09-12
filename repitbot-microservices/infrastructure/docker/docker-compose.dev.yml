@@ -1,0 +1,304 @@
+version: '3.8'
+
+services:
+  # Database Services
+  postgres:
+    image: postgres:15-alpine
+    container_name: repitbot_postgres_dev
+    environment:
+      POSTGRES_DB: repitbot_dev
+      POSTGRES_USER: repitbot
+      POSTGRES_PASSWORD: repitbot_dev_password
+      PGDATA: /var/lib/postgresql/data/pgdata
+    volumes:
+      - postgres_data_dev:/var/lib/postgresql/data
+      - ./init-scripts:/docker-entrypoint-initdb.d
+    ports:
+      - "5432:5432"
+    networks:
+      - repitbot-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U repitbot -d repitbot_dev"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Redis for caching and message broker
+  redis:
+    image: redis:7-alpine
+    container_name: repitbot_redis_dev
+    command: redis-server --appendonly yes --requirepass repitbot_redis_password
+    environment:
+      REDIS_PASSWORD: repitbot_redis_password
+    volumes:
+      - redis_data_dev:/data
+    ports:
+      - "6379:6379"
+    networks:
+      - repitbot-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "--raw", "incr", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+
+  # RabbitMQ for message queuing (alternative to Redis)
+  rabbitmq:
+    image: rabbitmq:3.11-management-alpine
+    container_name: repitbot_rabbitmq_dev
+    environment:
+      RABBITMQ_DEFAULT_USER: repitbot
+      RABBITMQ_DEFAULT_PASS: repitbot_rabbit_password
+      RABBITMQ_DEFAULT_VHOST: repitbot
+    volumes:
+      - rabbitmq_data_dev:/var/lib/rabbitmq
+    ports:
+      - "5672:5672"   # AMQP port
+      - "15672:15672" # Management UI
+    networks:
+      - repitbot-network
+    healthcheck:
+      test: rabbitmq-diagnostics -q ping
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  # Monitoring and Observability
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: repitbot_prometheus_dev
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+      - '--storage.tsdb.retention.time=200h'
+      - '--web.enable-lifecycle'
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus_data_dev:/prometheus
+    ports:
+      - "9090:9090"
+    networks:
+      - repitbot-network
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: repitbot_grafana_dev
+    environment:
+      GF_SECURITY_ADMIN_USER: admin
+      GF_SECURITY_ADMIN_PASSWORD: repitbot_grafana_password
+      GF_USERS_ALLOW_SIGN_UP: false
+    volumes:
+      - grafana_data_dev:/var/lib/grafana
+      - ./monitoring/grafana/provisioning:/etc/grafana/provisioning
+    ports:
+      - "3000:3000"
+    networks:
+      - repitbot-network
+    depends_on:
+      - prometheus
+
+  # Development tools
+  adminer:
+    image: adminer:latest
+    container_name: repitbot_adminer_dev
+    environment:
+      ADMINER_DEFAULT_SERVER: postgres
+    ports:
+      - "8080:8080"
+    networks:
+      - repitbot-network
+    depends_on:
+      - postgres
+
+  # Jaeger for distributed tracing
+  jaeger:
+    image: jaegertracing/all-in-one:latest
+    container_name: repitbot_jaeger_dev
+    environment:
+      COLLECTOR_ZIPKIN_HOST_PORT: :9411
+    ports:
+      - "5775:5775/udp"
+      - "6831:6831/udp"
+      - "6832:6832/udp"
+      - "5778:5778"
+      - "16686:16686"
+      - "14250:14250"
+      - "14268:14268"
+      - "14269:14269"
+      - "9411:9411"
+    networks:
+      - repitbot-network
+
+  # Elasticsearch for logging (optional)
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.8.0
+    container_name: repitbot_elasticsearch_dev
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    volumes:
+      - elasticsearch_data_dev:/usr/share/elasticsearch/data
+    ports:
+      - "9200:9200"
+    networks:
+      - repitbot-network
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:9200/_cluster/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  # Kibana for log visualization
+  kibana:
+    image: docker.elastic.co/kibana/kibana:8.8.0
+    container_name: repitbot_kibana_dev
+    environment:
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+    ports:
+      - "5601:5601"
+    networks:
+      - repitbot-network
+    depends_on:
+      - elasticsearch
+
+  # API Gateway (Nginx)
+  api-gateway:
+    image: nginx:alpine
+    container_name: repitbot_api_gateway_dev
+    volumes:
+      - ./nginx/nginx.dev.conf:/etc/nginx/nginx.conf
+      - ./nginx/conf.d:/etc/nginx/conf.d
+    ports:
+      - "80:80"
+      - "443:443"
+    networks:
+      - repitbot-network
+    depends_on:
+      - user-service
+      - auth-service
+      - lesson-service
+
+  # Microservices (Development placeholders)
+  user-service:
+    build:
+      context: ../../services/user-service
+      dockerfile: Dockerfile.dev
+    container_name: repitbot_user_service_dev
+    environment:
+      - ENVIRONMENT=development
+      - DATABASE_URL=postgresql://repitbot:repitbot_dev_password@postgres:5432/repitbot_dev
+      - REDIS_URL=redis://:repitbot_redis_password@redis:6379/0
+      - MESSAGE_BROKER_URL=amqp://repitbot:repitbot_rabbit_password@rabbitmq:5672/repitbot
+    volumes:
+      - ../../services/user-service:/app
+      - ../../shared:/app/shared
+    ports:
+      - "8001:8000"
+    networks:
+      - repitbot-network
+    depends_on:
+      - postgres
+      - redis
+      - rabbitmq
+    command: ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
+
+  auth-service:
+    build:
+      context: ../../services/auth-service
+      dockerfile: Dockerfile.dev
+    container_name: repitbot_auth_service_dev
+    environment:
+      - ENVIRONMENT=development
+      - DATABASE_URL=postgresql://repitbot:repitbot_dev_password@postgres:5432/repitbot_dev
+      - REDIS_URL=redis://:repitbot_redis_password@redis:6379/1
+      - MESSAGE_BROKER_URL=amqp://repitbot:repitbot_rabbit_password@rabbitmq:5672/repitbot
+    volumes:
+      - ../../services/auth-service:/app
+      - ../../shared:/app/shared
+    ports:
+      - "8002:8000"
+    networks:
+      - repitbot-network
+    depends_on:
+      - postgres
+      - redis
+      - rabbitmq
+    command: ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
+
+  lesson-service:
+    build:
+      context: ../../services/lesson-service
+      dockerfile: Dockerfile.dev
+    container_name: repitbot_lesson_service_dev
+    environment:
+      - ENVIRONMENT=development
+      - DATABASE_URL=postgresql://repitbot:repitbot_dev_password@postgres:5432/repitbot_dev
+      - REDIS_URL=redis://:repitbot_redis_password@redis:6379/2
+      - MESSAGE_BROKER_URL=amqp://repitbot:repitbot_rabbit_password@rabbitmq:5672/repitbot
+    volumes:
+      - ../../services/lesson-service:/app
+      - ../../shared:/app/shared
+    ports:
+      - "8003:8000"
+    networks:
+      - repitbot-network
+    depends_on:
+      - postgres
+      - redis
+      - rabbitmq
+    command: ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
+
+  # Telegram Bot Service
+  telegram-bot:
+    build:
+      context: ../../telegram-bot
+      dockerfile: Dockerfile.dev
+    container_name: repitbot_telegram_bot_dev
+    environment:
+      - ENVIRONMENT=development
+      - TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN}
+      - API_GATEWAY_URL=http://api-gateway
+      - USER_SERVICE_URL=http://user-service:8000
+      - AUTH_SERVICE_URL=http://auth-service:8000
+      - LESSON_SERVICE_URL=http://lesson-service:8000
+    volumes:
+      - ../../telegram-bot:/app
+      - ../../shared:/app/shared
+    networks:
+      - repitbot-network
+    depends_on:
+      - api-gateway
+      - user-service
+      - auth-service
+      - lesson-service
+    command: ["python", "bot.py"]
+
+volumes:
+  postgres_data_dev:
+    driver: local
+  redis_data_dev:
+    driver: local
+  rabbitmq_data_dev:
+    driver: local
+  prometheus_data_dev:
+    driver: local
+  grafana_data_dev:
+    driver: local
+  elasticsearch_data_dev:
+    driver: local
+
+networks:
+  repitbot-network:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.20.0.0/16
+
+# Health check and development utilities
+# Use: docker-compose -f docker-compose.dev.yml up -d
+# View logs: docker-compose -f docker-compose.dev.yml logs -f [service_name]
+# Scale service: docker-compose -f docker-compose.dev.yml up -d --scale user-service=2

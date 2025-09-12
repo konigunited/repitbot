@@ -1,0 +1,100 @@
+🎯 МИКРОСЕРВИСЫ (10 сервисов)
+
+  1. User Service - Пользователи и аутентификация
+  2. Student Service - Ученики и достижения
+  3. Tutor Service - Репетиторы и статистика
+  4. Lesson Service - Уроки и расписание
+  5. Homework Service - Домашние задания
+  6. Payment Service - Платежи и баланс
+  7. Material Service - Учебные материалы
+  8. Notification Service - Telegram уведомления
+  9. Analytics Service - Аналитика и отчеты
+  10. API Gateway - Маршрутизация и безопасность
+
+  📁 СТРУКТУРА ПРОЕКТА
+
+  repitbot/
+  ├── services/
+  │   ├── user-service/
+  │   │   ├── app/
+  │   │   │   ├── main.py                # FastAPI app
+  │   │   │   ├── models/user.py         # SQLAlchemy модели
+  │   │   │   ├── services/auth_service.py
+  │   │   │   ├── api/v1/users.py        # REST API
+  │   │   │   └── database/connection.py
+  │   │   ├── tests/
+  │   │   ├── Dockerfile
+  │   │   └── requirements.txt
+  │   │
+  │   ├── lesson-service/               # Аналогично для всех
+  │   ├── homework-service/
+  │   └── ... (остальные сервисы)
+  │
+  ├── shared/                          # Общие компоненты
+  │   ├── events/base.py              # Event Sourcing
+  │   ├── models/enums.py             # Общие перечисления
+  │   └── utils/database.py           # DB утилиты
+  │
+  ├── telegram-bot/                   # Telegram интерфейс
+  │   ├── app/
+  │   │   ├── main.py
+  │   │   ├── handlers/
+  │   │   └── services/api_client.py  # HTTP клиент
+  │
+  ├── infrastructure/
+  │   ├── docker/docker-compose.yml
+  │   ├── kubernetes/
+  │   └── monitoring/
+
+  📋 ПЛАН МИГРАЦИИ (16 недель)
+
+  🚀 Этап 1: Инфраструктура (Неделя 1-2)
+
+  - Создание структуры каталогов
+  - Настройка Docker
+  - Создание shared компонентов
+
+  👤 Этап 2: User Service (Неделя 3-4)
+
+  - Миграция модели User
+  - JWT аутентификация
+  - API endpoints
+
+  📚 Этап 3: Lesson & Homework (Неделя 5-6)
+
+  - Сервисы уроков и ДЗ
+  - Событийная система
+  - File upload
+
+  💰 Этап 4: Payment & Materials (Неделя 7-8)
+
+  - Платежная система
+  - Библиотека материалов
+
+  🔔 Этап 5: Notifications & Analytics (Неделя 9-10)
+
+  - Уведомления
+  - Аналитика и отчеты
+
+  🎓 Этап 6: Student Service & Gateway (Неделя 11-12)
+
+  - API Gateway
+  - Система достижений
+
+  🧪 Этап 7: Тестирование (Неделя 13-14)
+
+  - E2E тесты
+  - Нагрузочное тестирование
+  - Мониторинг
+
+  🚀 Этап 8: Production (Неделя 15-16)
+
+  - Blue-Green deployment
+  - Переход трафика
+
+  ⚡ ТЕХНИЧЕСКИЕ ДЕТАЛИ
+
+  Стек: Python 3.11+, FastAPI, PostgreSQL, Redis, Docker, KubernetesКоммуникация: HTTP/REST +
+  Event-Driven (Redis Pub/Sub)Паттерны: DDD, Clean Architecture, CQRS, Event Sourcing
+
+  Готов начать реализацию? С какого этапа начнем?

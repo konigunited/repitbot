@@ -1,20 +1,189 @@
-# Игнорируем виртуальное окружение
-venv/
-/venv/
+# RepitBot Microservices - Production .gitignore
 
-# Игнорируем файлы кэша Python
-__pycache__/
-*.pyc
-*.pyo
-*.pyd
-
-# Игнорируем файлы баз данных
-*.db
-*.sqlite3
-
-# Игнорируем файлы окружения с секретными данными
+# ============== СЕКРЕТНЫЕ ДАННЫЕ ==============
+# КРИТИЧНО: НЕ КОММИТИТЬ В GIT!
 .env
+.env.production
+.env.local
+.env.*.local
+*.key
+*.pem
+*.p12
+secrets/
+config/secrets/
 
-# Игнорируем временные файлы и папки
-/charts/
+# Database
+*.db
+*.sqlite
+*.sqlite3
+database.url
+connection_strings.txt
+
+# JWT Secrets
+jwt_secret.txt
+refresh_secret.txt
+api_keys.txt
+
+# ============== PYTHON ==============
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+pip-wheel-metadata/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# PyInstaller
+*.manifest
+*.spec
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+.pytest_cache/
+
+# Virtual environments
+venv/
+ENV/
+env/
+.venv/
+
+# ============== DOCKER ==============
+# Docker build cache
+.dockerignore
+docker-compose.override.yml
+docker-compose.local.yml
+docker-compose.debug.yml
+
+# ============== LOGS ==============
+logs/
+*.log
+log_*.txt
+error_*.txt
+debug_*.txt
+access_*.txt
+
+# ============== UPLOADS & FILES ==============
+# User uploaded files
+uploads/
+storage/
+files/
+media/
+tmp/
+temp/
+
+# Homework files
+homework_files/
+student_uploads/
+material_files/
+
+# Generated reports
+reports/
+exports/
+generated/
+
+# ============== MICROSERVICES SPECIFIC ==============
+# Service data
+services/*/data/
+services/*/logs/
+services/*/uploads/
+services/*/storage/
+services/*/cache/
+
+# Prometheus & Grafana data
+prometheus_data/
+grafana_data/
+monitoring/data/
+
+# RabbitMQ data
+rabbitmq_data/
+
+# Redis dumps
+dump.rdb
+
+# ============== IDE & EDITORS ==============
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# ============== OS SPECIFIC ==============
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+*.lnk
+
+# macOS
 .DS_Store
+.AppleDouble
+.LSOverride
+
+# Linux
+*~
+
+# ============== TESTING ==============
+.pytest_cache/
+test_results/
+coverage_reports/
+test_data/
+
+# ============== DEPLOYMENT ==============
+# Kubernetes secrets
+k8s/secrets/
+kubernetes/secrets/
+
+# Terraform
+*.tfstate
+*.tfstate.*
+.terraform/
+terraform.tfvars
+
+# Ansible
+inventory/production
+inventory/staging
+group_vars/production/
+host_vars/production/
+
+# ============== BACKUP ==============
+backup/
+*.bak
+*.backup
+*.dump
+*.sql.gz
+
+# ============== ВКЛЮЧИТЬ В GIT ==============
+# Эти файлы ДОЛЖНЫ быть в репозитории:
+!.gitkeep
+!README.md
+!requirements.txt
+!Dockerfile
+!docker-compose.yml
+!alembic.ini
+!pytest.ini

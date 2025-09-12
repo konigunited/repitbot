@@ -1,0 +1,398 @@
+version: '3.8'
+
+services:
+  # Database Services
+  postgres:
+    image: postgres:15-alpine
+    container_name: repitbot_postgres
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-repitbot}
+      POSTGRES_USER: ${POSTGRES_USER:-repitbot}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      PGDATA: /var/lib/postgresql/data/pgdata
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init-scripts:/docker-entrypoint-initdb.d
+    networks:
+      - repitbot-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-repitbot} -d ${POSTGRES_DB:-repitbot}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  # Redis for caching and message broker
+  redis:
+    image: redis:7-alpine
+    container_name: repitbot_redis
+    command: redis-server --appendonly yes --requirepass ${REDIS_PASSWORD}
+    environment:
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
+    volumes:
+      - redis_data:/data
+    networks:
+      - repitbot-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "--raw", "incr", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+    restart: unless-stopped
+
+  # RabbitMQ for message queuing
+  rabbitmq:
+    image: rabbitmq:3.11-management-alpine
+    container_name: repitbot_rabbitmq
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER:-repitbot}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD}
+      RABBITMQ_DEFAULT_VHOST: ${RABBITMQ_VHOST:-repitbot}
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    networks:
+      - repitbot-network
+    healthcheck:
+      test: rabbitmq-diagnostics -q ping
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    restart: unless-stopped
+
+  # API Gateway
+  api-gateway:
+    image: nginx:alpine
+    container_name: repitbot_api_gateway
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/conf.d:/etc/nginx/conf.d:ro
+      - ./nginx/ssl:/etc/nginx/ssl:ro
+    ports:
+      - "${API_GATEWAY_PORT:-80}:80"
+      - "${API_GATEWAY_SSL_PORT:-443}:443"
+    networks:
+      - repitbot-network
+    depends_on:
+      - user-service
+      - auth-service
+      - lesson-service
+      - homework-service
+      - payment-service
+      - notification-service
+      - material-service
+      - analytics-service
+      - achievement-service
+      - scheduler-service
+    restart: unless-stopped
+
+  # Microservices
+  user-service:
+    image: repitbot/user-service:${VERSION:-latest}
+    container_name: repitbot_user_service
+    environment:
+      - ENVIRONMENT=${ENVIRONMENT:-production}
+      - DATABASE_URL=postgresql://${POSTGRES_USER:-repitbot}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-repitbot}
+      - REDIS_URL=redis://:${REDIS_PASSWORD}@redis:6379/0
+      - MESSAGE_BROKER_URL=amqp://${RABBITMQ_USER:-repitbot}:${RABBITMQ_PASSWORD}@rabbitmq:5672/${RABBITMQ_VHOST:-repitbot}
+      - SECRET_KEY=${USER_SERVICE_SECRET_KEY}
+      - JWT_SECRET_KEY=${JWT_SECRET_KEY}
+    networks:
+      - repitbot-network
+    depends_on:
+      - postgres
+      - redis
+      - rabbitmq
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  auth-service:
+    image: repitbot/auth-service:${VERSION:-latest}
+    container_name: repitbot_auth_service
+    environment:
+      - ENVIRONMENT=${ENVIRONMENT:-production}
+      - DATABASE_URL=postgresql://${POSTGRES_USER:-repitbot}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-repitbot}
+      - REDIS_URL=redis://:${REDIS_PASSWORD}@redis:6379/1
+      - MESSAGE_BROKER_URL=amqp://${RABBITMQ_USER:-repitbot}:${RABBITMQ_PASSWORD}@rabbitmq:5672/${RABBITMQ_VHOST:-repitbot}
+      - SECRET_KEY=${AUTH_SERVICE_SECRET_KEY}
+      - JWT_SECRET_KEY=${JWT_SECRET_KEY}
+      - JWT_REFRESH_SECRET_KEY=${JWT_REFRESH_SECRET_KEY}
+    networks:
+      - repitbot-network
+    depends_on:
+      - postgres
+      - redis
+      - rabbitmq
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  lesson-service:
+    image: repitbot/lesson-service:${VERSION:-latest}
+    container_name: repitbot_lesson_service
+    environment:
+      - ENVIRONMENT=${ENVIRONMENT:-production}
+      - DATABASE_URL=postgresql://${POSTGRES_USER:-repitbot}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-repitbot}
+      - REDIS_URL=redis://:${REDIS_PASSWORD}@redis:6379/2
+      - MESSAGE_BROKER_URL=amqp://${RABBITMQ_USER:-repitbot}:${RABBITMQ_PASSWORD}@rabbitmq:5672/${RABBITMQ_VHOST:-repitbot}
+      - SECRET_KEY=${LESSON_SERVICE_SECRET_KEY}
+    networks:
+      - repitbot-network
+    depends_on:
+      - postgres
+      - redis
+      - rabbitmq
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  homework-service:
+    image: repitbot/homework-service:${VERSION:-latest}
+    container_name: repitbot_homework_service
+    environment:
+      - ENVIRONMENT=${ENVIRONMENT:-production}
+      - DATABASE_URL=postgresql://${POSTGRES_USER:-repitbot}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-repitbot}
+      - REDIS_URL=redis://:${REDIS_PASSWORD}@redis:6379/3
+      - MESSAGE_BROKER_URL=amqp://${RABBITMQ_USER:-repitbot}:${RABBITMQ_PASSWORD}@rabbitmq:5672/${RABBITMQ_VHOST:-repitbot}
+      - SECRET_KEY=${HOMEWORK_SERVICE_SECRET_KEY}
+    networks:
+      - repitbot-network
+    depends_on:
+      - postgres
+      - redis
+      - rabbitmq
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  payment-service:
+    image: repitbot/payment-service:${VERSION:-latest}
+    container_name: repitbot_payment_service
+    environment:
+      - ENVIRONMENT=${ENVIRONMENT:-production}
+      - DATABASE_URL=postgresql://${POSTGRES_USER:-repitbot}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-repitbot}
+      - REDIS_URL=redis://:${REDIS_PASSWORD}@redis:6379/4
+      - MESSAGE_BROKER_URL=amqp://${RABBITMQ_USER:-repitbot}:${RABBITMQ_PASSWORD}@rabbitmq:5672/${RABBITMQ_VHOST:-repitbot}
+      - SECRET_KEY=${PAYMENT_SERVICE_SECRET_KEY}
+    networks:
+      - repitbot-network
+    depends_on:
+      - postgres
+      - redis
+      - rabbitmq
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  notification-service:
+    image: repitbot/notification-service:${VERSION:-latest}
+    container_name: repitbot_notification_service
+    environment:
+      - ENVIRONMENT=${ENVIRONMENT:-production}
+      - DATABASE_URL=postgresql://${POSTGRES_USER:-repitbot}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-repitbot}
+      - REDIS_URL=redis://:${REDIS_PASSWORD}@redis:6379/5
+      - MESSAGE_BROKER_URL=amqp://${RABBITMQ_USER:-repitbot}:${RABBITMQ_PASSWORD}@rabbitmq:5672/${RABBITMQ_VHOST:-repitbot}
+      - SECRET_KEY=${NOTIFICATION_SERVICE_SECRET_KEY}
+      - TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN}
+    networks:
+      - repitbot-network
+    depends_on:
+      - postgres
+      - redis
+      - rabbitmq
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  material-service:
+    image: repitbot/material-service:${VERSION:-latest}
+    container_name: repitbot_material_service
+    environment:
+      - ENVIRONMENT=${ENVIRONMENT:-production}
+      - DATABASE_URL=postgresql://${POSTGRES_USER:-repitbot}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-repitbot}
+      - REDIS_URL=redis://:${REDIS_PASSWORD}@redis:6379/6
+      - MESSAGE_BROKER_URL=amqp://${RABBITMQ_USER:-repitbot}:${RABBITMQ_PASSWORD}@rabbitmq:5672/${RABBITMQ_VHOST:-repitbot}
+      - SECRET_KEY=${MATERIAL_SERVICE_SECRET_KEY}
+    networks:
+      - repitbot-network
+    depends_on:
+      - postgres
+      - redis
+      - rabbitmq
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  analytics-service:
+    image: repitbot/analytics-service:${VERSION:-latest}
+    container_name: repitbot_analytics_service
+    environment:
+      - ENVIRONMENT=${ENVIRONMENT:-production}
+      - DATABASE_URL=postgresql://${POSTGRES_USER:-repitbot}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-repitbot}
+      - REDIS_URL=redis://:${REDIS_PASSWORD}@redis:6379/7
+      - MESSAGE_BROKER_URL=amqp://${RABBITMQ_USER:-repitbot}:${RABBITMQ_PASSWORD}@rabbitmq:5672/${RABBITMQ_VHOST:-repitbot}
+      - SECRET_KEY=${ANALYTICS_SERVICE_SECRET_KEY}
+    networks:
+      - repitbot-network
+    depends_on:
+      - postgres
+      - redis
+      - rabbitmq
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  achievement-service:
+    image: repitbot/achievement-service:${VERSION:-latest}
+    container_name: repitbot_achievement_service
+    environment:
+      - ENVIRONMENT=${ENVIRONMENT:-production}
+      - DATABASE_URL=postgresql://${POSTGRES_USER:-repitbot}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-repitbot}
+      - REDIS_URL=redis://:${REDIS_PASSWORD}@redis:6379/8
+      - MESSAGE_BROKER_URL=amqp://${RABBITMQ_USER:-repitbot}:${RABBITMQ_PASSWORD}@rabbitmq:5672/${RABBITMQ_VHOST:-repitbot}
+      - SECRET_KEY=${ACHIEVEMENT_SERVICE_SECRET_KEY}
+    networks:
+      - repitbot-network
+    depends_on:
+      - postgres
+      - redis
+      - rabbitmq
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  scheduler-service:
+    image: repitbot/scheduler-service:${VERSION:-latest}
+    container_name: repitbot_scheduler_service
+    environment:
+      - ENVIRONMENT=${ENVIRONMENT:-production}
+      - DATABASE_URL=postgresql://${POSTGRES_USER:-repitbot}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-repitbot}
+      - REDIS_URL=redis://:${REDIS_PASSWORD}@redis:6379/9
+      - MESSAGE_BROKER_URL=amqp://${RABBITMQ_USER:-repitbot}:${RABBITMQ_PASSWORD}@rabbitmq:5672/${RABBITMQ_VHOST:-repitbot}
+      - SECRET_KEY=${SCHEDULER_SERVICE_SECRET_KEY}
+    networks:
+      - repitbot-network
+    depends_on:
+      - postgres
+      - redis
+      - rabbitmq
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Telegram Bot Service
+  telegram-bot:
+    image: repitbot/telegram-bot:${VERSION:-latest}
+    container_name: repitbot_telegram_bot
+    environment:
+      - ENVIRONMENT=${ENVIRONMENT:-production}
+      - TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN}
+      - TELEGRAM_WEBHOOK_URL=${TELEGRAM_WEBHOOK_URL}
+      - API_GATEWAY_URL=http://api-gateway
+      - SECRET_KEY=${TELEGRAM_BOT_SECRET_KEY}
+    networks:
+      - repitbot-network
+    depends_on:
+      - api-gateway
+      - user-service
+      - auth-service
+      - lesson-service
+      - homework-service
+      - notification-service
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Monitoring (Optional - can be disabled for production)
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: repitbot_prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+      - '--storage.tsdb.retention.time=200h'
+      - '--web.enable-lifecycle'
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus_data:/prometheus
+    networks:
+      - repitbot-network
+    restart: unless-stopped
+    profiles: ["monitoring"]
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: repitbot_grafana
+    environment:
+      GF_SECURITY_ADMIN_USER: ${GRAFANA_ADMIN_USER:-admin}
+      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_ADMIN_PASSWORD}
+      GF_USERS_ALLOW_SIGN_UP: false
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./monitoring/grafana/provisioning:/etc/grafana/provisioning:ro
+    networks:
+      - repitbot-network
+    depends_on:
+      - prometheus
+    restart: unless-stopped
+    profiles: ["monitoring"]
+
+volumes:
+  postgres_data:
+    driver: local
+  redis_data:
+    driver: local
+  rabbitmq_data:
+    driver: local
+  prometheus_data:
+    driver: local
+  grafana_data:
+    driver: local
+
+networks:
+  repitbot-network:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.21.0.0/16
+
+# Usage:
+# Production: docker-compose up -d
+# With monitoring: docker-compose --profile monitoring up -d
+# Scale specific service: docker-compose up -d --scale user-service=3

@@ -1,0 +1,592 @@
+version: '3.8'
+
+services:
+  # Database Services with production optimizations
+  postgres:
+    image: postgres:15-alpine
+    container_name: repitbot_postgres_prod
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      PGDATA: /var/lib/postgresql/data/pgdata
+      # Production optimizations
+      POSTGRES_INITDB_ARGS: "--encoding=UTF-8 --locale=C"
+    volumes:
+      - postgres_data_prod:/var/lib/postgresql/data
+      - ./init-scripts:/docker-entrypoint-initdb.d:ro
+      - ./postgres/postgresql.conf:/etc/postgresql/postgresql.conf:ro
+    networks:
+      - repitbot-network
+    command: postgres -c config_file=/etc/postgresql/postgresql.conf
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    restart: always
+    deploy:
+      resources:
+        limits:
+          memory: 2G
+          cpus: '2'
+        reservations:
+          memory: 1G
+          cpus: '1'
+
+  # Redis Cluster for high availability
+  redis-master:
+    image: redis:7-alpine
+    container_name: repitbot_redis_master_prod
+    command: |
+      redis-server 
+      --appendonly yes 
+      --requirepass ${REDIS_PASSWORD}
+      --maxmemory 1gb
+      --maxmemory-policy allkeys-lru
+      --save 900 1
+      --save 300 10
+      --save 60 10000
+    environment:
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
+    volumes:
+      - redis_master_data_prod:/data
+    networks:
+      - repitbot-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "-a", "${REDIS_PASSWORD}", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    restart: always
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+          cpus: '1'
+        reservations:
+          memory: 512M
+          cpus: '0.5'
+
+  redis-replica:
+    image: redis:7-alpine
+    container_name: repitbot_redis_replica_prod
+    command: |
+      redis-server 
+      --replicaof redis-master 6379
+      --masterauth ${REDIS_PASSWORD}
+      --requirepass ${REDIS_PASSWORD}
+      --maxmemory 1gb
+      --maxmemory-policy allkeys-lru
+    environment:
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
+    volumes:
+      - redis_replica_data_prod:/data
+    networks:
+      - repitbot-network
+    depends_on:
+      - redis-master
+    healthcheck:
+      test: ["CMD", "redis-cli", "-a", "${REDIS_PASSWORD}", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    restart: always
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+          cpus: '1'
+        reservations:
+          memory: 512M
+          cpus: '0.5'
+
+  # RabbitMQ Cluster
+  rabbitmq-1:
+    image: rabbitmq:3.11-management-alpine
+    container_name: repitbot_rabbitmq_1_prod
+    hostname: rabbitmq-1
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD}
+      RABBITMQ_DEFAULT_VHOST: ${RABBITMQ_VHOST}
+      RABBITMQ_ERLANG_COOKIE: ${RABBITMQ_ERLANG_COOKIE}
+      RABBITMQ_NODE_TYPE: disc
+    volumes:
+      - rabbitmq_1_data_prod:/var/lib/rabbitmq
+      - ./rabbitmq/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf:ro
+      - ./rabbitmq/definitions.json:/etc/rabbitmq/definitions.json:ro
+    networks:
+      - repitbot-network
+    healthcheck:
+      test: rabbitmq-diagnostics -q ping
+      interval: 30s
+      timeout: 15s
+      retries: 3
+    restart: always
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+          cpus: '1'
+        reservations:
+          memory: 512M
+          cpus: '0.5'
+
+  # Load Balancer (HAProxy)
+  load-balancer:
+    image: haproxy:2.8-alpine
+    container_name: repitbot_load_balancer_prod
+    volumes:
+      - ./haproxy/haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg:ro
+      - ./ssl:/etc/ssl/certs:ro
+    ports:
+      - "${LOAD_BALANCER_HTTP_PORT:-80}:80"
+      - "${LOAD_BALANCER_HTTPS_PORT:-443}:443"
+      - "${LOAD_BALANCER_STATS_PORT:-8404}:8404"  # Stats page
+    networks:
+      - repitbot-network
+    depends_on:
+      - user-service
+      - auth-service
+      - lesson-service
+      - homework-service
+      - payment-service
+      - notification-service
+      - material-service
+      - analytics-service
+      - achievement-service
+      - scheduler-service
+    restart: always
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+          cpus: '0.5'
+
+  # Microservices with production scaling
+  user-service:
+    image: repitbot/user-service:${VERSION}
+    environment:
+      - ENVIRONMENT=production
+      - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
+      - REDIS_URL=redis://:${REDIS_PASSWORD}@redis-master:6379/0
+      - REDIS_REPLICA_URL=redis://:${REDIS_PASSWORD}@redis-replica:6379/0
+      - MESSAGE_BROKER_URL=amqp://${RABBITMQ_USER}:${RABBITMQ_PASSWORD}@rabbitmq-1:5672/${RABBITMQ_VHOST}
+      - SECRET_KEY=${USER_SERVICE_SECRET_KEY}
+      - JWT_SECRET_KEY=${JWT_SECRET_KEY}
+      - LOG_LEVEL=INFO
+      - WORKERS=4
+    networks:
+      - repitbot-network
+    depends_on:
+      - postgres
+      - redis-master
+      - rabbitmq-1
+    restart: always
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    deploy:
+      replicas: 3
+      resources:
+        limits:
+          memory: 512M
+          cpus: '1'
+        reservations:
+          memory: 256M
+          cpus: '0.5'
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
+      update_config:
+        parallelism: 1
+        delay: 10s
+        failure_action: rollback
+        monitor: 60s
+
+  auth-service:
+    image: repitbot/auth-service:${VERSION}
+    environment:
+      - ENVIRONMENT=production
+      - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
+      - REDIS_URL=redis://:${REDIS_PASSWORD}@redis-master:6379/1
+      - REDIS_REPLICA_URL=redis://:${REDIS_PASSWORD}@redis-replica:6379/1
+      - MESSAGE_BROKER_URL=amqp://${RABBITMQ_USER}:${RABBITMQ_PASSWORD}@rabbitmq-1:5672/${RABBITMQ_VHOST}
+      - SECRET_KEY=${AUTH_SERVICE_SECRET_KEY}
+      - JWT_SECRET_KEY=${JWT_SECRET_KEY}
+      - JWT_REFRESH_SECRET_KEY=${JWT_REFRESH_SECRET_KEY}
+      - LOG_LEVEL=INFO
+      - WORKERS=4
+    networks:
+      - repitbot-network
+    depends_on:
+      - postgres
+      - redis-master
+      - rabbitmq-1
+    restart: always
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    deploy:
+      replicas: 2
+      resources:
+        limits:
+          memory: 512M
+          cpus: '1'
+        reservations:
+          memory: 256M
+          cpus: '0.5'
+
+  lesson-service:
+    image: repitbot/lesson-service:${VERSION}
+    environment:
+      - ENVIRONMENT=production
+      - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
+      - REDIS_URL=redis://:${REDIS_PASSWORD}@redis-master:6379/2
+      - REDIS_REPLICA_URL=redis://:${REDIS_PASSWORD}@redis-replica:6379/2
+      - MESSAGE_BROKER_URL=amqp://${RABBITMQ_USER}:${RABBITMQ_PASSWORD}@rabbitmq-1:5672/${RABBITMQ_VHOST}
+      - SECRET_KEY=${LESSON_SERVICE_SECRET_KEY}
+      - LOG_LEVEL=INFO
+      - WORKERS=4
+    networks:
+      - repitbot-network
+    depends_on:
+      - postgres
+      - redis-master
+      - rabbitmq-1
+    restart: always
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    deploy:
+      replicas: 2
+      resources:
+        limits:
+          memory: 512M
+          cpus: '1'
+        reservations:
+          memory: 256M
+          cpus: '0.5'
+
+  homework-service:
+    image: repitbot/homework-service:${VERSION}
+    environment:
+      - ENVIRONMENT=production
+      - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
+      - REDIS_URL=redis://:${REDIS_PASSWORD}@redis-master:6379/3
+      - REDIS_REPLICA_URL=redis://:${REDIS_PASSWORD}@redis-replica:6379/3
+      - MESSAGE_BROKER_URL=amqp://${RABBITMQ_USER}:${RABBITMQ_PASSWORD}@rabbitmq-1:5672/${RABBITMQ_VHOST}
+      - SECRET_KEY=${HOMEWORK_SERVICE_SECRET_KEY}
+      - LOG_LEVEL=INFO
+      - WORKERS=4
+    networks:
+      - repitbot-network
+    depends_on:
+      - postgres
+      - redis-master
+      - rabbitmq-1
+    restart: always
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    deploy:
+      replicas: 2
+      resources:
+        limits:
+          memory: 512M
+          cpus: '1'
+        reservations:
+          memory: 256M
+          cpus: '0.5'
+
+  payment-service:
+    image: repitbot/payment-service:${VERSION}
+    environment:
+      - ENVIRONMENT=production
+      - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
+      - REDIS_URL=redis://:${REDIS_PASSWORD}@redis-master:6379/4
+      - MESSAGE_BROKER_URL=amqp://${RABBITMQ_USER}:${RABBITMQ_PASSWORD}@rabbitmq-1:5672/${RABBITMQ_VHOST}
+      - SECRET_KEY=${PAYMENT_SERVICE_SECRET_KEY}
+      - LOG_LEVEL=INFO
+      - WORKERS=2
+    networks:
+      - repitbot-network
+    depends_on:
+      - postgres
+      - redis-master
+      - rabbitmq-1
+    restart: always
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    deploy:
+      replicas: 2
+      resources:
+        limits:
+          memory: 512M
+          cpus: '1'
+        reservations:
+          memory: 256M
+          cpus: '0.5'
+
+  notification-service:
+    image: repitbot/notification-service:${VERSION}
+    environment:
+      - ENVIRONMENT=production
+      - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
+      - REDIS_URL=redis://:${REDIS_PASSWORD}@redis-master:6379/5
+      - MESSAGE_BROKER_URL=amqp://${RABBITMQ_USER}:${RABBITMQ_PASSWORD}@rabbitmq-1:5672/${RABBITMQ_VHOST}
+      - SECRET_KEY=${NOTIFICATION_SERVICE_SECRET_KEY}
+      - TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN}
+      - LOG_LEVEL=INFO
+      - WORKERS=3
+    networks:
+      - repitbot-network
+    depends_on:
+      - postgres
+      - redis-master
+      - rabbitmq-1
+    restart: always
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    deploy:
+      replicas: 2
+      resources:
+        limits:
+          memory: 512M
+          cpus: '1'
+        reservations:
+          memory: 256M
+          cpus: '0.5'
+
+  material-service:
+    image: repitbot/material-service:${VERSION}
+    environment:
+      - ENVIRONMENT=production
+      - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
+      - REDIS_URL=redis://:${REDIS_PASSWORD}@redis-master:6379/6
+      - MESSAGE_BROKER_URL=amqp://${RABBITMQ_USER}:${RABBITMQ_PASSWORD}@rabbitmq-1:5672/${RABBITMQ_VHOST}
+      - SECRET_KEY=${MATERIAL_SERVICE_SECRET_KEY}
+      - LOG_LEVEL=INFO
+      - WORKERS=2
+    networks:
+      - repitbot-network
+    depends_on:
+      - postgres
+      - redis-master
+      - rabbitmq-1
+    restart: always
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    deploy:
+      replicas: 1
+      resources:
+        limits:
+          memory: 512M
+          cpus: '1'
+        reservations:
+          memory: 256M
+          cpus: '0.5'
+
+  analytics-service:
+    image: repitbot/analytics-service:${VERSION}
+    environment:
+      - ENVIRONMENT=production
+      - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
+      - REDIS_URL=redis://:${REDIS_PASSWORD}@redis-master:6379/7
+      - MESSAGE_BROKER_URL=amqp://${RABBITMQ_USER}:${RABBITMQ_PASSWORD}@rabbitmq-1:5672/${RABBITMQ_VHOST}
+      - SECRET_KEY=${ANALYTICS_SERVICE_SECRET_KEY}
+      - LOG_LEVEL=INFO
+      - WORKERS=2
+    networks:
+      - repitbot-network
+    depends_on:
+      - postgres
+      - redis-master
+      - rabbitmq-1
+    restart: always
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    deploy:
+      replicas: 1
+      resources:
+        limits:
+          memory: 512M
+          cpus: '1'
+        reservations:
+          memory: 256M
+          cpus: '0.5'
+
+  achievement-service:
+    image: repitbot/achievement-service:${VERSION}
+    environment:
+      - ENVIRONMENT=production
+      - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
+      - REDIS_URL=redis://:${REDIS_PASSWORD}@redis-master:6379/8
+      - MESSAGE_BROKER_URL=amqp://${RABBITMQ_USER}:${RABBITMQ_PASSWORD}@rabbitmq-1:5672/${RABBITMQ_VHOST}
+      - SECRET_KEY=${ACHIEVEMENT_SERVICE_SECRET_KEY}
+      - LOG_LEVEL=INFO
+      - WORKERS=2
+    networks:
+      - repitbot-network
+    depends_on:
+      - postgres
+      - redis-master
+      - rabbitmq-1
+    restart: always
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    deploy:
+      replicas: 1
+      resources:
+        limits:
+          memory: 512M
+          cpus: '1'
+        reservations:
+          memory: 256M
+          cpus: '0.5'
+
+  scheduler-service:
+    image: repitbot/scheduler-service:${VERSION}
+    environment:
+      - ENVIRONMENT=production
+      - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
+      - REDIS_URL=redis://:${REDIS_PASSWORD}@redis-master:6379/9
+      - MESSAGE_BROKER_URL=amqp://${RABBITMQ_USER}:${RABBITMQ_PASSWORD}@rabbitmq-1:5672/${RABBITMQ_VHOST}
+      - SECRET_KEY=${SCHEDULER_SERVICE_SECRET_KEY}
+      - LOG_LEVEL=INFO
+      - WORKERS=1
+    networks:
+      - repitbot-network
+    depends_on:
+      - postgres
+      - redis-master
+      - rabbitmq-1
+    restart: always
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    deploy:
+      replicas: 1
+      resources:
+        limits:
+          memory: 512M
+          cpus: '1'
+        reservations:
+          memory: 256M
+          cpus: '0.5'
+
+  # Telegram Bot Service
+  telegram-bot:
+    image: repitbot/telegram-bot:${VERSION}
+    environment:
+      - ENVIRONMENT=production
+      - TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN}
+      - TELEGRAM_WEBHOOK_URL=${TELEGRAM_WEBHOOK_URL}
+      - API_GATEWAY_URL=http://load-balancer
+      - SECRET_KEY=${TELEGRAM_BOT_SECRET_KEY}
+      - LOG_LEVEL=INFO
+    networks:
+      - repitbot-network
+    depends_on:
+      - load-balancer
+      - user-service
+      - auth-service
+      - lesson-service
+      - homework-service
+      - notification-service
+    restart: always
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    deploy:
+      replicas: 1
+      resources:
+        limits:
+          memory: 512M
+          cpus: '0.5'
+        reservations:
+          memory: 256M
+          cpus: '0.25'
+
+  # Log aggregation
+  filebeat:
+    image: docker.elastic.co/beats/filebeat:8.8.0
+    container_name: repitbot_filebeat_prod
+    user: root
+    volumes:
+      - ./filebeat/filebeat.yml:/usr/share/filebeat/filebeat.yml:ro
+      - /var/lib/docker/containers:/var/lib/docker/containers:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    networks:
+      - repitbot-network
+    restart: always
+    depends_on:
+      - user-service
+      - auth-service
+      - lesson-service
+
+volumes:
+  postgres_data_prod:
+    driver: local
+  redis_master_data_prod:
+    driver: local
+  redis_replica_data_prod:
+    driver: local
+  rabbitmq_1_data_prod:
+    driver: local
+
+networks:
+  repitbot-network:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.22.0.0/16
+
+# Usage:
+# Production deployment with Docker Swarm:
+# docker stack deploy -c docker-compose.prod.yml repitbot
+#
+# Or with docker-compose (single node):
+# docker-compose -f docker-compose.prod.yml up -d
