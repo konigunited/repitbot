@@ -343,7 +343,10 @@ async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
                        tutor_confirm_lesson_cancellation, tutor_library_by_grade,
                        tutor_remove_second_parent, tutor_replace_second_parent,
                        tutor_edit_lesson_start, tutor_edit_attendance_status, tutor_edit_mastery_status,
-                       tutor_edit_lesson_conduct_status, tutor_set_lesson_conduct)
+                       tutor_edit_lesson_conduct_status, tutor_set_lesson_conduct,
+                       tutor_delete_lesson_start, tutor_confirm_delete_lesson,
+                       tutor_schedule_setup_start, tutor_schedule_select_day, tutor_schedule_finish_setup,
+                       tutor_schedule_select_time, tutor_schedule_create_lessons, tutor_schedule_cancel)
     from .parent import (show_parent_dashboard, show_child_menu, show_child_progress,
                         show_child_schedule, show_child_payments, parent_generate_chart,
                         show_child_homework, show_child_lessons, show_child_achievements)
@@ -372,6 +375,14 @@ async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
         "tutor_edit_lesson_conduct_": (tutor_edit_lesson_conduct_status, "lesson_id"),
         "tutor_set_lesson_conduct_": (tutor_set_lesson_conduct, "lesson_id_status"),
         "tutor_edit_mastery_": (tutor_edit_mastery_status, "lesson_id"),
+        "tutor_delete_lesson_": (tutor_delete_lesson_start, "lesson_id"),
+        "tutor_confirm_delete_lesson_": (tutor_confirm_delete_lesson, "lesson_id"),
+        "tutor_schedule_setup_": (tutor_schedule_setup_start, "student_id"),
+        "schedule_day_": (tutor_schedule_select_day, "day"),
+        "schedule_finish": (tutor_schedule_finish_setup, None),
+        "schedule_time_": (tutor_schedule_select_time, "time"),
+        "schedule_create_": (tutor_schedule_create_lessons, "student_id"),
+        "schedule_cancel": (tutor_schedule_cancel, None),
         "tutor_check_hw_": (tutor_check_homework, "lesson_id"),
         "tutor_manage_library": (tutor_manage_library, None),
         "tutor_add_material": (tutor_add_material_start, None),

@@ -33,7 +33,8 @@ from ..keyboards import (
     tutor_edit_lesson_conduct_keyboard, tutor_edit_mastery_keyboard, tutor_check_homework_keyboard, tutor_select_student_for_report_keyboard,
     tutor_select_month_for_report_keyboard, tutor_library_management_keyboard,
     tutor_select_material_to_delete_keyboard, broadcast_confirm_keyboard,
-    second_parent_choice_keyboard, existing_second_parents_keyboard
+    second_parent_choice_keyboard, existing_second_parents_keyboard,
+    tutor_delete_lesson_keyboard, tutor_schedule_setup_keyboard, tutor_schedule_time_keyboard, tutor_schedule_confirm_keyboard
 )
 from ..chart_generator import generate_progress_chart
 from .common import show_main_menu
@@ -1983,3 +1984,254 @@ async def tutor_confirm_lesson_cancellation(update: Update, context: ContextType
         await update.callback_query.answer("Ошибка при обработке запроса")
     finally:
         db.close()
+
+# --- Lesson Deletion ---
+async def tutor_delete_lesson_start(update: Update, context: ContextTypes.DEFAULT_TYPE, lesson_id: int):
+    """Запрашивает подтверждение удаления урока."""
+    query = update.callback_query
+    db = SessionLocal()
+    try:
+        lesson = db.query(Lesson).filter(Lesson.id == lesson_id).first()
+        if not lesson:
+            await query.edit_message_text("Урок не найден.")
+            return
+        
+        from ..keyboards import tutor_delete_lesson_keyboard
+        await query.edit_message_text(
+            f"⚠️ Вы уверены, что хотите удалить урок?\n\n"
+            f"📅 Дата: {lesson.date.strftime('%d.%m.%Y')}\n"
+            f"📝 Тема: {lesson.topic}\n\n"
+            f"Это действие необратимо!",
+            reply_markup=tutor_delete_lesson_keyboard(lesson_id)
+        )
+    finally:
+        db.close()
+
+async def tutor_confirm_delete_lesson(update: Update, context: ContextTypes.DEFAULT_TYPE, lesson_id: int):
+    """Окончательно удаляет урок."""
+    query = update.callback_query
+    db = SessionLocal()
+    try:
+        lesson = db.query(Lesson).filter(Lesson.id == lesson_id).first()
+        if lesson:
+            student_id = lesson.student_id
+            topic = lesson.topic
+            date_str = lesson.date.strftime('%d.%m.%Y')
+            
+            # Удаляем урок (связанные ДЗ удалятся автоматически через cascade)
+            db.delete(lesson)
+            db.commit()
+            
+            await query.edit_message_text(
+                f"✅ Урок удален!\n"
+                f"📅 {date_str} - {topic}"
+            )
+            
+            # Показываем список уроков ученика
+            from .shared import show_lesson_list
+            await show_lesson_list(update, context, student_id)
+        else:
+            await query.edit_message_text("❌ Урок не найден.")
+    except Exception as e:
+        db.rollback()
+        await query.edit_message_text(f"❌ Ошибка при удалении урока: {e}")
+    finally:
+        db.close()
+
+# --- Schedule System ---
+async def tutor_schedule_setup_start(update: Update, context: ContextTypes.DEFAULT_TYPE, student_id: int):
+    """Начинает настройку расписания для ученика."""
+    query = update.callback_query
+    db = SessionLocal()
+    try:
+        student = db.query(User).filter(User.id == student_id).first()
+        if not student:
+            await query.edit_message_text("Ученик не найден.")
+            return
+        
+        context.user_data['schedule_student_id'] = student_id
+        context.user_data['schedule_days'] = []
+        context.user_data['schedule_time'] = None
+        
+        from ..keyboards import tutor_schedule_setup_keyboard
+        await query.edit_message_text(
+            f"📅 Настройка расписания для {student.full_name}\n\n"
+            f"Выберите дни недели для уроков.\n"
+            f"Можно выбрать несколько дней.\n\n"
+            f"Выбранные дни: {', '.join(context.user_data['schedule_days'])}",
+            reply_markup=tutor_schedule_setup_keyboard()
+        )
+    finally:
+        db.close()
+
+async def tutor_schedule_select_day(update: Update, context: ContextTypes.DEFAULT_TYPE, day: str):
+    """Добавляет/убирает день из расписания."""
+    query = update.callback_query
+    
+    day_names = {
+        'monday': 'Понедельник',
+        'tuesday': 'Вторник', 
+        'wednesday': 'Среда',
+        'thursday': 'Четверг',
+        'friday': 'Пятница',
+        'saturday': 'Суббота',
+        'sunday': 'Воскресенье'
+    }
+    
+    selected_days = context.user_data.get('schedule_days', [])
+    day_name = day_names[day]
+    
+    if day in selected_days:
+        selected_days.remove(day)
+    else:
+        selected_days.append(day)
+    
+    context.user_data['schedule_days'] = selected_days
+    
+    from ..keyboards import tutor_schedule_setup_keyboard
+    await query.edit_message_text(
+        f"📅 Настройка расписания\n\n"
+        f"Выберите дни недели для уроков.\n"
+        f"Можно выбрать несколько дней.\n\n"
+        f"Выбранные дни: {', '.join([day_names[d] for d in selected_days]) if selected_days else 'Не выбраны'}",
+        reply_markup=tutor_schedule_setup_keyboard()
+    )
+
+async def tutor_schedule_finish_setup(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Переходит к выбору времени."""
+    query = update.callback_query
+    selected_days = context.user_data.get('schedule_days', [])
+    
+    if not selected_days:
+        await query.answer("⚠️ Выберите хотя бы один день!", show_alert=True)
+        return
+    
+    from ..keyboards import tutor_schedule_time_keyboard
+    await query.edit_message_text(
+        "🕐 Выберите время проведения уроков:",
+        reply_markup=tutor_schedule_time_keyboard()
+    )
+
+async def tutor_schedule_select_time(update: Update, context: ContextTypes.DEFAULT_TYPE, time: str):
+    """Сохраняет время и показывает подтверждение."""
+    query = update.callback_query
+    context.user_data['schedule_time'] = time
+    
+    selected_days = context.user_data.get('schedule_days', [])
+    student_id = context.user_data.get('schedule_student_id')
+    
+    day_names = {
+        'monday': 'Понедельник',
+        'tuesday': 'Вторник', 
+        'wednesday': 'Среда',
+        'thursday': 'Четверг',
+        'friday': 'Пятница',
+        'saturday': 'Суббота',
+        'sunday': 'Воскресенье'
+    }
+    
+    days_text = ', '.join([day_names[d] for d in selected_days])
+    
+    from ..keyboards import tutor_schedule_confirm_keyboard
+    await query.edit_message_text(
+        f"📅 Подтверждение расписания:\n\n"
+        f"🗓️ Дни: {days_text}\n"
+        f"🕐 Время: {time}\n\n"
+        f"Будут созданы уроки на ближайшие 4 недели.\n"
+        f"Темы уроков нужно будет добавить отдельно.",
+        reply_markup=tutor_schedule_confirm_keyboard(student_id)
+    )
+
+async def tutor_schedule_create_lessons(update: Update, context: ContextTypes.DEFAULT_TYPE, student_id: int):
+    """Создает уроки по расписанию."""
+    query = update.callback_query
+    
+    selected_days = context.user_data.get('schedule_days', [])
+    schedule_time = context.user_data.get('schedule_time')
+    
+    if not selected_days or not schedule_time:
+        await query.edit_message_text("❌ Ошибка: данные расписания не найдены.")
+        return
+    
+    db = SessionLocal()
+    try:
+        from datetime import datetime, timedelta
+        
+        # Мапинг дней недели
+        weekday_map = {
+            'monday': 0, 'tuesday': 1, 'wednesday': 2, 'thursday': 3,
+            'friday': 4, 'saturday': 5, 'sunday': 6
+        }
+        
+        created_lessons = 0
+        start_date = datetime.now().date()
+        
+        # Создаем уроки на 4 недели вперед
+        for week in range(4):
+            week_start = start_date + timedelta(weeks=week)
+            
+            for day_key in selected_days:
+                weekday_num = weekday_map[day_key]
+                
+                # Находим дату этого дня недели
+                days_ahead = weekday_num - week_start.weekday()
+                if days_ahead <= 0:
+                    days_ahead += 7
+                
+                lesson_date = week_start + timedelta(days=days_ahead)
+                
+                # Создаем datetime с выбранным временем
+                time_parts = schedule_time.split(':')
+                lesson_datetime = datetime.combine(
+                    lesson_date, 
+                    datetime.strptime(schedule_time, '%H:%M').time()
+                )
+                
+                # Проверяем, нет ли уже урока в это время
+                existing_lesson = db.query(Lesson).filter(
+                    Lesson.student_id == student_id,
+                    Lesson.date == lesson_datetime
+                ).first()
+                
+                if not existing_lesson:
+                    new_lesson = Lesson(
+                        student_id=student_id,
+                        topic="Урок (тема не указана)",
+                        date=lesson_datetime,
+                        skills_developed="",
+                        mastery_level=TopicMastery.NOT_LEARNED,
+                        attendance_status=AttendanceStatus.SCHEDULED,
+                        lesson_status=LessonStatus.NOT_CONDUCTED
+                    )
+                    db.add(new_lesson)
+                    created_lessons += 1
+        
+        db.commit()
+        
+        await query.edit_message_text(
+            f"✅ Расписание создано!\n\n"
+            f"📝 Создано уроков: {created_lessons}\n"
+            f"📅 На период: 4 недели\n\n"
+            f"Не забудьте указать темы для каждого урока в разделе 'Уроки ученика'."
+        )
+        
+        # Очищаем данные
+        context.user_data.clear()
+        
+    except Exception as e:
+        db.rollback()
+        await query.edit_message_text(f"❌ Ошибка при создании расписания: {e}")
+    finally:
+        db.close()
+
+async def tutor_schedule_cancel(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Отменяет настройку расписания."""
+    query = update.callback_query
+    student_id = context.user_data.get('schedule_student_id')
+    context.user_data.clear()
+    
+    if student_id:
+        from .shared import show_student_profile
+        await show_student_profile(update, context, student_id)
+    else:
+        await query.edit_message_text("❌ Настройка расписания отменена.")

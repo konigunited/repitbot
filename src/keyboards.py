@@ -124,6 +124,7 @@ def tutor_student_profile_keyboard(student_id, has_parent=False, has_second_pare
             InlineKeyboardButton("➕ Добавить урок", callback_data=f"tutor_add_lesson_{student_id}"),
             InlineKeyboardButton("💰 Добавить оплату", callback_data=f"tutor_add_payment_{student_id}")
         ],
+        [InlineKeyboardButton("📅 Настроить расписание", callback_data=f"tutor_schedule_setup_{student_id}")],
         [InlineKeyboardButton("✏️ Редактировать ФИО", callback_data=f"tutor_edit_name_{student_id}")],
     ]
     
@@ -184,16 +185,33 @@ def tutor_lesson_details_keyboard(lesson):
             keyboard.append(attendance_buttons[2:])
     
     # Кнопки управления уроком
-    management_row = [InlineKeyboardButton("✏️ Изменить статус", callback_data=f"tutor_edit_lesson_{lesson.id}")]
+    management_row = [
+        InlineKeyboardButton("✏️ Изменить статус", callback_data=f"tutor_edit_lesson_{lesson.id}"),
+        InlineKeyboardButton("🗑️ Удалить урок", callback_data=f"tutor_delete_lesson_{lesson.id}")
+    ]
+    keyboard.append(management_row)
     
     # Если ДЗ есть, добавляем кнопку для его просмотра/проверки
+    homework_row = []
     if lesson.homeworks:
-        management_row.append(InlineKeyboardButton("📝 Проверить ДЗ", callback_data=f"tutor_check_hw_{lesson.id}"))
+        homework_row.append(InlineKeyboardButton("📝 Проверить ДЗ", callback_data=f"tutor_check_hw_{lesson.id}"))
     else:
-        management_row.append(InlineKeyboardButton("➕ Добавить ДЗ", callback_data=f"tutor_add_hw_{lesson.id}"))
+        homework_row.append(InlineKeyboardButton("➕ Добавить ДЗ", callback_data=f"tutor_add_hw_{lesson.id}"))
     
-    keyboard.append(management_row)
+    if homework_row:
+        keyboard.append(homework_row)
+    
     keyboard.append([InlineKeyboardButton("⬅️ К списку уроков", callback_data=f"tutor_lessons_list_{lesson.student_id}")])
+    return InlineKeyboardMarkup(keyboard)
+
+def tutor_delete_lesson_keyboard(lesson_id):
+    """Клавиатура подтверждения удаления урока."""
+    keyboard = [
+        [
+            InlineKeyboardButton("✅ Да, удалить", callback_data=f"tutor_confirm_delete_lesson_{lesson_id}"),
+            InlineKeyboardButton("❌ Отмена", callback_data=f"tutor_lesson_details_{lesson_id}")
+        ]
+    ]
     return InlineKeyboardMarkup(keyboard)
 
 def tutor_cancel_confirmation_keyboard(lesson_id, status):
@@ -577,4 +595,54 @@ def existing_second_parents_keyboard(parents, current_parent_id=None):
         keyboard.append([InlineKeyboardButton(text, callback_data=f"second_parent_select_{parent.id}")])
     
     keyboard.append([InlineKeyboardButton("⬅️ Назад", callback_data="second_parent_back_to_choice")])
+    return InlineKeyboardMarkup(keyboard)
+
+def tutor_schedule_setup_keyboard():
+    """Клавиатура выбора дней недели для расписания."""
+    weekdays = [
+        ("Понедельник", "monday"),
+        ("Вторник", "tuesday"), 
+        ("Среда", "wednesday"),
+        ("Четверг", "thursday"),
+        ("Пятница", "friday"),
+        ("Суббота", "saturday"),
+        ("Воскресенье", "sunday")
+    ]
+    
+    keyboard = []
+    for day_name, day_key in weekdays:
+        keyboard.append([InlineKeyboardButton(f"📅 {day_name}", callback_data=f"schedule_day_{day_key}")])
+    
+    keyboard.append([InlineKeyboardButton("✅ Завершить настройку", callback_data="schedule_finish")])
+    keyboard.append([InlineKeyboardButton("❌ Отмена", callback_data="schedule_cancel")])
+    return InlineKeyboardMarkup(keyboard)
+
+def tutor_schedule_time_keyboard():
+    """Клавиатура выбора времени урока."""
+    times = [
+        "09:00", "10:00", "11:00", "12:00", 
+        "13:00", "14:00", "15:00", "16:00",
+        "17:00", "18:00", "19:00", "20:00"
+    ]
+    
+    keyboard = []
+    row = []
+    for i, time in enumerate(times):
+        row.append(InlineKeyboardButton(time, callback_data=f"schedule_time_{time}"))
+        if len(row) == 3 or i == len(times) - 1:
+            keyboard.append(row)
+            row = []
+    
+    keyboard.append([InlineKeyboardButton("❌ Отмена", callback_data="schedule_cancel")])
+    return InlineKeyboardMarkup(keyboard)
+
+def tutor_schedule_confirm_keyboard(student_id):
+    """Клавиатура подтверждения создания расписания."""
+    keyboard = [
+        [
+            InlineKeyboardButton("✅ Создать уроки", callback_data=f"schedule_create_{student_id}"),
+            InlineKeyboardButton("✏️ Изменить", callback_data=f"tutor_schedule_setup_{student_id}")
+        ],
+        [InlineKeyboardButton("❌ Отмена", callback_data=f"tutor_view_student_{student_id}")]
+    ]
     return InlineKeyboardMarkup(keyboard)

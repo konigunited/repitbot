@@ -34,6 +34,7 @@ class TopicMastery(enum.Enum):
     MASTERED = "mastered"
 
 class AttendanceStatus(enum.Enum):
+    SCHEDULED = "scheduled"  # Урок запланирован (по умолчанию)
     ATTENDED = "attended"
     EXCUSED_ABSENCE = "excused_absence"
     UNEXCUSED_ABSENCE = "unexcused_absence"

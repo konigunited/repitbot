@@ -37,7 +37,10 @@ from src.handlers.tutor import (
     report_start, report_select_student, report_select_month_and_generate, report_cancel,
     tutor_manage_library, tutor_add_material_start, tutor_add_material_with_grade, tutor_get_material_grade, tutor_get_material_title, 
     tutor_get_material_link, tutor_get_material_description,
-    broadcast_start, broadcast_get_message, broadcast_cancel, broadcast_send
+    broadcast_start, broadcast_get_message, broadcast_cancel, broadcast_send,
+    tutor_delete_lesson_start, tutor_confirm_delete_lesson,
+    tutor_schedule_setup_start, tutor_schedule_select_day, tutor_schedule_finish_setup, 
+    tutor_schedule_select_time, tutor_schedule_create_lessons, tutor_schedule_cancel
 )
 
 # Импортируем обработчики ученика
