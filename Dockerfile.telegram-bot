@@ -29,7 +29,9 @@ RUN pip install --no-cache-dir \
 COPY ./src ./src
 COPY ./telegram-bot ./telegram-bot
 COPY ./bot.py .
-COPY ./repitbot.db ./repitbot.db
+
+# Create empty database file if not exists (will be initialized at runtime)
+RUN touch repitbot.db
 
 # Create logs directory
 RUN mkdir -p logs
