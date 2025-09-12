@@ -1,0 +1,67 @@
+# Prometheus configuration for RepitBot microservices monitoring
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+# Alertmanager configuration
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets: []
+
+# Load rules once and periodically evaluate them
+rule_files:
+  # - "first_rules.yml"
+  # - "second_rules.yml"
+
+# Scrape configurations
+scrape_configs:
+  # Prometheus itself
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
+
+  # User Service
+  - job_name: 'user-service'
+    metrics_path: '/metrics'
+    static_configs:
+      - targets: ['user-service:8001']
+    scrape_interval: 30s
+    scrape_timeout: 10s
+
+  # Auth Service
+  - job_name: 'auth-service'
+    metrics_path: '/metrics'
+    static_configs:
+      - targets: ['auth-service:8002']
+    scrape_interval: 30s
+    scrape_timeout: 10s
+
+  # API Gateway (Nginx)
+  - job_name: 'api-gateway'
+    metrics_path: '/metrics'
+    static_configs:
+      - targets: ['api-gateway:9113']
+    scrape_interval: 30s
+    scrape_timeout: 10s
+
+  # PostgreSQL (if postgres_exporter is added)
+  - job_name: 'postgres'
+    static_configs:
+      - targets: ['postgres-exporter:9187']
+    scrape_interval: 30s
+    scrape_timeout: 10s
+
+  # Redis (if redis_exporter is added)
+  - job_name: 'redis'
+    static_configs:
+      - targets: ['redis-exporter:9121']
+    scrape_interval: 30s
+    scrape_timeout: 10s
+
+  # Node exporter for system metrics (if added)
+  - job_name: 'node'
+    static_configs:
+      - targets: ['node-exporter:9100']
+    scrape_interval: 30s
+    scrape_timeout: 10s

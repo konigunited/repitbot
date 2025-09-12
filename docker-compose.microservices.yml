@@ -1,0 +1,635 @@
+version: '3.8'
+
+services:
+  # ============== ИНФРАСТРУКТУРА ==============
+  
+  # PostgreSQL база данных
+  postgres:
+    image: postgres:15-alpine
+    container_name: repitbot_postgres
+    environment:
+      POSTGRES_DB: repitbot
+      POSTGRES_USER: repitbot
+      POSTGRES_PASSWORD: repitbot_password
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init-databases.sql:/docker-entrypoint-initdb.d/init-databases.sql
+    ports:
+      - "5432:5432"
+    networks:
+      - repitbot_network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U repitbot"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  # RabbitMQ для событий
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    container_name: repitbot_rabbitmq
+    environment:
+      RABBITMQ_DEFAULT_USER: repitbot
+      RABBITMQ_DEFAULT_PASS: repitbot_password
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    ports:
+      - "5672:5672"    # AMQP порт
+      - "15672:15672"  # Management UI
+    networks:
+      - repitbot_network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "check_port_connectivity"]
+      interval: 30s
+      timeout: 20s
+      retries: 5
+
+  # Redis для кеширования
+  redis:
+    image: redis:7-alpine
+    container_name: repitbot_redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - repitbot_network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  # ============== МИКРОСЕРВИСЫ ==============
+
+  # User Service
+  user-service:
+    build:
+      context: ./services/user-service
+      dockerfile: Dockerfile
+    container_name: repitbot_user_service
+    environment:
+      - DATABASE_URL=postgresql+asyncpg://repitbot:repitbot_password@postgres:5432/user_service
+      - RABBITMQ_URL=amqp://repitbot:repitbot_password@rabbitmq:5672/
+      - REDIS_URL=redis://redis:6379/0
+      - JWT_SECRET_KEY=your-super-secret-jwt-key-change-in-production
+      - DEBUG=false
+    volumes:
+      - user_service_data:/app/data
+    ports:
+      - "8001:8001"
+    networks:
+      - repitbot_network
+    depends_on:
+      postgres:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8001/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  # Lesson Service
+  lesson-service:
+    build:
+      context: ./services/lesson-service
+      dockerfile: Dockerfile
+    container_name: repitbot_lesson_service
+    environment:
+      - DATABASE_URL=postgresql+asyncpg://repitbot:repitbot_password@postgres:5432/lesson_service
+      - RABBITMQ_URL=amqp://repitbot:repitbot_password@rabbitmq:5672/
+      - USER_SERVICE_URL=http://user-service:8001
+      - HOMEWORK_SERVICE_URL=http://homework-service:8003
+      - JWT_SECRET_KEY=your-super-secret-jwt-key-change-in-production
+      - DEBUG=false
+    volumes:
+      - lesson_service_data:/app/data
+    ports:
+      - "8002:8002"
+    networks:
+      - repitbot_network
+    depends_on:
+      postgres:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+      user-service:
+        condition: service_healthy
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8002/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  # Homework Service
+  homework-service:
+    build:
+      context: ./services/homework-service
+      dockerfile: Dockerfile
+    container_name: repitbot_homework_service
+    environment:
+      - DATABASE_URL=postgresql+asyncpg://repitbot:repitbot_password@postgres:5432/homework_service
+      - RABBITMQ_URL=amqp://repitbot:repitbot_password@rabbitmq:5672/
+      - USER_SERVICE_URL=http://user-service:8001
+      - LESSON_SERVICE_URL=http://lesson-service:8002
+      - FILE_STORAGE_PATH=/app/storage/homework
+      - MAX_FILE_SIZE_MB=50
+      - JWT_SECRET_KEY=your-super-secret-jwt-key-change-in-production
+      - DEBUG=false
+    volumes:
+      - homework_service_data:/app/data
+      - homework_files:/app/storage/homework
+    ports:
+      - "8003:8003"
+    networks:
+      - repitbot_network
+    depends_on:
+      postgres:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+      user-service:
+        condition: service_healthy
+      lesson-service:
+        condition: service_healthy
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8003/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  # Payment Service
+  payment-service:
+    build:
+      context: ./services/payment-service
+      dockerfile: Dockerfile
+    container_name: repitbot_payment_service
+    environment:
+      - DATABASE_URL=postgresql+asyncpg://repitbot:repitbot_password@postgres:5432/payment_service
+      - RABBITMQ_URL=amqp://repitbot:repitbot_password@rabbitmq:5672/
+      - REDIS_URL=redis://redis:6379/1
+      - USER_SERVICE_URL=http://user-service:8001
+      - LESSON_SERVICE_URL=http://lesson-service:8002
+      - NOTIFICATION_SERVICE_URL=http://notification-service:8006
+      - JWT_SECRET_KEY=your-super-secret-jwt-key-change-in-production
+      - DEFAULT_PRICE_PER_LESSON=1000.00
+      - MAX_BALANCE=1000
+      - ENABLE_NEGATIVE_BALANCE=false
+      - EVENT_PROCESSING_ENABLED=true
+      - DEBUG=false
+    volumes:
+      - payment_service_data:/app/data
+    ports:
+      - "8004:8003"
+    networks:
+      - repitbot_network
+    depends_on:
+      postgres:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      user-service:
+        condition: service_healthy
+      lesson-service:
+        condition: service_healthy
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8003/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  # Material Service
+  material-service:
+    build:
+      context: ./services/material-service
+      dockerfile: Dockerfile
+    container_name: repitbot_material_service
+    environment:
+      - DATABASE_URL=postgresql+asyncpg://repitbot:repitbot_password@postgres:5432/material_service
+      - RABBITMQ_URL=amqp://repitbot:repitbot_password@rabbitmq:5672/
+      - REDIS_URL=redis://redis:6379/2
+      - USER_SERVICE_URL=http://user-service:8001
+      - LESSON_SERVICE_URL=http://lesson-service:8002
+      - UPLOAD_DIR=/app/storage/materials
+      - MAX_FILE_SIZE=104857600  # 100MB
+      - ALLOWED_FILE_TYPES=pdf,doc,docx,txt,jpg,jpeg,png,gif,mp4,avi,mov
+      - ENABLE_FILE_PROCESSING=true
+      - ENABLE_THUMBNAILS=true
+      - ENABLE_VIDEO_PREVIEWS=false
+      - ENABLE_ACCESS_LOGGING=true
+      - ENABLE_DOWNLOAD_TRACKING=true
+      - ENABLE_VIEW_TRACKING=true
+      - EVENT_PROCESSING_ENABLED=true
+      - DEBUG=false
+    volumes:
+      - material_service_data:/app/data
+      - material_files:/app/storage/materials
+    ports:
+      - "8005:8004"
+    networks:
+      - repitbot_network
+    depends_on:
+      postgres:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      user-service:
+        condition: service_healthy
+      lesson-service:
+        condition: service_healthy
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8004/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  # Notification Service
+  notification-service:
+    build:
+      context: ./services/notification-service
+      dockerfile: Dockerfile
+    container_name: repitbot_notification_service
+    environment:
+      - DATABASE_URL=postgresql+asyncpg://repitbot:repitbot_password@postgres:5432/notification_service
+      - RABBITMQ_URL=amqp://repitbot:repitbot_password@rabbitmq:5672/
+      - REDIS_URL=redis://redis:6379/3
+      - USER_SERVICE_URL=http://user-service:8001
+      - LESSON_SERVICE_URL=http://lesson-service:8002
+      - TELEGRAM_BOT_TOKEN=${BOT_TOKEN}
+      - TELEGRAM_API_URL=https://api.telegram.org
+      - EMAIL_SMTP_HOST=smtp.gmail.com
+      - EMAIL_SMTP_PORT=587
+      - EMAIL_USERNAME=${EMAIL_USERNAME}
+      - EMAIL_PASSWORD=${EMAIL_PASSWORD}
+      - EMAIL_FROM_ADDRESS=noreply@repitbot.com
+      - EMAIL_FROM_NAME=RepitBot
+      - ENABLE_EMAIL_NOTIFICATIONS=true
+      - ENABLE_TELEGRAM_NOTIFICATIONS=true
+      - ENABLE_PUSH_NOTIFICATIONS=false
+      - NOTIFICATION_RETRY_ATTEMPTS=3
+      - NOTIFICATION_RETRY_DELAY=300
+      - BATCH_SIZE=100
+      - RATE_LIMIT_PER_MINUTE=1000
+      - EVENT_PROCESSING_ENABLED=true
+      - DEBUG=false
+      - JWT_SECRET_KEY=your-super-secret-jwt-key-change-in-production
+    volumes:
+      - notification_service_data:/app/data
+      - notification_templates:/app/templates
+    ports:
+      - "8006:8006"
+    networks:
+      - repitbot_network
+    depends_on:
+      postgres:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      user-service:
+        condition: service_healthy
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8006/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  # Analytics Service
+  analytics-service:
+    build:
+      context: ./services/analytics-service
+      dockerfile: Dockerfile
+    container_name: repitbot_analytics_service
+    environment:
+      - DATABASE_URL=postgresql+asyncpg://repitbot:repitbot_password@postgres:5432/analytics_service
+      - RABBITMQ_URL=amqp://repitbot:repitbot_password@rabbitmq:5672/
+      - REDIS_URL=redis://redis:6379/4
+      - USER_SERVICE_URL=http://user-service:8001
+      - LESSON_SERVICE_URL=http://lesson-service:8002
+      - PAYMENT_SERVICE_URL=http://payment-service:8003
+      - MATERIAL_SERVICE_URL=http://material-service:8004
+      - NOTIFICATION_SERVICE_URL=http://notification-service:8006
+      - REPORTS_STORAGE_PATH=/app/reports
+      - CHARTS_CACHE_TTL=3600
+      - ANALYTICS_REFRESH_INTERVAL=300
+      - ENABLE_REAL_TIME_ANALYTICS=true
+      - ENABLE_CHART_CACHING=true
+      - ENABLE_REPORT_GENERATION=true
+      - BATCH_PROCESSING_SIZE=1000
+      - MAX_REPORT_SIZE_MB=100
+      - EVENT_PROCESSING_ENABLED=true
+      - DEBUG=false
+      - JWT_SECRET_KEY=your-super-secret-jwt-key-change-in-production
+    volumes:
+      - analytics_service_data:/app/data
+      - analytics_reports:/app/reports
+      - analytics_templates:/app/templates
+    ports:
+      - "8007:8007"
+    networks:
+      - repitbot_network
+    depends_on:
+      postgres:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      user-service:
+        condition: service_healthy
+      lesson-service:
+        condition: service_healthy
+      payment-service:
+        condition: service_healthy
+      material-service:
+        condition: service_healthy
+      notification-service:
+        condition: service_healthy
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8007/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+
+  # Student Service
+  student-service:
+    build:
+      context: ./services/student-service
+      dockerfile: Dockerfile
+    container_name: repitbot_student_service
+    environment:
+      - DATABASE_URL=postgresql+asyncpg://repitbot:repitbot_password@postgres:5432/student_service
+      - RABBITMQ_URL=amqp://repitbot:repitbot_password@rabbitmq:5672/
+      - REDIS_URL=redis://redis:6379/5
+      - USER_SERVICE_URL=http://user-service:8001
+      - LESSON_SERVICE_URL=http://lesson-service:8002
+      - HOMEWORK_SERVICE_URL=http://homework-service:8003
+      - NOTIFICATION_SERVICE_URL=http://notification-service:8006
+      - DEFAULT_LEVEL_XP_THRESHOLD=1000
+      - XP_MULTIPLIER=1.5
+      - MAX_LEVEL=100
+      - ENABLE_ACHIEVEMENTS=true
+      - ENABLE_GAMIFICATION=true
+      - ENABLE_RECOMMENDATIONS=true
+      - ENABLE_SOCIAL_FEATURES=true
+      - EVENT_PROCESSING_ENABLED=true
+      - DEBUG=false
+      - JWT_SECRET_KEY=your-super-secret-jwt-key-change-in-production
+    volumes:
+      - student_service_data:/app/data
+    ports:
+      - "8008:8008"
+    networks:
+      - repitbot_network
+    depends_on:
+      postgres:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      user-service:
+        condition: service_healthy
+      lesson-service:
+        condition: service_healthy
+      homework-service:
+        condition: service_healthy
+      notification-service:
+        condition: service_healthy
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8008/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  # API Gateway
+  api-gateway:
+    build:
+      context: ./services/api-gateway
+      dockerfile: Dockerfile
+    container_name: repitbot_api_gateway
+    environment:
+      - HOST=0.0.0.0
+      - PORT=8000
+      - DEBUG=false
+      - ENVIRONMENT=production
+      - JWT_SECRET_KEY=your-super-secret-jwt-key-change-in-production
+      - RATE_LIMIT_PER_MINUTE=100
+      - RATE_LIMIT_BURST=20
+      - REQUEST_TIMEOUT=30
+      - CONNECT_TIMEOUT=5
+      - CIRCUIT_BREAKER_FAILURE_THRESHOLD=5
+      - CIRCUIT_BREAKER_RECOVERY_TIMEOUT=60
+      - LOAD_BALANCER_STRATEGY=round_robin
+      - HEALTH_CHECK_INTERVAL=30
+      - ENABLE_CORS=true
+      - ENABLE_REQUEST_LOGGING=true
+      - ENABLE_RATE_LIMITING=true
+      - ENABLE_CIRCUIT_BREAKER=true
+    ports:
+      - "8000:8000"
+    networks:
+      - repitbot_network
+    depends_on:
+      user-service:
+        condition: service_healthy
+      lesson-service:
+        condition: service_healthy
+      homework-service:
+        condition: service_healthy
+      payment-service:
+        condition: service_healthy
+      material-service:
+        condition: service_healthy
+      notification-service:
+        condition: service_healthy
+      analytics-service:
+        condition: service_healthy
+      student-service:
+        condition: service_healthy
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  # Telegram Bot (монолит с интеграцией микросервисов)
+  telegram-bot:
+    build:
+      context: .
+      dockerfile: Dockerfile.telegram-bot
+    container_name: repitbot_telegram_bot
+    environment:
+      - BOT_TOKEN=${BOT_TOKEN}
+      - DATABASE_URL=sqlite:///./repitbot.db
+      - USER_SERVICE_URL=http://user-service:8001
+      - LESSON_SERVICE_URL=http://lesson-service:8002
+      - HOMEWORK_SERVICE_URL=http://homework-service:8003
+      - PAYMENT_SERVICE_URL=http://payment-service:8003
+      - MATERIAL_SERVICE_URL=http://material-service:8004
+      - NOTIFICATION_SERVICE_URL=http://notification-service:8006
+      - ANALYTICS_SERVICE_URL=http://analytics-service:8007
+      - STUDENT_SERVICE_URL=http://student-service:8008
+      - API_GATEWAY_URL=http://api-gateway:8000
+      - MICROSERVICES_ENABLED=true
+      - FALLBACK_TO_MONOLITH=true
+      - ENABLE_ANALYTICS_INTEGRATION=true
+      - ENABLE_NOTIFICATION_INTEGRATION=true
+      - DEBUG=false
+    volumes:
+      - bot_data:/app/data
+      - ./repitbot.db:/app/repitbot.db
+      - ./logs:/app/logs
+    networks:
+      - repitbot_network
+    depends_on:
+      user-service:
+        condition: service_healthy
+      lesson-service:
+        condition: service_healthy
+      homework-service:
+        condition: service_healthy
+      payment-service:
+        condition: service_healthy
+      material-service:
+        condition: service_healthy
+      notification-service:
+        condition: service_healthy
+      analytics-service:
+        condition: service_healthy
+      student-service:
+        condition: service_healthy
+      api-gateway:
+        condition: service_healthy
+    restart: unless-stopped
+
+  # ============== МОНИТОРИНГ ==============
+
+  # Prometheus для метрик
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: repitbot_prometheus
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus_data:/prometheus
+    ports:
+      - "9090:9090"
+    networks:
+      - repitbot_network
+    restart: unless-stopped
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+
+  # Grafana для дашбордов
+  grafana:
+    image: grafana/grafana:latest
+    container_name: repitbot_grafana
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    volumes:
+      - grafana_data:/var/lib/grafana
+    ports:
+      - "3000:3000"
+    networks:
+      - repitbot_network
+    restart: unless-stopped
+
+  # ============== РАЗРАБОТКА ==============
+
+  # PgAdmin для управления БД (только в dev режиме)
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: repitbot_pgadmin
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=admin@repitbot.com
+      - PGADMIN_DEFAULT_PASSWORD=admin
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+    ports:
+      - "5050:80"
+    networks:
+      - repitbot_network
+    restart: unless-stopped
+    profiles:
+      - dev
+
+networks:
+  repitbot_network:
+    driver: bridge
+    name: repitbot_network
+
+volumes:
+  # Базы данных
+  postgres_data:
+    name: repitbot_postgres_data
+  rabbitmq_data:
+    name: repitbot_rabbitmq_data
+  redis_data:
+    name: repitbot_redis_data
+  
+  # Сервисы
+  user_service_data:
+    name: repitbot_user_service_data
+  lesson_service_data:
+    name: repitbot_lesson_service_data
+  homework_service_data:
+    name: repitbot_homework_service_data
+  homework_files:
+    name: repitbot_homework_files
+  payment_service_data:
+    name: repitbot_payment_service_data
+  material_service_data:
+    name: repitbot_material_service_data
+  material_files:
+    name: repitbot_material_files
+  notification_service_data:
+    name: repitbot_notification_service_data
+  notification_templates:
+    name: repitbot_notification_templates
+  analytics_service_data:
+    name: repitbot_analytics_service_data
+  analytics_reports:
+    name: repitbot_analytics_reports
+  analytics_templates:
+    name: repitbot_analytics_templates
+  student_service_data:
+    name: repitbot_student_service_data
+  
+  # Telegram Bot
+  bot_data:
+    name: repitbot_bot_data
+  
+  # Мониторинг
+  prometheus_data:
+    name: repitbot_prometheus_data
+  grafana_data:
+    name: repitbot_grafana_data
+  
+  # Разработка
+  pgadmin_data:
+    name: repitbot_pgadmin_data

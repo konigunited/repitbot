@@ -1,0 +1,330 @@
+version: '3.8'
+
+# Docker Compose для Stage 5 сервисов - Notification & Analytics
+# Используется для изолированного тестирования новых сервисов
+
+services:
+  # ============== ИНФРАСТРУКТУРА ==============
+  
+  # PostgreSQL база данных
+  postgres-stage5:
+    image: postgres:15-alpine
+    container_name: repitbot_postgres_stage5
+    environment:
+      POSTGRES_DB: repitbot_stage5
+      POSTGRES_USER: repitbot
+      POSTGRES_PASSWORD: repitbot_password
+    volumes:
+      - postgres_stage5_data:/var/lib/postgresql/data
+      - ../init-db.sql:/docker-entrypoint-initdb.d/init-db.sql
+    ports:
+      - "5433:5432"  # Другой порт для изоляции
+    networks:
+      - stage5_network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U repitbot"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  # RabbitMQ для событий
+  rabbitmq-stage5:
+    image: rabbitmq:3-management-alpine
+    container_name: repitbot_rabbitmq_stage5
+    environment:
+      RABBITMQ_DEFAULT_USER: repitbot
+      RABBITMQ_DEFAULT_PASS: repitbot_password
+    volumes:
+      - rabbitmq_stage5_data:/var/lib/rabbitmq
+    ports:
+      - "5673:5672"    # AMQP порт
+      - "15673:15672"  # Management UI
+    networks:
+      - stage5_network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "check_port_connectivity"]
+      interval: 30s
+      timeout: 20s
+      retries: 5
+
+  # Redis для кеширования
+  redis-stage5:
+    image: redis:7-alpine
+    container_name: repitbot_redis_stage5
+    ports:
+      - "6380:6379"
+    volumes:
+      - redis_stage5_data:/data
+    networks:
+      - stage5_network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  # ============== STAGE 5 СЕРВИСЫ ==============
+
+  # Notification Service
+  notification-service:
+    build:
+      context: ./notification-service
+      dockerfile: Dockerfile
+    container_name: repitbot_notification_service_stage5
+    environment:
+      - DATABASE_URL=postgresql+asyncpg://repitbot:repitbot_password@postgres-stage5:5432/notification_service
+      - RABBITMQ_URL=amqp://repitbot:repitbot_password@rabbitmq-stage5:5672/
+      - REDIS_URL=redis://redis-stage5:6379/0
+      - USER_SERVICE_URL=http://user-service-mock:8001
+      - LESSON_SERVICE_URL=http://lesson-service-mock:8002
+      - TELEGRAM_BOT_TOKEN=${BOT_TOKEN}
+      - TELEGRAM_API_URL=https://api.telegram.org
+      - EMAIL_SMTP_HOST=smtp.gmail.com
+      - EMAIL_SMTP_PORT=587
+      - EMAIL_USERNAME=${EMAIL_USERNAME}
+      - EMAIL_PASSWORD=${EMAIL_PASSWORD}
+      - EMAIL_FROM_ADDRESS=noreply@repitbot.com
+      - EMAIL_FROM_NAME=RepitBot
+      - ENABLE_EMAIL_NOTIFICATIONS=true
+      - ENABLE_TELEGRAM_NOTIFICATIONS=true
+      - ENABLE_PUSH_NOTIFICATIONS=false
+      - NOTIFICATION_RETRY_ATTEMPTS=3
+      - NOTIFICATION_RETRY_DELAY=300
+      - BATCH_SIZE=100
+      - RATE_LIMIT_PER_MINUTE=1000
+      - EVENT_PROCESSING_ENABLED=true
+      - DEBUG=true
+      - JWT_SECRET_KEY=stage5-test-jwt-key
+    volumes:
+      - notification_stage5_data:/app/data
+      - notification_stage5_templates:/app/templates
+    ports:
+      - "8106:8006"
+    networks:
+      - stage5_network
+    depends_on:
+      postgres-stage5:
+        condition: service_healthy
+      rabbitmq-stage5:
+        condition: service_healthy
+      redis-stage5:
+        condition: service_healthy
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8006/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  # Analytics Service
+  analytics-service:
+    build:
+      context: ./analytics-service
+      dockerfile: Dockerfile
+    container_name: repitbot_analytics_service_stage5
+    environment:
+      - DATABASE_URL=postgresql+asyncpg://repitbot:repitbot_password@postgres-stage5:5432/analytics_service
+      - RABBITMQ_URL=amqp://repitbot:repitbot_password@rabbitmq-stage5:5672/
+      - REDIS_URL=redis://redis-stage5:6379/1
+      - USER_SERVICE_URL=http://user-service-mock:8001
+      - LESSON_SERVICE_URL=http://lesson-service-mock:8002
+      - PAYMENT_SERVICE_URL=http://payment-service-mock:8003
+      - MATERIAL_SERVICE_URL=http://material-service-mock:8004
+      - NOTIFICATION_SERVICE_URL=http://notification-service:8006
+      - REPORTS_STORAGE_PATH=/app/reports
+      - CHARTS_CACHE_TTL=3600
+      - ANALYTICS_REFRESH_INTERVAL=300
+      - ENABLE_REAL_TIME_ANALYTICS=true
+      - ENABLE_CHART_CACHING=true
+      - ENABLE_REPORT_GENERATION=true
+      - BATCH_PROCESSING_SIZE=1000
+      - MAX_REPORT_SIZE_MB=100
+      - EVENT_PROCESSING_ENABLED=true
+      - DEBUG=true
+      - JWT_SECRET_KEY=stage5-test-jwt-key
+    volumes:
+      - analytics_stage5_data:/app/data
+      - analytics_stage5_reports:/app/reports
+      - analytics_stage5_templates:/app/templates
+    ports:
+      - "8107:8007"
+    networks:
+      - stage5_network
+    depends_on:
+      postgres-stage5:
+        condition: service_healthy
+      rabbitmq-stage5:
+        condition: service_healthy
+      redis-stage5:
+        condition: service_healthy
+      notification-service:
+        condition: service_healthy
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8007/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  # ============== MOCK СЕРВИСЫ ==============
+  
+  # Mock User Service для тестирования
+  user-service-mock:
+    image: wiremock/wiremock:2.35.0
+    container_name: repitbot_user_service_mock
+    command: ["--port", "8001", "--global-response-templating"]
+    volumes:
+      - ./mocks/user-service:/home/wiremock
+    ports:
+      - "8101:8001"
+    networks:
+      - stage5_network
+
+  # Mock Lesson Service для тестирования
+  lesson-service-mock:
+    image: wiremock/wiremock:2.35.0
+    container_name: repitbot_lesson_service_mock
+    command: ["--port", "8002", "--global-response-templating"]
+    volumes:
+      - ./mocks/lesson-service:/home/wiremock
+    ports:
+      - "8102:8002"
+    networks:
+      - stage5_network
+
+  # Mock Payment Service для тестирования
+  payment-service-mock:
+    image: wiremock/wiremock:2.35.0
+    container_name: repitbot_payment_service_mock
+    command: ["--port", "8003", "--global-response-templating"]
+    volumes:
+      - ./mocks/payment-service:/home/wiremock
+    ports:
+      - "8103:8003"
+    networks:
+      - stage5_network
+
+  # Mock Material Service для тестирования
+  material-service-mock:
+    image: wiremock/wiremock:2.35.0
+    container_name: repitbot_material_service_mock
+    command: ["--port", "8004", "--global-response-templating"]
+    volumes:
+      - ./mocks/material-service:/home/wiremock
+    ports:
+      - "8104:8004"
+    networks:
+      - stage5_network
+
+  # ============== ТЕСТИРОВАНИЕ ==============
+
+  # Event Publisher для тестирования
+  event-publisher:
+    build:
+      context: ./testing
+      dockerfile: Dockerfile.event-publisher
+    container_name: repitbot_event_publisher_stage5
+    environment:
+      - RABBITMQ_URL=amqp://repitbot:repitbot_password@rabbitmq-stage5:5672/
+    networks:
+      - stage5_network
+    depends_on:
+      rabbitmq-stage5:
+        condition: service_healthy
+    profiles:
+      - testing
+
+  # Load Testing
+  load-tester:
+    build:
+      context: ./testing
+      dockerfile: Dockerfile.load-tester
+    container_name: repitbot_load_tester_stage5
+    environment:
+      - NOTIFICATION_SERVICE_URL=http://notification-service:8006
+      - ANALYTICS_SERVICE_URL=http://analytics-service:8007
+    networks:
+      - stage5_network
+    depends_on:
+      notification-service:
+        condition: service_healthy
+      analytics-service:
+        condition: service_healthy
+    profiles:
+      - testing
+
+  # ============== МОНИТОРИНГ ==============
+
+  # Prometheus для метрик (Stage 5)
+  prometheus-stage5:
+    image: prom/prometheus:latest
+    container_name: repitbot_prometheus_stage5
+    volumes:
+      - ./config/prometheus-stage5.yml:/etc/prometheus/prometheus.yml
+      - prometheus_stage5_data:/prometheus
+    ports:
+      - "9091:9090"
+    networks:
+      - stage5_network
+    restart: unless-stopped
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+    profiles:
+      - monitoring
+
+  # Grafana для дашбордов (Stage 5)
+  grafana-stage5:
+    image: grafana/grafana:latest
+    container_name: repitbot_grafana_stage5
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_SERVER_HTTP_PORT=3001
+    volumes:
+      - grafana_stage5_data:/var/lib/grafana
+      - ./config/grafana/dashboards:/etc/grafana/provisioning/dashboards
+      - ./config/grafana/datasources:/etc/grafana/provisioning/datasources
+    ports:
+      - "3001:3001"
+    networks:
+      - stage5_network
+    restart: unless-stopped
+    profiles:
+      - monitoring
+
+networks:
+  stage5_network:
+    driver: bridge
+    name: repitbot_stage5_network
+
+volumes:
+  # Инфраструктура
+  postgres_stage5_data:
+    name: repitbot_postgres_stage5_data
+  rabbitmq_stage5_data:
+    name: repitbot_rabbitmq_stage5_data
+  redis_stage5_data:
+    name: repitbot_redis_stage5_data
+  
+  # Сервисы
+  notification_stage5_data:
+    name: repitbot_notification_stage5_data
+  notification_stage5_templates:
+    name: repitbot_notification_stage5_templates
+  analytics_stage5_data:
+    name: repitbot_analytics_stage5_data
+  analytics_stage5_reports:
+    name: repitbot_analytics_stage5_reports
+  analytics_stage5_templates:
+    name: repitbot_analytics_stage5_templates
+  
+  # Мониторинг
+  prometheus_stage5_data:
+    name: repitbot_prometheus_stage5_data
+  grafana_stage5_data:
+    name: repitbot_grafana_stage5_data
