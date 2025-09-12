@@ -26,7 +26,7 @@ if config.config_file_name is not None:
 target_metadata = Base.metadata
 
 def get_url():
-    service_name = "MATERIAL"
+    service_name = "HOMEWORK"
     return os.getenv(f"DATABASE_URL_{service_name.upper()}", "postgresql://user:pass@localhost/dbname")
 
 def run_migrations_offline() -> None:

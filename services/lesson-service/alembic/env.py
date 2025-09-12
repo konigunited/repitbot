@@ -8,12 +8,7 @@ import sys
 # Add the app directory to the path
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'app'))
 
-try:
-    from app.models import Base
-except ImportError:
-    # Fallback if models don't exist yet
-    from sqlalchemy.ext.declarative import declarative_base
-    Base = declarative_base()
+from app.models import Base
 
 # this is the Alembic Config object
 config = context.config
@@ -26,8 +21,7 @@ if config.config_file_name is not None:
 target_metadata = Base.metadata
 
 def get_url():
-    service_name = "MATERIAL"
-    return os.getenv(f"DATABASE_URL_{service_name.upper()}", "postgresql://user:pass@localhost/dbname")
+    return os.getenv("DATABASE_URL_LESSON", "postgresql://user:pass@localhost/dbname")
 
 def run_migrations_offline() -> None:
     """Run migrations in 'offline' mode."""
@@ -36,7 +30,7 @@ def run_migrations_offline() -> None:
         url=url,
         target_metadata=target_metadata,
         literal_binds=True,
-        dialect_opts={{"paramstyle": "named"}},
+        dialect_opts={"paramstyle": "named"},
     )
 
     with context.begin_transaction():

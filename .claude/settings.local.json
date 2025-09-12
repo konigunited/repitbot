@@ -29,7 +29,10 @@
       "Bash(for service in analytics-service api-gateway notification-service student-service)",
       "Bash(do if [ ! -f \"services/$service/alembic.ini\" ])",
       "Bash(then echo \"Missing: services/$service/alembic.ini\")",
-      "Bash(fi)"
+      "Bash(fi)",
+      "Bash(for service in user-service lesson-service homework-service material-service notification-service analytics-service student-service api-gateway)",
+      "Bash(do echo \"Checking services/$service/alembic\")",
+      "Bash(echo:*)"
     ],
     "deny": [],
     "additionalDirectories": [
