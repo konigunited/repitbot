@@ -168,49 +168,6 @@ services:
       timeout: 10s
       retries: 5
 
-  # Payment Service
-  payment-service:
-    build:
-      context: ./services/payment-service
-      dockerfile: Dockerfile
-    container_name: repitbot_payment_service
-    environment:
-      - DATABASE_URL=postgresql+asyncpg://repitbot:repitbot_password@postgres:5432/payment_service
-      - RABBITMQ_URL=amqp://repitbot:repitbot_password@rabbitmq:5672/
-      - REDIS_URL=redis://redis:6379/1
-      - USER_SERVICE_URL=http://user-service:8001
-      - LESSON_SERVICE_URL=http://lesson-service:8002
-      - NOTIFICATION_SERVICE_URL=http://notification-service:8006
-      - JWT_SECRET_KEY=your-super-secret-jwt-key-change-in-production
-      - DEFAULT_PRICE_PER_LESSON=1000.00
-      - MAX_BALANCE=1000
-      - ENABLE_NEGATIVE_BALANCE=false
-      - EVENT_PROCESSING_ENABLED=true
-      - DEBUG=false
-    volumes:
-      - payment_service_data:/app/data
-    ports:
-      - "8004:8003"
-    networks:
-      - repitbot_network
-    depends_on:
-      postgres:
-        condition: service_healthy
-      rabbitmq:
-        condition: service_healthy
-      redis:
-        condition: service_healthy
-      user-service:
-        condition: service_healthy
-      lesson-service:
-        condition: service_healthy
-    restart: unless-stopped
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8003/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 5
-
   # Material Service
   material-service:
     build:
@@ -324,7 +281,6 @@ services:
       - REDIS_URL=redis://redis:6379/4
       - USER_SERVICE_URL=http://user-service:8001
       - LESSON_SERVICE_URL=http://lesson-service:8002
-      - PAYMENT_SERVICE_URL=http://payment-service:8003
       - MATERIAL_SERVICE_URL=http://material-service:8004
       - NOTIFICATION_SERVICE_URL=http://notification-service:8006
       - REPORTS_STORAGE_PATH=/app/reports
@@ -356,8 +312,6 @@ services:
       user-service:
         condition: service_healthy
       lesson-service:
-        condition: service_healthy
-      payment-service:
         condition: service_healthy
       material-service:
         condition: service_healthy
@@ -458,8 +412,6 @@ services:
         condition: service_healthy
       homework-service:
         condition: service_healthy
-      payment-service:
-        condition: service_healthy
       material-service:
         condition: service_healthy
       notification-service:
@@ -487,7 +439,6 @@ services:
       - USER_SERVICE_URL=http://user-service:8001
       - LESSON_SERVICE_URL=http://lesson-service:8002
       - HOMEWORK_SERVICE_URL=http://homework-service:8003
-      - PAYMENT_SERVICE_URL=http://payment-service:8003
       - MATERIAL_SERVICE_URL=http://material-service:8004
       - NOTIFICATION_SERVICE_URL=http://notification-service:8006
       - ANALYTICS_SERVICE_URL=http://analytics-service:8007
@@ -510,8 +461,6 @@ services:
       lesson-service:
         condition: service_healthy
       homework-service:
-        condition: service_healthy
-      payment-service:
         condition: service_healthy
       material-service:
         condition: service_healthy

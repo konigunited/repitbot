@@ -1,0 +1,203 @@
+version: '3.8'
+
+services:
+  # ============== ИНФРАСТРУКТУРА ==============
+  
+  # PostgreSQL база данных
+  postgres:
+    image: postgres:15-alpine
+    container_name: repitbot_postgres
+    environment:
+      POSTGRES_DB: repitbot
+      POSTGRES_USER: repitbot
+      POSTGRES_PASSWORD: repitbot_secure_password_2024
+      POSTGRES_MULTIPLE_DATABASES: repitbot_users,repitbot_lessons,repitbot_homework,repitbot_materials,repitbot_notifications,repitbot_analytics,repitbot_students,repitbot_gateway
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init-db.sql:/docker-entrypoint-initdb.d/init-db.sql
+    ports:
+      - "192.168.88.228:5432:5432"
+    networks:
+      - repitbot_network
+    restart: unless-stopped
+
+  # RabbitMQ для событий
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    container_name: repitbot_rabbitmq
+    environment:
+      RABBITMQ_DEFAULT_USER: repitbot
+      RABBITMQ_DEFAULT_PASS: repitbot123
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    ports:
+      - "192.168.88.228:5672:5672"
+      - "192.168.88.228:15672:15672"
+    networks:
+      - repitbot_network
+    restart: unless-stopped
+
+  # Redis для кеширования
+  redis:
+    image: redis:alpine
+    container_name: repitbot_redis
+    command: redis-server --requirepass repitbot123
+    volumes:
+      - redis_data:/data
+    ports:
+      - "192.168.88.228:6379:6379"
+    networks:
+      - repitbot_network
+    restart: unless-stopped
+
+  # ============== ОСНОВНЫЕ МИКРОСЕРВИСЫ ==============
+
+  # API Gateway - точка входа
+  api-gateway:
+    build: 
+      context: ./services/api-gateway
+      dockerfile: Dockerfile
+    container_name: repitbot_gateway
+    environment:
+      - DATABASE_URL_GATEWAY=${DATABASE_URL_GATEWAY}
+      - USER_SERVICE_URL=${USER_SERVICE_URL}
+      - LESSON_SERVICE_URL=${LESSON_SERVICE_URL}
+      - HOMEWORK_SERVICE_URL=${HOMEWORK_SERVICE_URL}
+      - MATERIAL_SERVICE_URL=${MATERIAL_SERVICE_URL}
+      - NOTIFICATION_SERVICE_URL=${NOTIFICATION_SERVICE_URL}
+      - JWT_SECRET_KEY=${JWT_SECRET_KEY}
+    ports:
+      - "192.168.88.228:8000:8000"
+    depends_on:
+      - postgres
+      - rabbitmq
+      - redis
+    networks:
+      - repitbot_network
+    restart: unless-stopped
+    volumes:
+      - upload_data:/app/uploads
+      - storage_data:/app/storage
+
+  # User Service - управление пользователями
+  user-service:
+    build: 
+      context: ./services/user-service
+      dockerfile: Dockerfile
+    container_name: repitbot_user
+    environment:
+      - DATABASE_URL_USER=${DATABASE_URL_USER}
+      - JWT_SECRET_KEY=${JWT_SECRET_KEY}
+      - JWT_REFRESH_SECRET=${JWT_REFRESH_SECRET}
+      - RABBITMQ_URL=${RABBITMQ_URL}
+    ports:
+      - "192.168.88.228:8001:8001"
+    depends_on:
+      - postgres
+      - rabbitmq
+    networks:
+      - repitbot_network
+    restart: unless-stopped
+
+  # Lesson Service - управление уроками
+  lesson-service:
+    build: 
+      context: ./services/lesson-service
+      dockerfile: Dockerfile
+    container_name: repitbot_lesson
+    environment:
+      - DATABASE_URL_LESSON=${DATABASE_URL_LESSON}
+      - USER_SERVICE_URL=${USER_SERVICE_URL}
+      - RABBITMQ_URL=${RABBITMQ_URL}
+    ports:
+      - "192.168.88.228:8002:8002"
+    depends_on:
+      - postgres
+      - rabbitmq
+      - user-service
+    networks:
+      - repitbot_network
+    restart: unless-stopped
+
+  # Homework Service - управление домашними заданиями
+  homework-service:
+    build: 
+      context: ./services/homework-service
+      dockerfile: Dockerfile
+    container_name: repitbot_homework
+    environment:
+      - DATABASE_URL_HOMEWORK=${DATABASE_URL_HOMEWORK}
+      - USER_SERVICE_URL=${USER_SERVICE_URL}
+      - LESSON_SERVICE_URL=${LESSON_SERVICE_URL}
+      - RABBITMQ_URL=${RABBITMQ_URL}
+    ports:
+      - "192.168.88.228:8003:8003"
+    depends_on:
+      - postgres
+      - rabbitmq
+      - user-service
+      - lesson-service
+    networks:
+      - repitbot_network
+    restart: unless-stopped
+    volumes:
+      - upload_data:/app/uploads
+
+  # Material Service - управление материалами
+  material-service:
+    build: 
+      context: ./services/material-service
+      dockerfile: Dockerfile
+    container_name: repitbot_material
+    environment:
+      - DATABASE_URL_MATERIAL=${DATABASE_URL_MATERIAL}
+      - USER_SERVICE_URL=${USER_SERVICE_URL}
+      - RABBITMQ_URL=${RABBITMQ_URL}
+    ports:
+      - "192.168.88.228:8005:8005"
+    depends_on:
+      - postgres
+      - rabbitmq
+      - user-service
+    networks:
+      - repitbot_network
+    restart: unless-stopped
+    volumes:
+      - storage_data:/app/storage
+
+  # Notification Service - уведомления
+  notification-service:
+    build: 
+      context: ./services/notification-service
+      dockerfile: Dockerfile
+    container_name: repitbot_notification
+    environment:
+      - DATABASE_URL_NOTIFICATION=${DATABASE_URL_NOTIFICATION}
+      - BOT_TOKEN=${BOT_TOKEN}
+      - EMAIL_USERNAME=${EMAIL_USERNAME:-test@example.com}
+      - EMAIL_PASSWORD=${EMAIL_PASSWORD:-test_password}
+      - RABBITMQ_URL=${RABBITMQ_URL}
+    ports:
+      - "192.168.88.228:8006:8006"
+    depends_on:
+      - postgres
+      - rabbitmq
+    networks:
+      - repitbot_network
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+    driver: local
+  rabbitmq_data:
+    driver: local
+  redis_data:
+    driver: local
+  upload_data:
+    driver: local
+  storage_data:
+    driver: local
+
+networks:
+  repitbot_network:
+    driver: bridge

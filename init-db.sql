@@ -1,56 +1,31 @@
--- Инициализация базы данных для микросервисной архитектуры RepitBot
--- Создается единая БД с отдельными схемами для каждого сервиса
+-- Создание баз данных для минимальной версии RepitBot
+-- Выполняется автоматически при запуске PostgreSQL контейнера
 
--- Создание схем для сервисов
-CREATE SCHEMA IF NOT EXISTS user_service;
-CREATE SCHEMA IF NOT EXISTS auth_service;
-CREATE SCHEMA IF NOT EXISTS lesson_service;
-CREATE SCHEMA IF NOT EXISTS homework_service;
-CREATE SCHEMA IF NOT EXISTS payment_service;
-CREATE SCHEMA IF NOT EXISTS material_service;
-CREATE SCHEMA IF NOT EXISTS notification_service;
-CREATE SCHEMA IF NOT EXISTS analytics_service;
+-- Основные базы данных для микросервисов
+CREATE DATABASE repitbot_users;
+CREATE DATABASE repitbot_lessons;  
+CREATE DATABASE repitbot_homework;
+CREATE DATABASE repitbot_materials;
+CREATE DATABASE repitbot_notifications;
+CREATE DATABASE repitbot_gateway;
 
--- Создание пользователей для сервисов (в production должны быть отдельные пользователи)
--- В development режиме используем общего пользователя
+-- Опциональные базы для будущего расширения
+CREATE DATABASE repitbot_analytics;
+CREATE DATABASE repitbot_students;
 
--- Права доступа для схем
-GRANT ALL PRIVILEGES ON SCHEMA user_service TO repitbot;
-GRANT ALL PRIVILEGES ON SCHEMA auth_service TO repitbot;
-GRANT ALL PRIVILEGES ON SCHEMA lesson_service TO repitbot;
-GRANT ALL PRIVILEGES ON SCHEMA homework_service TO repitbot;
-GRANT ALL PRIVILEGES ON SCHEMA payment_service TO repitbot;
-GRANT ALL PRIVILEGES ON SCHEMA material_service TO repitbot;
-GRANT ALL PRIVILEGES ON SCHEMA notification_service TO repitbot;
-GRANT ALL PRIVILEGES ON SCHEMA analytics_service TO repitbot;
+-- Создание пользователя с правами доступа ко всем базам
+CREATE USER repitbot WITH ENCRYPTED PASSWORD 'repitbot_secure_password_2024';
 
--- Настройка search_path по умолчанию
-ALTER USER repitbot SET search_path = user_service, auth_service, lesson_service, homework_service, payment_service, material_service, notification_service, analytics_service, public;
+-- Предоставление всех привилегий пользователю repitbot
+GRANT ALL PRIVILEGES ON DATABASE repitbot_users TO repitbot;
+GRANT ALL PRIVILEGES ON DATABASE repitbot_lessons TO repitbot;
+GRANT ALL PRIVILEGES ON DATABASE repitbot_homework TO repitbot;
+GRANT ALL PRIVILEGES ON DATABASE repitbot_materials TO repitbot;
+GRANT ALL PRIVILEGES ON DATABASE repitbot_notifications TO repitbot;
+GRANT ALL PRIVILEGES ON DATABASE repitbot_gateway TO repitbot;
+GRANT ALL PRIVILEGES ON DATABASE repitbot_analytics TO repitbot;
+GRANT ALL PRIVILEGES ON DATABASE repitbot_students TO repitbot;
 
--- Создание расширений
-CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
-CREATE EXTENSION IF NOT EXISTS "pgcrypto";
-
--- Функция для автоматического обновления updated_at
-CREATE OR REPLACE FUNCTION update_updated_at_column()
-RETURNS TRIGGER AS $$
-BEGIN
-    NEW.updated_at = CURRENT_TIMESTAMP;
-    RETURN NEW;
-END;
-$$ language 'plpgsql';
-
--- Комментарии для документации
-COMMENT ON SCHEMA user_service IS 'Схема для User Service - управление пользователями';
-COMMENT ON SCHEMA auth_service IS 'Схема для Auth Service - аутентификация и авторизация';
-COMMENT ON SCHEMA lesson_service IS 'Схема для Lesson Service - управление уроками';
-COMMENT ON SCHEMA homework_service IS 'Схема для Homework Service - управление домашними заданиями';
-COMMENT ON SCHEMA payment_service IS 'Схема для Payment Service - платежи и биллинг';
-COMMENT ON SCHEMA material_service IS 'Схема для Material Service - управление материалами';
-COMMENT ON SCHEMA notification_service IS 'Схема для Notification Service - уведомления';
-COMMENT ON SCHEMA analytics_service IS 'Схема для Analytics Service - аналитика и отчеты';
-
--- Логирование
-\echo 'Database schemas created successfully for RepitBot microservices'
-\echo 'Core Services: user_service, auth_service, lesson_service, homework_service'
-\echo 'Additional Services: payment_service, material_service, notification_service, analytics_service'
+-- Сделать пользователя суперпользователем для миграций
+ALTER USER repitbot CREATEDB;
+ALTER USER repitbot SUPERUSER;
