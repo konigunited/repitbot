@@ -17,8 +17,12 @@ RUN apt-get update && apt-get install -y \
     libffi-dev \
     libssl-dev \
     build-essential \
-    wkhtmltopdf \
     && rm -rf /var/lib/apt/lists/*
+
+# Install wkhtmltopdf from alternative source if needed for PDF generation
+# RUN wget -q -O wkhtmltox.deb https://github.com/wkhtmltopdf/packaging/releases/download/0.12.6.1-2/wkhtmltox_0.12.6.1-2.bullseye_amd64.deb \
+#     && dpkg -i wkhtmltox.deb || apt-get install -f -y \
+#     && rm wkhtmltox.deb
 
 # Create app user
 RUN adduser --disabled-password --gecos '' analytics
