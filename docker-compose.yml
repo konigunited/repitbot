@@ -6,7 +6,7 @@ services:
     container_name: repitbot
     restart: unless-stopped
     environment:
-      - BOT_TOKEN=${BOT_TOKEN}
+      - TELEGRAM_TOKEN=${TELEGRAM_TOKEN}
       - ADMIN_ACCESS_CODE=${ADMIN_ACCESS_CODE}
       - DATABASE_URL=sqlite:///data/repitbot.db
       - LOG_LEVEL=INFO
@@ -33,7 +33,7 @@ services:
     networks:
       - repitbot_network
     ports:
-      - "5432:5432"
+      - "5434:5432"
 
 volumes:
   postgres_data:
