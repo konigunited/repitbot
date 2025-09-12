@@ -305,8 +305,14 @@ def main() -> None:
         states={
             ADD_MATERIAL_GRADE: [CallbackQueryHandler(tutor_get_material_grade, pattern="^select_grade_")],
             ADD_MATERIAL_TITLE: [MessageHandler(filters.TEXT & ~filters.COMMAND, tutor_get_material_title)],
-            ADD_MATERIAL_LINK: [MessageHandler(filters.TEXT, tutor_get_material_link)],
-            ADD_MATERIAL_DESC: [MessageHandler(filters.TEXT, tutor_get_material_description)],
+            ADD_MATERIAL_LINK: [
+                MessageHandler(filters.TEXT, tutor_get_material_link),
+                CommandHandler("skip", tutor_get_material_link)
+            ],
+            ADD_MATERIAL_DESC: [
+                MessageHandler(filters.TEXT, tutor_get_material_description),
+                CommandHandler("skip", tutor_get_material_description)
+            ],
         },
         fallbacks=[CommandHandler("cancel", cancel_conversation)],
         per_user=True,

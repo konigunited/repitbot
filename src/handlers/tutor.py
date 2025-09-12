@@ -1745,7 +1745,7 @@ async def tutor_get_material_link(update: Update, context: ContextTypes.DEFAULT_
 async def tutor_get_material_description(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Получает описание и создает материал."""
     desc = update.message.text
-    if desc == '/skip': desc = None
+    if desc.lower() == '/skip': desc = None
     
     db = SessionLocal()
     new_material = Material(
