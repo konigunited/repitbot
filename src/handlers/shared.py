@@ -486,6 +486,7 @@ async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
     for prefix, (handler, param_name) in action_map.items():
         if data == prefix or data.startswith(prefix):
             handler_found = True
+            print(f"DEBUG: Found handler for '{data}': {handler.__name__ if hasattr(handler, '__name__') else handler}")
             try:
                 if param_name is None:
                     # Вызываем без параметров
