@@ -3339,3 +3339,19 @@ F
 2025-09-13 15:00:13 | RepitBot.HealthMonitor | INFO     | health_monitor.py:99 | start_monitoring | Мониторинг здоровья запущен
 2025-09-13 15:00:13 | RepitBot | INFO     | bot.py:158 | start_health_monitoring | Система мониторинга здоровья запущена
 2025-09-13 15:00:13 | RepitBot.HealthMonitor | WARNING  | health_monitor.py:149 | _handle_warning | ⚠️ WARNING: Health check disk_space failed 1 times
+2025-09-13 15:05:16 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-09-13 15:05:16 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-09-13 15:05:16 | RepitBot | INFO     | logger.py:120 | setup_logging | Система логирования инициализирована
+2025-09-13 15:05:16 | RepitBot | INFO     | bot.py:182 | main | Database tables created/checked.
+2025-09-13 15:05:17 | RepitBot | INFO     | bot.py:467 | main | Запускаем бота...
+2025-09-13 15:05:18 | RepitBot | INFO     | bot.py:165 | initialize_systems | Бот инициализирован
+2025-09-13 15:05:18 | RepitBot | INFO     | bot.py:169 | initialize_systems | Подключение к Telegram API установлено. Бот: @mathtestmathbot
+2025-09-13 15:05:18 | RepitBot | INFO     | bot.py:138 | start_scheduler | Планировщик запущен с задачами: напоминания об уроках, балансе и дедлайнах ДЗ
+2025-09-13 15:05:18 | RepitBot.HealthMonitor | INFO     | health_monitor.py:56 | add_check | Добавлена проверка здоровья: database_connection (интервал: 60с)
+2025-09-13 15:05:18 | RepitBot.HealthMonitor | INFO     | health_monitor.py:56 | add_check | Добавлена проверка здоровья: disk_space (интервал: 300с)
+2025-09-13 15:05:18 | RepitBot.HealthMonitor | INFO     | health_monitor.py:56 | add_check | Добавлена проверка здоровья: memory_usage (интервал: 120с)
+2025-09-13 15:05:18 | RepitBot.HealthMonitor | INFO     | health_monitor.py:266 | setup_default_checks | Стандартные проверки здоровья настроены
+2025-09-13 15:05:18 | RepitBot.HealthMonitor | INFO     | health_monitor.py:56 | add_check | Добавлена проверка здоровья: bot_connection (интервал: 120с)
+2025-09-13 15:05:18 | RepitBot.HealthMonitor | INFO     | health_monitor.py:99 | start_monitoring | Мониторинг здоровья запущен
+2025-09-13 15:05:18 | RepitBot | INFO     | bot.py:158 | start_health_monitoring | Система мониторинга здоровья запущена
+2025-09-13 15:05:18 | RepitBot.HealthMonitor | WARNING  | health_monitor.py:149 | _handle_warning | ⚠️ WARNING: Health check disk_space failed 1 times
