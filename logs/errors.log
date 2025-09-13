@@ -922,3 +922,6 @@
 2025-08-25 20:03:29 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
 2025-08-25 20:03:31 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
 2025-09-13 14:59:17 | RepitBot.HealthMonitor | CRITICAL | health_monitor.py:139 | _handle_critical_failure | 🚨 CRITICAL: Health check disk_space failed 3 times
+2025-09-13 15:15:21 | RepitBot.HealthMonitor | CRITICAL | health_monitor.py:139 | _handle_critical_failure | 🚨 CRITICAL: Health check disk_space failed 3 times
+2025-09-13 15:20:23 | RepitBot.HealthMonitor | CRITICAL | health_monitor.py:139 | _handle_critical_failure | 🚨 CRITICAL: Health check disk_space failed 4 times
+2025-09-13 15:23:36 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.RemoteProtocolError: Server disconnected without sending a response.'}

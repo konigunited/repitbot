@@ -50,34 +50,51 @@ async def chat_with_tutor_start(update: Update, context: ContextTypes.DEFAULT_TY
 
 async def forward_message_to_tutor(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Пересылает сообщение от ученика/родителя к репетитору или обрабатывает быстрый ответ репетитора"""
-    user = get_user_by_telegram_id(update.effective_user.id)
-
-    # Если это репетитор с данными быстрого ответа, отправляем быстрый ответ
-    if (user and user.role == UserRole.TUTOR and
-        context.user_data.get('quick_reply_recipient')):
-        return await send_tutor_quick_reply(update, context)
-    
-    # Находим репетитора (предполагаем, что он один)
     db = SessionLocal()
-    tutor = db.query(User).filter(User.role == UserRole.TUTOR).first()
-    db.close()
-    
-    if not tutor or not tutor.telegram_id:
-        await update.message.reply_text(
-            "❌ Не удалось связаться с репетитором. Попробуйте позже."
-        )
-        return ConversationHandler.END
-    
+    try:
+        user = db.query(User).filter(User.telegram_id == update.effective_user.id).first()
+
+        # Если это репетитор с данными быстрого ответа, отправляем быстрый ответ
+        if (user and user.role == UserRole.TUTOR and
+            context.user_data.get('quick_reply_recipient')):
+            return await send_tutor_quick_reply(update, context)
+
+        # Находим репетитора (предполагаем, что он один)
+        tutor = db.query(User).filter(User.role == UserRole.TUTOR).first()
+
+        if not tutor or not tutor.telegram_id:
+            await update.message.reply_text(
+                "❌ Не удалось связаться с репетитором. Попробуйте позже."
+            )
+            return ConversationHandler.END
+
+        if not user:
+            await update.message.reply_text(
+                "❌ Пользователь не найден. Используйте /start для регистрации."
+            )
+            return ConversationHandler.END
+
+        # Сохраняем данные пользователя для использования после закрытия сессии
+        user_data = {
+            'full_name': user.full_name,
+            'telegram_id': user.telegram_id,
+            'role': user.role
+        }
+        tutor_telegram_id = tutor.telegram_id
+
+    finally:
+        db.close()
+
     # Формируем заголовок сообщения
-    role_emoji = "👨‍🎓" if user.role == UserRole.STUDENT else "👨‍👩‍👧‍👦"
-    role_text = "Ученик" if user.role == UserRole.STUDENT else "Родитель"
-    header = f"{role_emoji} *{role_text}:* {user.full_name}\nID для ответа: `{user.telegram_id}`\n\n"
+    role_emoji = "👨‍🎓" if user_data['role'] == UserRole.STUDENT else "👨‍👩‍👧‍👦"
+    role_text = "Ученик" if user_data['role'] == UserRole.STUDENT else "Родитель"
+    header = f"{role_emoji} *{role_text}:* {user_data['full_name']}\nID для ответа: `{user_data['telegram_id']}`\n\n"
     
     try:
         # Отправляем разные типы сообщений
         if update.message.text:
             await context.bot.send_message(
-                chat_id=tutor.telegram_id,
+                chat_id=tutor_telegram_id,
                 text=header + update.message.text,
                 parse_mode='Markdown',
                 reply_to_message_id=update.message.message_id if update.message.reply_to_message else None
@@ -86,7 +103,7 @@ async def forward_message_to_tutor(update: Update, context: ContextTypes.DEFAULT
             photo = update.message.photo[-1]  # Берем фото лучшего качества
             caption = header + (update.message.caption or "")
             await context.bot.send_photo(
-                chat_id=tutor.telegram_id,
+                chat_id=tutor_telegram_id,
                 photo=photo.file_id,
                 caption=caption,
                 parse_mode='Markdown'
@@ -94,7 +111,7 @@ async def forward_message_to_tutor(update: Update, context: ContextTypes.DEFAULT
         elif update.message.document:
             caption = header + (update.message.caption or "")
             await context.bot.send_document(
-                chat_id=tutor.telegram_id,
+                chat_id=tutor_telegram_id,
                 document=update.message.document.file_id,
                 caption=caption,
                 parse_mode='Markdown'
@@ -102,21 +119,21 @@ async def forward_message_to_tutor(update: Update, context: ContextTypes.DEFAULT
         elif update.message.voice:
             caption = header + "🎤 Голосовое сообщение"
             await context.bot.send_voice(
-                chat_id=tutor.telegram_id,
+                chat_id=tutor_telegram_id,
                 voice=update.message.voice.file_id,
                 caption=caption,
                 parse_mode='Markdown'
             )
-        
+
         # Добавляем кнопку для быстрого ответа репетитора
         reply_keyboard = InlineKeyboardMarkup([[
-            InlineKeyboardButton("💬 Ответить", callback_data=f"tutor_reply_to_{user.telegram_id}")
+            InlineKeyboardButton("💬 Ответить", callback_data=f"tutor_reply_to_{user_data['telegram_id']}")
         ]])
-        
+
         # Отправляем уведомление репетитору с кнопкой ответа
         try:
             await context.bot.send_message(
-                chat_id=tutor.telegram_id,
+                chat_id=tutor_telegram_id,
                 text="📬 *Новое сообщение получено!*\n\nДля ответа нажмите кнопку ниже или просто ответьте на сообщение выше.",
                 parse_mode='Markdown',
                 reply_markup=reply_keyboard

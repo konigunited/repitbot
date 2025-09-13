@@ -392,12 +392,11 @@ def main() -> None:
             ],
         },
         fallbacks=[
-            CommandHandler("cancel", tutor_message_cancel),
             CallbackQueryHandler(tutor_message_cancel, pattern="^message_cancel$")
         ],
         per_user=True,
         per_chat=True,
-        per_message=True
+        per_message=False
     )
 
     # --- Регистрация обработчиков ---
