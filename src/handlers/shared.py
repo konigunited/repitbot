@@ -103,6 +103,22 @@ async def forward_message_to_tutor(update: Update, context: ContextTypes.DEFAULT
                 parse_mode='Markdown'
             )
         
+        # Добавляем кнопку для быстрого ответа репетитора
+        reply_keyboard = InlineKeyboardMarkup([[
+            InlineKeyboardButton("💬 Ответить", callback_data=f"tutor_reply_to_{user.telegram_id}")
+        ]])
+        
+        # Отправляем уведомление репетитору с кнопкой ответа
+        try:
+            await context.bot.send_message(
+                chat_id=tutor.telegram_id,
+                text="📬 *Новое сообщение получено!*\n\nДля ответа нажмите кнопку ниже или просто ответьте на сообщение выше.",
+                parse_mode='Markdown',
+                reply_markup=reply_keyboard
+            )
+        except:
+            pass  # Если не удалось отправить уведомление, игнорируем
+        
         await update.message.reply_text("✅ Сообщение отправлено репетитору!")
         
     except Forbidden:
@@ -117,6 +133,44 @@ async def forward_message_to_tutor(update: Update, context: ContextTypes.DEFAULT
     # Возвращаемся в главное меню
     await show_main_menu(update, context)
     return ConversationHandler.END
+
+async def tutor_quick_reply_start(update: Update, context: ContextTypes.DEFAULT_TYPE, user_id: int):
+    """Быстрый ответ репетитора на сообщение пользователя."""
+    query = update.callback_query
+    await query.answer()
+    
+    # Проверяем, что это действительно репетитор
+    user = get_user_by_telegram_id(update.effective_user.id)
+    if not user or user.role != UserRole.TUTOR:
+        await query.edit_message_text("У вас нет доступа к этой функции.")
+        return
+    
+    # Находим получателя
+    db = SessionLocal()
+    recipient = db.query(User).filter(User.telegram_id == user_id).first()
+    db.close()
+    
+    if not recipient:
+        await query.edit_message_text("❌ Получатель не найден.")
+        return
+    
+    # Сохраняем информацию о получателе в context
+    context.user_data['quick_reply_recipient'] = {
+        'user_id': user_id,
+        'name': recipient.full_name,
+        'role': recipient.role.value
+    }
+    
+    role_emoji = "👨‍🎓" if recipient.role == UserRole.STUDENT else "👨‍👩‍👧‍👦"
+    role_text = "ученику" if recipient.role == UserRole.STUDENT else "родителю"
+    
+    await query.edit_message_text(
+        f"💬 *Быстрый ответ {role_text}*\n\n"
+        f"{role_emoji} Получатель: {recipient.full_name}\n\n"
+        f"Напишите ваше сообщение. Можно отправлять текст, фото или файлы.\n\n"
+        f"Для отмены введите /cancel",
+        parse_mode='Markdown'
+    )
 
 async def handle_tutor_reply(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Обрабатывает ответ репетитора на сообщение пользователя."""
@@ -346,7 +400,9 @@ async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
                        tutor_edit_lesson_conduct_status, tutor_set_lesson_conduct,
                        tutor_delete_lesson_start, tutor_confirm_delete_lesson,
                        tutor_schedule_setup_start, tutor_schedule_select_day, tutor_schedule_finish_setup,
-                       tutor_schedule_select_time, tutor_schedule_create_lessons, tutor_schedule_cancel)
+                       tutor_schedule_select_time, tutor_schedule_create_lessons, tutor_schedule_cancel,
+                       tutor_parent_contact_start, tutor_message_student_start, tutor_message_parent_start,
+                       tutor_message_input, tutor_message_send, tutor_message_cancel)
     from .parent import (show_parent_dashboard, show_child_menu, show_child_progress,
                         show_child_schedule, show_child_payments, parent_generate_chart,
                         show_child_homework, show_child_lessons, show_child_achievements)
@@ -383,6 +439,10 @@ async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
         "schedule_time_": (tutor_schedule_select_time, "time"),
         "schedule_create_": (tutor_schedule_create_lessons, "student_id"),
         "schedule_cancel": (tutor_schedule_cancel, None),
+        "tutor_parent_contact_": (tutor_parent_contact_start, "student_id"),
+        "tutor_message_student_": (tutor_message_student_start, "student_id"),
+        "tutor_message_parent_": (tutor_message_parent_start, "parent_id_student_id"),
+        "tutor_reply_to_": (lambda update, context, user_id: tutor_quick_reply_start(update, context, int(user_id)), "user_id"),
         "tutor_check_hw_": (tutor_check_homework, "lesson_id"),
         "tutor_manage_library": (tutor_manage_library, None),
         "tutor_add_material": (tutor_add_material_start, None),
@@ -461,6 +521,26 @@ async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
                     # Для выбора класса в библиотеке
                     grade = data.split("_")[-1]  # Последняя часть после последнего "_"
                     await handler(update, context, grade)
+                elif param_name == "day":
+                    # Для выбора дня в расписании
+                    day = data.split("_")[-1]  # Последняя часть после последнего "_"
+                    await handler(update, context, day)
+                elif param_name == "time":
+                    # Для выбора времени в расписании
+                    time = data.split("_")[-1]  # Последняя часть после последнего "_"
+                    await handler(update, context, time)
+                elif param_name == "parent_id_student_id":
+                    # Для сообщений родителю (формат: tutor_message_parent_<parent_id>_<student_id>)
+                    parts = data.split("_")
+                    if len(parts) >= 4:
+                        parent_id_student_id = "_".join(parts[3:])  # parent_id_student_id
+                        await handler(update, context, parent_id_student_id)
+                    else:
+                        await handler(update, context, data)
+                elif param_name == "user_id":
+                    # Для быстрого ответа пользователю
+                    user_id = data.split("_")[-1]  # Последняя часть после последнего "_"
+                    await handler(update, context, user_id)
                 else:
                     await handler(update, context)
                     

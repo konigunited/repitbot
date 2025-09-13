@@ -2235,3 +2235,226 @@ async def tutor_schedule_cancel(update: Update, context: ContextTypes.DEFAULT_TY
         await show_student_profile(update, context, student_id)
     else:
         await query.edit_message_text("❌ Настройка расписания отменена.")
+
+# --- Messaging System ---
+async def tutor_message_student_start(update: Update, context: ContextTypes.DEFAULT_TYPE, student_id: int):
+    """Начинает отправку сообщения ученику."""
+    query = update.callback_query
+    db = SessionLocal()
+    try:
+        student = db.query(User).filter(User.id == student_id).first()
+        if not student:
+            await query.edit_message_text("Ученик не найден.")
+            return ConversationHandler.END
+        
+        if not student.telegram_id:
+            await query.edit_message_text(
+                f"❌ У ученика {student.full_name} нет Telegram ID.\n"
+                f"Ученик должен сначала войти в бота."
+            )
+            return ConversationHandler.END
+        
+        context.user_data['message_recipient_type'] = 'student'
+        context.user_data['message_recipient_id'] = student_id
+        context.user_data['message_recipient_name'] = student.full_name
+        context.user_data['message_student_id'] = student_id
+        
+        await query.edit_message_text(
+            f"💬 Сообщение для ученика: {student.full_name}\n\n"
+            f"Введите текст сообщения.\n"
+            f"Можно отправлять текст, фото или файлы.\n\n"
+            f"Для отмены введите /cancel"
+        )
+        return 1  # MESSAGE_INPUT состояние
+        
+    finally:
+        db.close()
+
+async def tutor_parent_contact_start(update: Update, context: ContextTypes.DEFAULT_TYPE, student_id: int):
+    """Показывает список родителей ученика для связи."""
+    query = update.callback_query
+    db = SessionLocal()
+    try:
+        student = db.query(User).filter(User.id == student_id).first()
+        if not student:
+            await query.edit_message_text("Ученик не найден.")
+            return
+        
+        parents = [student.parent, student.second_parent]
+        available_parents = [p for p in parents if p and p.telegram_id]
+        
+        if not available_parents:
+            await query.edit_message_text(
+                f"❌ У ученика {student.full_name} нет родителей в системе\n"
+                f"или родители не входили в бота."
+            )
+            return
+        
+        from ..keyboards import tutor_parent_contact_keyboard
+        await query.edit_message_text(
+            f"👨‍👩‍👧‍👦 Связь с родителями ученика: {student.full_name}\n\n"
+            f"Выберите родителя для отправки сообщения:",
+            reply_markup=tutor_parent_contact_keyboard(student_id, available_parents)
+        )
+        
+    finally:
+        db.close()
+
+async def tutor_message_parent_start(update: Update, context: ContextTypes.DEFAULT_TYPE, parent_id_student_id: str):
+    """Начинает отправку сообщения родителю."""
+    query = update.callback_query
+    parent_id, student_id = parent_id_student_id.split('_', 1)
+    parent_id, student_id = int(parent_id), int(student_id)
+    
+    db = SessionLocal()
+    try:
+        parent = db.query(User).filter(User.id == parent_id).first()
+        student = db.query(User).filter(User.id == student_id).first()
+        
+        if not parent or not student:
+            await query.edit_message_text("Родитель или ученик не найден.")
+            return ConversationHandler.END
+        
+        if not parent.telegram_id:
+            await query.edit_message_text(
+                f"❌ У родителя {parent.full_name} нет Telegram ID.\n"
+                f"Родитель должен сначала войти в бота."
+            )
+            return ConversationHandler.END
+        
+        context.user_data['message_recipient_type'] = 'parent'
+        context.user_data['message_recipient_id'] = parent_id
+        context.user_data['message_recipient_name'] = parent.full_name
+        context.user_data['message_student_id'] = student_id
+        context.user_data['message_student_name'] = student.full_name
+        
+        await query.edit_message_text(
+            f"💬 Сообщение для родителя: {parent.full_name}\n"
+            f"👨‍🎓 Ученик: {student.full_name}\n\n"
+            f"Введите текст сообщения.\n"
+            f"Можно отправлять текст, фото или файлы.\n\n"
+            f"Для отмены введите /cancel"
+        )
+        return 1  # MESSAGE_INPUT состояние
+        
+    finally:
+        db.close()
+
+async def tutor_message_input(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Получает сообщение и показывает подтверждение."""
+    recipient_name = context.user_data.get('message_recipient_name')
+    recipient_type = context.user_data.get('message_recipient_type')
+    student_id = context.user_data.get('message_student_id')
+    
+    # Сохраняем сообщение
+    if update.message.text:
+        context.user_data['message_content'] = update.message.text
+        context.user_data['message_type'] = 'text'
+        preview = update.message.text[:100] + "..." if len(update.message.text) > 100 else update.message.text
+    elif update.message.photo:
+        context.user_data['message_content'] = update.message.photo[-1].file_id
+        context.user_data['message_type'] = 'photo'
+        context.user_data['message_caption'] = update.message.caption or ""
+        preview = "📷 Фото" + (f": {update.message.caption}" if update.message.caption else "")
+    elif update.message.document:
+        context.user_data['message_content'] = update.message.document.file_id
+        context.user_data['message_type'] = 'document'
+        context.user_data['message_caption'] = update.message.caption or ""
+        preview = f"📄 Документ: {update.message.document.file_name}"
+    else:
+        await update.message.reply_text("❌ Поддерживаются только текст, фото или документы.")
+        return 1  # MESSAGE_INPUT
+    
+    from ..keyboards import message_confirm_keyboard
+    await update.message.reply_text(
+        f"📝 Подтверждение отправки:\n\n"
+        f"👤 Получатель: {recipient_name} ({recipient_type})\n\n"
+        f"💬 Сообщение:\n{preview}",
+        reply_markup=message_confirm_keyboard(
+            context.user_data['message_recipient_type'], 
+            context.user_data['message_recipient_id'],
+            student_id
+        )
+    )
+    return 2  # MESSAGE_CONFIRM
+
+async def tutor_message_send(update: Update, context: ContextTypes.DEFAULT_TYPE, recipient_info: str):
+    """Отправляет сообщение получателю."""
+    query = update.callback_query
+    recipient_type, recipient_id = recipient_info.split('_', 1)
+    recipient_id = int(recipient_id)
+    
+    db = SessionLocal()
+    try:
+        # Получаем данные получателя
+        recipient = db.query(User).filter(User.id == recipient_id).first()
+        if not recipient or not recipient.telegram_id:
+            await query.edit_message_text("❌ Получатель не найден или не активен.")
+            return ConversationHandler.END
+        
+        # Отправляем сообщение
+        message_content = context.user_data.get('message_content')
+        message_type = context.user_data.get('message_type')
+        message_caption = context.user_data.get('message_caption', '')
+        sender_name = get_user_by_telegram_id(update.effective_user.id).full_name
+        
+        header = f"📨 Сообщение от репетитора {sender_name}:\n\n"
+        
+        if message_type == 'text':
+            await context.bot.send_message(
+                chat_id=recipient.telegram_id,
+                text=header + message_content
+            )
+        elif message_type == 'photo':
+            await context.bot.send_photo(
+                chat_id=recipient.telegram_id,
+                photo=message_content,
+                caption=header + message_caption
+            )
+        elif message_type == 'document':
+            await context.bot.send_document(
+                chat_id=recipient.telegram_id,
+                document=message_content,
+                caption=header + message_caption
+            )
+        
+        from ..keyboards import message_sent_keyboard
+        await query.edit_message_text(
+            f"✅ Сообщение отправлено!\n\n"
+            f"👤 Получатель: {recipient.full_name}",
+            reply_markup=message_sent_keyboard(
+                recipient_type, 
+                recipient_id, 
+                context.user_data.get('message_student_id')
+            )
+        )
+        
+        # Очищаем данные
+        context.user_data.clear()
+        return ConversationHandler.END
+        
+    except Exception as e:
+        await query.edit_message_text(f"❌ Ошибка при отправке сообщения: {e}")
+        return ConversationHandler.END
+    finally:
+        db.close()
+
+async def tutor_message_cancel(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Отменяет отправку сообщения."""
+    student_id = context.user_data.get('message_student_id')
+    context.user_data.clear()
+    
+    if update.callback_query:
+        query = update.callback_query
+        if student_id:
+            from .shared import show_student_profile  
+            await show_student_profile(update, context, student_id)
+        else:
+            await query.edit_message_text("❌ Отправка сообщения отменена.")
+    else:
+        await update.message.reply_text("❌ Отправка сообщения отменена.")
+        if student_id:
+            from .shared import show_student_profile
+            await show_student_profile(update, context, student_id)
+    
+    return ConversationHandler.END

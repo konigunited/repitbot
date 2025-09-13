@@ -125,6 +125,10 @@ def tutor_student_profile_keyboard(student_id, has_parent=False, has_second_pare
             InlineKeyboardButton("💰 Добавить оплату", callback_data=f"tutor_add_payment_{student_id}")
         ],
         [InlineKeyboardButton("📅 Настроить расписание", callback_data=f"tutor_schedule_setup_{student_id}")],
+        [
+            InlineKeyboardButton("💬 Написать ученику", callback_data=f"tutor_message_student_{student_id}"),
+            InlineKeyboardButton("👨‍👩‍👧‍👦 Связь с родителями", callback_data=f"tutor_parent_contact_{student_id}")
+        ],
         [InlineKeyboardButton("✏️ Редактировать ФИО", callback_data=f"tutor_edit_name_{student_id}")],
     ]
     
@@ -645,4 +649,43 @@ def tutor_schedule_confirm_keyboard(student_id):
         ],
         [InlineKeyboardButton("❌ Отмена", callback_data=f"tutor_view_student_{student_id}")]
     ]
+    return InlineKeyboardMarkup(keyboard)
+
+def tutor_parent_contact_keyboard(student_id, parents):
+    """Клавиатура для выбора родителя для связи."""
+    keyboard = []
+    
+    for parent in parents:
+        if parent:  # Проверяем что родитель существует
+            keyboard.append([InlineKeyboardButton(
+                f"💬 Написать: {parent.full_name}", 
+                callback_data=f"tutor_message_parent_{parent.id}_{student_id}"
+            )])
+    
+    keyboard.append([InlineKeyboardButton("⬅️ Назад к ученику", callback_data=f"tutor_view_student_{student_id}")])
+    return InlineKeyboardMarkup(keyboard)
+
+def message_confirm_keyboard(recipient_type, recipient_id, student_id=None):
+    """Клавиатура подтверждения отправки сообщения."""
+    keyboard = [
+        [
+            InlineKeyboardButton("✅ Отправить", callback_data=f"send_message_{recipient_type}_{recipient_id}"),
+            InlineKeyboardButton("❌ Отмена", callback_data="message_cancel")
+        ]
+    ]
+    
+    if student_id:
+        keyboard.append([InlineKeyboardButton("⬅️ К ученику", callback_data=f"tutor_view_student_{student_id}")])
+    
+    return InlineKeyboardMarkup(keyboard)
+
+def message_sent_keyboard(recipient_type, recipient_id, student_id=None):
+    """Клавиатура после отправки сообщения."""
+    keyboard = []
+    
+    if student_id:
+        keyboard.append([InlineKeyboardButton("⬅️ К ученику", callback_data=f"tutor_view_student_{student_id}")])
+    else:
+        keyboard.append([InlineKeyboardButton("🏠 В главное меню", callback_data="main_menu")])
+    
     return InlineKeyboardMarkup(keyboard)
