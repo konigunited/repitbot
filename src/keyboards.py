@@ -117,6 +117,7 @@ def tutor_student_list_keyboard(students):
     return InlineKeyboardMarkup(keyboard)
 
 def tutor_student_profile_keyboard(student_id, has_parent=False, has_second_parent=False):
+    print(f"DEBUG: Creating keyboard for student_id={student_id}, has_parent={has_parent}, has_second_parent={has_second_parent}")
     keyboard = [
         [InlineKeyboardButton("📚 Уроки ученика", callback_data=f"tutor_lessons_list_{student_id}")],
         [InlineKeyboardButton("📈 Аналитика прогресса", callback_data=f"tutor_analytics_{student_id}")],
@@ -154,6 +155,11 @@ def tutor_student_profile_keyboard(student_id, has_parent=False, has_second_pare
         InlineKeyboardButton("❌ Удалить ученика", callback_data=f"tutor_delete_student_{student_id}"),
         InlineKeyboardButton("⬅️ К списку учеников", callback_data="tutor_student_list")
     ])
+    
+    print(f"DEBUG: Keyboard created with {len(keyboard)} rows")
+    for i, row in enumerate(keyboard):
+        for j, button in enumerate(row):
+            print(f"DEBUG: Row {i}, Button {j}: '{button.text}' -> '{button.callback_data}'")
     
     return InlineKeyboardMarkup(keyboard)
 
