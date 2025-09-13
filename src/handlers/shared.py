@@ -375,6 +375,10 @@ async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
     
     print(f"BUTTON_HANDLER: Received callback '{data}' from user {update.effective_user.id}")
     
+    # Дополнительная отладка для schedule кнопок
+    if "schedule" in data:
+        print(f"DEBUG: Schedule button detected: {data}")
+    
     # Логируем все нажатия кнопок
     log_user_action(update.effective_user.id, f"BUTTON_CLICK: {data}")
     
