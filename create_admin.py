@@ -10,16 +10,34 @@ sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 from src.database import SessionLocal, User, UserRole
 
 def create_admin_user():
-    """Создает админского пользователя с кодом доступа MARINA2024"""
+    """Создает или обновляет админского пользователя с кодом доступа MARINA2024"""
     db = SessionLocal()
     try:
-        # Удаляем существующих репетиторов чтобы избежать дублирования
-        existing_tutors = db.query(User).filter(User.role == UserRole.TUTOR).all()
-        for tutor in existing_tutors:
-            print(f"Удаляем существующего репетитора: {tutor.full_name} (код: {tutor.access_code})")
-            db.delete(tutor)
+        # Ищем существующего админа с кодом MARINA2024
+        existing_admin = db.query(User).filter(
+            User.access_code == 'MARINA2024',
+            User.role == UserRole.TUTOR
+        ).first()
         
-        # Создаем нового админа
+        if existing_admin:
+            print(f"Администратор с кодом 'MARINA2024' уже существует: {existing_admin.full_name}")
+            return existing_admin
+        
+        # Ищем старого админа с кодом marina или другими старыми кодами и обновляем его
+        old_admin = db.query(User).filter(
+            User.access_code.in_(['marina', 'MARINA']),
+            User.role == UserRole.TUTOR
+        ).first()
+        
+        if old_admin:
+            print(f"Обновляем существующего админа: {old_admin.full_name}")
+            old_admin.access_code = 'MARINA2024'
+            old_admin.full_name = 'Марина Администратор'
+            db.commit()
+            print(f"Код доступа обновлен: {old_admin.access_code}")
+            return old_admin
+        
+        # Создаем нового админа, если не нашли существующего
         admin = User(
             full_name='Марина Администратор',
             role=UserRole.TUTOR,
