@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 import os
 import enum
-from datetime import datetime
+from datetime import datetime, timedelta
+from .timezone_utils import now as tz_now
 from sqlalchemy import (create_engine, Column, Integer, String, ForeignKey,
                         DateTime, Text, Enum as SAEnum, Boolean, func as sql_func)
 from sqlalchemy.orm import sessionmaker, relationship, declarative_base, joinedload
@@ -354,7 +355,7 @@ def update_study_streak(student_id: int):
         if not student:
             return []
             
-        today = datetime.now().date()
+        today = tz_now().date()
         
         if student.last_lesson_date:
             last_date = student.last_lesson_date.date()
@@ -369,7 +370,7 @@ def update_study_streak(student_id: int):
         else:
             student.streak_days = 1
             
-        student.last_lesson_date = datetime.now()
+        student.last_lesson_date = tz_now().replace(tzinfo=None)
         db.commit()
         
         new_achievements = []
@@ -396,7 +397,7 @@ def get_dashboard_stats():
     """Собирает статистику для дашборда репетитора."""
     db = SessionLocal()
     try:
-        now = datetime.now()
+        now = tz_now().replace(tzinfo=None)
         year, month = now.year, now.month
 
         student_count = db.query(User).filter(User.role == UserRole.STUDENT).count()
@@ -451,7 +452,7 @@ def shift_lessons_after_cancellation(cancelled_lesson_id: int):
             # Если нет будущих уроков, создаем урок-заглушку для отработки
             # Используем дату далеко в будущем как маркер "не запланированного" урока
             from datetime import datetime, timedelta
-            far_future_date = datetime.now() + timedelta(days=3650)  # 10 лет вперед
+            far_future_date = tz_now() + timedelta(days=3650)  # 10 лет вперед
             
             makeup_lesson = Lesson(
                 student_id=cancelled_lesson.student_id,
@@ -478,7 +479,7 @@ def shift_lessons_after_cancellation(cancelled_lesson_id: int):
             print(f"DEBUG: This is the last lesson - no future lessons to shift")
             # Если это последний урок, создаем урок для отработки
             from datetime import datetime, timedelta
-            far_future_date = datetime.now() + timedelta(days=3650)
+            far_future_date = tz_now() + timedelta(days=3650)
             
             makeup_lesson = Lesson(
                 student_id=cancelled_lesson.student_id,
@@ -523,7 +524,7 @@ def shift_lessons_after_cancellation(cancelled_lesson_id: int):
         
         # Создаем урок-заглушку для последнего урока (без конкретной даты)
         from datetime import datetime, timedelta
-        far_future_date = datetime.now() + timedelta(days=3650)
+        far_future_date = tz_now() + timedelta(days=3650)
         
         makeup_lesson = Lesson(
             student_id=cancelled_lesson.student_id,

@@ -49,8 +49,13 @@ async def chat_with_tutor_start(update: Update, context: ContextTypes.DEFAULT_TY
     return CHAT_WITH_TUTOR
 
 async def forward_message_to_tutor(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    """Пересылает сообщение от ученика/родителя к репетитору"""
+    """Пересылает сообщение от ученика/родителя к репетитору или обрабатывает быстрый ответ репетитора"""
     user = get_user_by_telegram_id(update.effective_user.id)
+
+    # Если это репетитор с данными быстрого ответа, отправляем быстрый ответ
+    if (user and user.role == UserRole.TUTOR and
+        context.user_data.get('quick_reply_recipient')):
+        return await send_tutor_quick_reply(update, context)
     
     # Находим репетитора (предполагаем, что он один)
     db = SessionLocal()
@@ -171,6 +176,71 @@ async def tutor_quick_reply_start(update: Update, context: ContextTypes.DEFAULT_
         f"Для отмены введите /cancel",
         parse_mode='Markdown'
     )
+    return CHAT_WITH_TUTOR  # Возвращаем состояние для ожидания ввода сообщения
+
+async def send_tutor_quick_reply(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Отправляет быстрый ответ репетитора пользователю."""
+    recipient_info = context.user_data.get('quick_reply_recipient')
+
+    if not recipient_info:
+        await update.message.reply_text("❌ Информация о получателе потеряна. Попробуйте снова.")
+        return ConversationHandler.END
+
+    # Получаем текст/контент ответа
+    if update.message.text:
+        reply_text = update.message.text
+        message_type = 'text'
+    elif update.message.photo:
+        reply_text = update.message.caption or ""
+        message_type = 'photo'
+        file_id = update.message.photo[-1].file_id
+    elif update.message.document:
+        reply_text = update.message.caption or ""
+        message_type = 'document'
+        file_id = update.message.document.file_id
+    else:
+        await update.message.reply_text("❌ Поддерживаются только текст, фото или документы.")
+        return CHAT_WITH_TUTOR
+
+    user_id = recipient_info['user_id']
+    sender_name = get_user_by_telegram_id(update.effective_user.id)
+    sender_name = sender_name.full_name if sender_name else "Репетитор"
+
+    try:
+        # Отправляем ответ пользователю
+        header = f"📩 Ответ от репетитора {sender_name}:\n\n"
+
+        if message_type == 'text':
+            await context.bot.send_message(
+                chat_id=user_id,
+                text=header + reply_text
+            )
+        elif message_type == 'photo':
+            await context.bot.send_photo(
+                chat_id=user_id,
+                photo=file_id,
+                caption=header + reply_text
+            )
+        elif message_type == 'document':
+            await context.bot.send_document(
+                chat_id=user_id,
+                document=file_id,
+                caption=header + reply_text
+            )
+
+        role_text = "ученику" if recipient_info['role'] == 'student' else "родителю"
+        await update.message.reply_text(f"✅ Ответ {role_text} {recipient_info['name']} отправлен!")
+
+        # Очищаем данные
+        context.user_data.pop('quick_reply_recipient', None)
+        return ConversationHandler.END
+
+    except Forbidden:
+        await update.message.reply_text("❌ Пользователь заблокировал бота. Ответ не доставлен.")
+    except Exception as e:
+        await update.message.reply_text(f"❌ Ошибка при отправке ответа: {e}")
+
+    return ConversationHandler.END
 
 async def handle_tutor_reply(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Обрабатывает ответ репетитора на сообщение пользователя."""
@@ -183,7 +253,15 @@ async def handle_tutor_reply(update: Update, context: ContextTypes.DEFAULT_TYPE)
     if not user or user.role != UserRole.TUTOR:
         return
 
-    tutor_reply_text = update.message.text
+    # Получаем текст ответа репетитора
+    if update.message.text:
+        tutor_reply_text = update.message.text
+    elif update.message.caption:
+        tutor_reply_text = update.message.caption
+    else:
+        await update.message.reply_text("❌ Поддерживаются только текстовые ответы или файлы с подписями.")
+        return
+
     original_message = update.message.reply_to_message
 
     # --- Вариант 1: Ответ на пересланное сообщение ---

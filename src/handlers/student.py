@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import json
-from datetime import datetime
+from datetime import datetime, timedelta
+from ..timezone_utils import now as tz_now
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import ContextTypes, ConversationHandler
 from sqlalchemy.orm import joinedload
@@ -311,7 +312,7 @@ async def show_schedule(update: Update, context: ContextTypes.DEFAULT_TYPE):
     db = SessionLocal()
     
     # Получаем будущие уроки
-    now = datetime.now()
+    now = tz_now().replace(tzinfo=None)
     future_lessons = db.query(Lesson).filter(
         Lesson.student_id == user.id,
         Lesson.date >= now
@@ -488,7 +489,7 @@ async def show_payment_and_attendance(update: Update, context: ContextTypes.DEFA
     
     # Статистика посещаемости за последние 30 дней
     from datetime import timedelta
-    thirty_days_ago = datetime.now() - timedelta(days=30)
+    thirty_days_ago = tz_now() - timedelta(days=30)
     
     recent_lessons = db.query(Lesson).filter(
         Lesson.student_id == user.id,

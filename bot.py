@@ -124,7 +124,7 @@ if not TOKEN:
 
 async def start_scheduler(application):
     """Инициализирует и запускает планировщик задач."""
-    scheduler = AsyncIOScheduler(timezone="Europe/Moscow")
+    scheduler = AsyncIOScheduler(timezone="Europe/Kaliningrad")
     
     # Напоминания о предстоящих уроках (каждый час)
     scheduler.add_job(send_reminders, 'interval', hours=1, args=[application], name="Lesson Reminders")

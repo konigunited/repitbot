@@ -5,6 +5,7 @@ python-dotenv>=1.0.0
 
 # Scheduling and background tasks
 APScheduler>=3.10.0
+pytz>=2023.3
 
 # Database migrations
 alembic>=1.12.0

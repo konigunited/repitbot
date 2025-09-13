@@ -6,6 +6,7 @@
 
 import os
 from datetime import datetime, timedelta
+from ..timezone_utils import now as tz_now
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import ContextTypes, ConversationHandler
 from sqlalchemy.orm import joinedload
@@ -154,7 +155,7 @@ async def show_child_schedule(update: Update, context: ContextTypes.DEFAULT_TYPE
     db = SessionLocal()
     
     # Получаем будущие уроки
-    now = datetime.now()
+    now = tz_now().replace(tzinfo=None)
     future_lessons = db.query(Lesson).filter(
         Lesson.student_id == student_id,
         Lesson.date >= now
@@ -393,7 +394,7 @@ async def show_child_progress(update: Update, context: ContextTypes.DEFAULT_TYPE
             return
         
         # Статистика за месяц
-        month_start = datetime.now().replace(day=1)
+        month_start = tz_now().replace(day=1, tzinfo=None)
         monthly_lessons = db.query(Lesson).filter(
             Lesson.student_id == student.id,
             Lesson.date >= month_start,
@@ -497,7 +498,7 @@ async def show_child_homework(update: Update, context: ContextTypes.DEFAULT_TYPE
                 deadline_str = hw.deadline.strftime('%d.%m') if hw.deadline else "Без срока"
                 
                 # Проверяем просрочку
-                is_overdue = (hw.deadline and hw.deadline < datetime.now() 
+                is_overdue = (hw.deadline and hw.deadline < tz_now().replace(tzinfo=None) 
                              and hw.status == HomeworkStatus.PENDING)
                 overdue_mark = "🔴 " if is_overdue else ""
                 

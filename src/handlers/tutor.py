@@ -9,6 +9,7 @@ import re
 import json
 import asyncio
 from datetime import datetime, timedelta
+from ..timezone_utils import now as tz_now
 from telegram import Update, InlineKeyboardMarkup, InlineKeyboardButton
 from telegram.ext import ContextTypes, ConversationHandler
 from telegram.error import Forbidden
@@ -1224,7 +1225,7 @@ async def tutor_reschedule_lesson_get_date(update: Update, context: ContextTypes
             return RESCHEDULE_LESSON_DATE
         
         # Проверяем, что дата в будущем
-        if new_date <= datetime.now():
+        if new_date <= tz_now().replace(tzinfo=None):
             await update.message.reply_text("❌ Дата должна быть в будущем")
             return RESCHEDULE_LESSON_DATE
         
@@ -1449,7 +1450,7 @@ async def tutor_set_homework_status(update: Update, context: ContextTypes.DEFAUL
     new_status = HomeworkStatus(status_value)
     if new_status == HomeworkStatus.CHECKED and hw.status != HomeworkStatus.CHECKED:
         hw.lesson.student.points += 15
-        hw.checked_at = datetime.now()
+        hw.checked_at = tz_now().replace(tzinfo=None)
         
         # Проверяем достижения по домашним заданиям
         completed_hw_count = db.query(Homework).filter(
@@ -1576,7 +1577,7 @@ async def show_tutor_dashboard(update: Update, context: ContextTypes.DEFAULT_TYP
         return
         
     stats = get_dashboard_stats()
-    month_name = datetime.now().strftime("%B")
+    month_name = tz_now().strftime("%B")
     
     text = (
         f"📈 *Статистика за {month_name}*\n\n"
@@ -1623,7 +1624,7 @@ async def report_select_month_and_generate(update: Update, context: ContextTypes
     student_id = context.user_data.get('report_student_id')
     month_offset = int(parts[-1])
     
-    target_date = datetime.now() - timedelta(days=month_offset * 30)
+    target_date = tz_now() - timedelta(days=month_offset * 30)
     year, month = target_date.year, target_date.month
     
     student = get_user_by_id(student_id)
@@ -2159,6 +2160,7 @@ async def tutor_schedule_create_lessons(update: Update, context: ContextTypes.DE
     db = SessionLocal()
     try:
         from datetime import datetime, timedelta
+        from ..timezone_utils import now as tz_now
         
         # Мапинг дней недели
         weekday_map = {
@@ -2167,28 +2169,33 @@ async def tutor_schedule_create_lessons(update: Update, context: ContextTypes.DE
         }
         
         created_lessons = 0
-        start_date = datetime.now().date()
-        
+        current_date = tz_now().date()
+
         # Создаем уроки на 4 недели вперед
         for week in range(4):
-            week_start = start_date + timedelta(weeks=week)
-            
+            week_start = current_date + timedelta(weeks=week)
+
             for day_key in selected_days:
                 weekday_num = weekday_map[day_key]
-                
+
                 # Находим дату этого дня недели
                 days_ahead = weekday_num - week_start.weekday()
-                if days_ahead <= 0:
+                if days_ahead < 0:
                     days_ahead += 7
-                
+
                 lesson_date = week_start + timedelta(days=days_ahead)
-                
+
                 # Создаем datetime с выбранным временем
                 time_parts = schedule_time.split(':')
                 lesson_datetime = datetime.combine(
-                    lesson_date, 
+                    lesson_date,
                     datetime.strptime(schedule_time, '%H:%M').time()
                 )
+
+                # Проверяем, что урок не в прошлом времени
+                current_datetime = tz_now().replace(tzinfo=None)
+                if lesson_datetime <= current_datetime:
+                    continue
                 
                 # Проверяем, нет ли уже урока в это время
                 existing_lesson = db.query(Lesson).filter(
@@ -2338,8 +2345,15 @@ async def tutor_parent_contact_start(update: Update, context: ContextTypes.DEFAU
 async def tutor_message_parent_start(update: Update, context: ContextTypes.DEFAULT_TYPE, parent_id_student_id: str):
     """Начинает отправку сообщения родителю."""
     query = update.callback_query
-    parent_id, student_id = parent_id_student_id.split('_', 1)
-    parent_id, student_id = int(parent_id), int(student_id)
+
+    try:
+        parts = parent_id_student_id.split('_')
+        if len(parts) != 2:
+            raise ValueError("Invalid format")
+        parent_id, student_id = int(parts[0]), int(parts[1])
+    except (ValueError, IndexError):
+        await query.edit_message_text("❌ Ошибка: неверный формат данных.")
+        return ConversationHandler.END
     
     db = SessionLocal()
     try:
@@ -2434,8 +2448,15 @@ async def tutor_message_send_wrapper(update: Update, context: ContextTypes.DEFAU
 async def tutor_message_send(update: Update, context: ContextTypes.DEFAULT_TYPE, recipient_info: str):
     """Отправляет сообщение получателю."""
     query = update.callback_query
-    recipient_type, recipient_id = recipient_info.split('_', 1)
-    recipient_id = int(recipient_id)
+
+    try:
+        parts = recipient_info.split('_')
+        if len(parts) != 2:
+            raise ValueError("Invalid format")
+        recipient_type, recipient_id = parts[0], int(parts[1])
+    except (ValueError, IndexError):
+        await query.edit_message_text("❌ Ошибка: неверный формат данных получателя.")
+        return ConversationHandler.END
     
     db = SessionLocal()
     try:
@@ -2449,7 +2470,8 @@ async def tutor_message_send(update: Update, context: ContextTypes.DEFAULT_TYPE,
         message_content = context.user_data.get('message_content')
         message_type = context.user_data.get('message_type')
         message_caption = context.user_data.get('message_caption', '')
-        sender_name = get_user_by_telegram_id(update.effective_user.id).full_name
+        sender = get_user_by_telegram_id(update.effective_user.id)
+        sender_name = sender.full_name if sender else "Репетитор"
         
         header = f"📨 Сообщение от репетитора {sender_name}:\n\n"
         
