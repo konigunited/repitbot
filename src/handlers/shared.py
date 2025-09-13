@@ -440,8 +440,6 @@ async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
         "schedule_create_": (tutor_schedule_create_lessons, "student_id"),
         "schedule_cancel": (tutor_schedule_cancel, None),
         "tutor_parent_contact_": (tutor_parent_contact_start, "student_id"),
-        "tutor_message_student_": (tutor_message_student_start, "student_id"),
-        "tutor_message_parent_": (tutor_message_parent_start, "parent_id_student_id"),
         "tutor_reply_to_": (lambda update, context, user_id: tutor_quick_reply_start(update, context, int(user_id)), "user_id"),
         "tutor_check_hw_": (tutor_check_homework, "lesson_id"),
         "tutor_manage_library": (tutor_manage_library, None),
