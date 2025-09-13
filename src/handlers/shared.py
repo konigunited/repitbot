@@ -195,6 +195,10 @@ async def tutor_quick_reply_start(update: Update, context: ContextTypes.DEFAULT_
     )
     return CHAT_WITH_TUTOR  # Возвращаем состояние для ожидания ввода сообщения
 
+async def tutor_reply_handler(update: Update, context: ContextTypes.DEFAULT_TYPE, user_id: str):
+    """Обработчик кнопки быстрого ответа репетитора."""
+    return await tutor_quick_reply_start(update, context, int(user_id))
+
 async def send_tutor_quick_reply(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Отправляет быстрый ответ репетитора пользователю."""
     recipient_info = context.user_data.get('quick_reply_recipient')
@@ -536,7 +540,7 @@ async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
         "schedule_day_": (tutor_schedule_toggle_day, "day"),
         "schedule_back": (tutor_schedule_back, None),
         "tutor_parent_contact_": (tutor_parent_contact_start, "student_id"),
-        "tutor_reply_to_": (lambda update, context, user_id: tutor_quick_reply_start(update, context, int(user_id)), "user_id"),
+        "tutor_reply_to_": (tutor_reply_handler, "user_id"),
         "tutor_check_hw_": (tutor_check_homework, "lesson_id"),
         "tutor_manage_library": (tutor_manage_library, None),
         "tutor_add_material": (tutor_add_material_start, None),
