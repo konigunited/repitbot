@@ -136,7 +136,7 @@ class HealthMonitor:
     
     async def _handle_critical_failure(self, check: HealthCheck):
         """Обрабатывает критические сбои"""
-        logger.critical(f"🚨 CRITICAL: Health check {check.name} failed {check.failure_count} times")
+        logger.critical(f"CRITICAL: Health check {check.name} failed {check.failure_count} times")
         
         # Попытка автоматического восстановления
         if check.name == "database_connection":
@@ -146,7 +146,7 @@ class HealthMonitor:
     
     async def _handle_warning(self, check: HealthCheck):
         """Обрабатывает предупреждения"""
-        logger.warning(f"⚠️ WARNING: Health check {check.name} failed {check.failure_count} times")
+        logger.warning(f"WARNING: Health check {check.name} failed {check.failure_count} times")
     
     async def _recover_database(self):
         """Попытка восстановления подключения к БД"""
