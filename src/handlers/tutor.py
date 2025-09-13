@@ -2042,6 +2042,7 @@ async def tutor_confirm_delete_lesson(update: Update, context: ContextTypes.DEFA
 # --- Schedule System ---
 async def tutor_schedule_setup_start(update: Update, context: ContextTypes.DEFAULT_TYPE, student_id: int):
     """Начинает настройку расписания для ученика."""
+    print(f"DEBUG: tutor_schedule_setup_start called with student_id={student_id}")
     query = update.callback_query
     db = SessionLocal()
     try:
