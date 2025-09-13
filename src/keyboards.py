@@ -666,8 +666,15 @@ def tutor_weekly_schedule_keyboard(schedule):
         button_text = f"{icon} {day_name}"
         keyboard.append([InlineKeyboardButton(button_text, callback_data=f"schedule_toggle_{day_key}")])
 
-    # Кнопки для дополнительных действий
-    keyboard.append([InlineKeyboardButton("🕒 Установить время", callback_data="schedule_set_time")])
+    # Кнопки для заметок к дням недели
+    note_buttons = []
+    for day_key, day_name in days.items():
+        note_buttons.append(InlineKeyboardButton(f"📝 {day_name}", callback_data=f"schedule_note_{day_key}"))
+
+    # Разбиваем кнопки заметок на строки по 2
+    for i in range(0, len(note_buttons), 2):
+        keyboard.append(note_buttons[i:i+2])
+
     keyboard.append([InlineKeyboardButton("🔙 Назад", callback_data="schedule_back")])
 
     return InlineKeyboardMarkup(keyboard)

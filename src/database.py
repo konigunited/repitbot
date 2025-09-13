@@ -147,7 +147,13 @@ class WeeklySchedule(Base):
     friday = Column(Boolean, default=False)
     saturday = Column(Boolean, default=False)
     sunday = Column(Boolean, default=False)
-    preferred_time = Column(String, nullable=True)  # Предпочтительное время "HH:MM"
+    monday_note = Column(Text, nullable=True)
+    tuesday_note = Column(Text, nullable=True)
+    wednesday_note = Column(Text, nullable=True)
+    thursday_note = Column(Text, nullable=True)
+    friday_note = Column(Text, nullable=True)
+    saturday_note = Column(Text, nullable=True)
+    sunday_note = Column(Text, nullable=True)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
 
@@ -672,5 +678,48 @@ def shift_lessons_after_cancellation(cancelled_lesson_id: int):
         db.rollback()
         print(f"ERROR in shift_lessons_after_cancellation: {e}")
         return False
+    finally:
+        db.close()
+
+def update_day_note(student_id: int, tutor_id: int, day: str, note: str):
+    """Обновляет заметку для конкретного дня недели"""
+    db = SessionLocal()
+    try:
+        schedule = db.query(WeeklySchedule).filter(
+            WeeklySchedule.student_id == student_id,
+            WeeklySchedule.tutor_id == tutor_id
+        ).first()
+
+        if not schedule:
+            schedule = WeeklySchedule(student_id=student_id, tutor_id=tutor_id)
+            db.add(schedule)
+
+        # Обновляем заметку для нужного дня
+        day_note_field = f"{day.lower()}_note"
+        setattr(schedule, day_note_field, note)
+
+        db.commit()
+        return True
+    except Exception as e:
+        db.rollback()
+        print(f"ERROR updating day note: {e}")
+        return False
+    finally:
+        db.close()
+
+def get_day_note(student_id: int, tutor_id: int, day: str) -> str:
+    """Получает заметку для конкретного дня недели"""
+    db = SessionLocal()
+    try:
+        schedule = db.query(WeeklySchedule).filter(
+            WeeklySchedule.student_id == student_id,
+            WeeklySchedule.tutor_id == tutor_id
+        ).first()
+
+        if not schedule:
+            return ""
+
+        day_note_field = f"{day.lower()}_note"
+        return getattr(schedule, day_note_field) or ""
     finally:
         db.close()

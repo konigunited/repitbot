@@ -25,7 +25,8 @@ from ..database import (
     get_all_materials, get_material_by_id, delete_material_by_id,
     get_dashboard_stats, HomeworkStatus, TopicMastery, AttendanceStatus, LessonStatus, get_student_balance,
     get_student_achievements, award_achievement, update_study_streak, check_points_achievements,
-    shift_lessons_after_cancellation, get_weekly_schedule, get_schedule_days_text, toggle_schedule_day
+    shift_lessons_after_cancellation, get_weekly_schedule, get_schedule_days_text, toggle_schedule_day,
+    update_day_note, get_day_note
 )
 from ..keyboards import (
     tutor_main_keyboard, tutor_student_list_keyboard, tutor_student_profile_keyboard,
@@ -2554,5 +2555,81 @@ async def tutor_message_cancel(update: Update, context: ContextTypes.DEFAULT_TYP
         if student_id:
             # show_student_profile is defined in this module
             await show_student_profile(update, context, student_id)
-    
+
+    return ConversationHandler.END
+
+async def tutor_schedule_add_note(update: Update, context: ContextTypes.DEFAULT_TYPE, day: str):
+    """Добавляет заметку к дню недели в расписании."""
+    query = update.callback_query
+    student_id = context.user_data.get('schedule_student_id')
+
+    if not student_id:
+        await query.answer("Ошибка: студент не выбран")
+        return
+
+    # Сохраняем информацию для ConversationHandler
+    context.user_data['note_day'] = day
+    context.user_data['note_student_id'] = student_id
+
+    # Получаем текущую заметку
+    db = SessionLocal()
+    try:
+        tutor = get_user_by_telegram_id(update.effective_user.id)
+        student = db.query(User).filter(User.id == student_id).first()
+
+        if not tutor or not student:
+            await query.answer("Ошибка: пользователь не найден")
+            return
+
+        current_note = get_day_note(student_id, tutor.id, day)
+        day_names = {
+            'monday': 'понедельник', 'tuesday': 'вторник', 'wednesday': 'среда',
+            'thursday': 'четверг', 'friday': 'пятница', 'saturday': 'суббота', 'sunday': 'воскресенье'
+        }
+
+        note_text = f"Текущая заметка: {current_note}" if current_note else "Заметка пока не добавлена"
+
+        await query.edit_message_text(
+            f"📝 *Заметка на {day_names[day]}*\n\n"
+            f"{note_text}\n\n"
+            f"Введите новую заметку для {day_names[day]} или /cancel для отмены:",
+            parse_mode='Markdown'
+        )
+
+        return "WAITING_NOTE"
+
+    finally:
+        db.close()
+
+async def tutor_schedule_save_note(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Сохраняет заметку для дня недели."""
+    day = context.user_data.get('note_day')
+    student_id = context.user_data.get('note_student_id')
+    note_text = update.message.text
+
+    if not day or not student_id:
+        await update.message.reply_text("❌ Ошибка: потеряны данные. Попробуйте снова.")
+        return ConversationHandler.END
+
+    tutor = get_user_by_telegram_id(update.effective_user.id)
+    if not tutor:
+        await update.message.reply_text("❌ Ошибка: репетитор не найден.")
+        return ConversationHandler.END
+
+    # Сохраняем заметку
+    success = update_day_note(student_id, tutor.id, day, note_text)
+
+    if success:
+        day_names = {
+            'monday': 'понедельник', 'tuesday': 'вторник', 'wednesday': 'среда',
+            'thursday': 'четверг', 'friday': 'пятница', 'saturday': 'суббота', 'sunday': 'воскресенье'
+        }
+        await update.message.reply_text(f"✅ Заметка для {day_names[day]} сохранена!")
+    else:
+        await update.message.reply_text("❌ Ошибка при сохранении заметки.")
+
+    # Очищаем данные
+    context.user_data.pop('note_day', None)
+    context.user_data.pop('note_student_id', None)
+
     return ConversationHandler.END
