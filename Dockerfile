@@ -1,27 +1,35 @@
-# Используем официальный образ Python
 FROM python:3.11-slim
 
-# Устанавливаем рабочую директорию
 WORKDIR /app
 
-# Копируем файлы зависимостей
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    gcc \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copy requirements first for better caching
 COPY requirements.txt .
 
-# Обновляем pip и устанавливаем зависимости
-RUN pip install --upgrade pip && \
-    pip install --no-cache-dir -r requirements.txt
+# Install Python dependencies
+RUN pip install --no-cache-dir -r requirements.txt
 
-# Копируем исходный код
+# Copy application code
 COPY . .
 
-# Создаем директории для логов и базы данных
-RUN mkdir -p logs charts
+# Create directories for data, logs and charts
+RUN mkdir -p data logs charts
 
-# Устанавливаем права доступа
-RUN chmod +x bot.py
+# Set environment variables
+ENV PYTHONPATH=/app
+ENV PYTHONUNBUFFERED=1
 
-# Открываем порт (если нужен веб-сервер)
+# Expose port (if needed for webhooks)
 EXPOSE 8080
 
-# Команда для запуска
+# Create non-root user for security
+RUN useradd --create-home --shell /bin/bash app && \
+    chown -R app:app /app
+USER app
+
+# Run the bot
 CMD ["python", "bot.py"]

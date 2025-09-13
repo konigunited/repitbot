@@ -135,6 +135,26 @@ class Material(Base):
     created_at = Column(DateTime(timezone=True), server_default=func.now())
 
 # Модель для достижений студентов
+class WeeklySchedule(Base):
+    __tablename__ = 'weekly_schedules'
+    id = Column(Integer, primary_key=True, index=True)
+    student_id = Column(Integer, ForeignKey('users.id'), nullable=False)
+    tutor_id = Column(Integer, ForeignKey('users.id'), nullable=False)
+    monday = Column(Boolean, default=False)
+    tuesday = Column(Boolean, default=False)
+    wednesday = Column(Boolean, default=False)
+    thursday = Column(Boolean, default=False)
+    friday = Column(Boolean, default=False)
+    saturday = Column(Boolean, default=False)
+    sunday = Column(Boolean, default=False)
+    preferred_time = Column(String, nullable=True)  # Предпочтительное время "HH:MM"
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+    updated_at = Column(DateTime(timezone=True), onupdate=func.now())
+
+    # Связи
+    student = relationship("User", foreign_keys=[student_id])
+    tutor = relationship("User", foreign_keys=[tutor_id])
+
 class Achievement(Base):
     __tablename__ = 'achievements'
     id = Column(Integer, primary_key=True, index=True)
@@ -144,9 +164,115 @@ class Achievement(Base):
     description = Column(Text, nullable=True)
     icon = Column(String, default="🏆")
     earned_at = Column(DateTime(timezone=True), server_default=func.now())
-    
+
     # Связи
     student = relationship("User", foreign_keys=[student_id])
+
+# Функции для работы с еженедельным расписанием
+def get_weekly_schedule(student_id: int, tutor_id: int):
+    """Возвращает еженедельное расписание для ученика и репетитора."""
+    db = SessionLocal()
+    schedule = db.query(WeeklySchedule).filter(
+        WeeklySchedule.student_id == student_id,
+        WeeklySchedule.tutor_id == tutor_id
+    ).first()
+    db.close()
+    return schedule
+
+def create_or_update_weekly_schedule(student_id: int, tutor_id: int, schedule_data: dict):
+    """Создает или обновляет еженедельное расписание."""
+    db = SessionLocal()
+    try:
+        existing_schedule = db.query(WeeklySchedule).filter(
+            WeeklySchedule.student_id == student_id,
+            WeeklySchedule.tutor_id == tutor_id
+        ).first()
+
+        if existing_schedule:
+            # Обновляем существующее расписание
+            for day, value in schedule_data.items():
+                if hasattr(existing_schedule, day):
+                    setattr(existing_schedule, day, value)
+            existing_schedule.updated_at = tz_now()
+        else:
+            # Создаем новое расписание
+            new_schedule = WeeklySchedule(
+                student_id=student_id,
+                tutor_id=tutor_id,
+                **schedule_data
+            )
+            db.add(new_schedule)
+
+        db.commit()
+        return True
+    except Exception as e:
+        db.rollback()
+        print(f"Ошибка при сохранении расписания: {e}")
+        return False
+    finally:
+        db.close()
+
+def toggle_schedule_day(student_id: int, tutor_id: int, day_name: str):
+    """Переключает день недели в расписании (включает/выключает)."""
+    db = SessionLocal()
+    try:
+        schedule = db.query(WeeklySchedule).filter(
+            WeeklySchedule.student_id == student_id,
+            WeeklySchedule.tutor_id == tutor_id
+        ).first()
+
+        if not schedule:
+            # Создаем новое расписание, если его нет
+            schedule_data = {day_name: True}
+            schedule = WeeklySchedule(
+                student_id=student_id,
+                tutor_id=tutor_id,
+                **schedule_data
+            )
+            db.add(schedule)
+        else:
+            # Переключаем день
+            current_value = getattr(schedule, day_name, False)
+            setattr(schedule, day_name, not current_value)
+            schedule.updated_at = tz_now()
+
+        db.commit()
+        return True
+    except Exception as e:
+        db.rollback()
+        print(f"Ошибка при переключении дня расписания: {e}")
+        return False
+    finally:
+        db.close()
+
+def get_schedule_days_text(schedule):
+    """Возвращает текстовое представление дней расписания."""
+    if not schedule:
+        return "Нет регулярного расписания"
+
+    days_ru = {
+        'monday': 'Понедельник',
+        'tuesday': 'Вторник',
+        'wednesday': 'Среда',
+        'thursday': 'Четверг',
+        'friday': 'Пятница',
+        'saturday': 'Суббота',
+        'sunday': 'Воскресенье'
+    }
+
+    active_days = []
+    for day_en, day_ru in days_ru.items():
+        if getattr(schedule, day_en, False):
+            active_days.append(day_ru)
+
+    if not active_days:
+        return "Нет активных дней"
+
+    result = "Регулярные занятия: " + ", ".join(active_days)
+    if schedule.preferred_time:
+        result += f" в {schedule.preferred_time}"
+
+    return result
 
 def get_db():
     db = SessionLocal()

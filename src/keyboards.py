@@ -646,6 +646,32 @@ def tutor_schedule_time_keyboard():
     keyboard.append([InlineKeyboardButton("❌ Отмена", callback_data="schedule_cancel")])
     return InlineKeyboardMarkup(keyboard)
 
+def tutor_weekly_schedule_keyboard(schedule):
+    """Клавиатура управления еженедельным расписанием."""
+    weekdays = [
+        ("Понедельник", "monday"),
+        ("Вторник", "tuesday"),
+        ("Среда", "wednesday"),
+        ("Четверг", "thursday"),
+        ("Пятница", "friday"),
+        ("Суббота", "saturday"),
+        ("Воскресенье", "sunday")
+    ]
+
+    keyboard = []
+    for day_name, day_key in weekdays:
+        # Показываем статус дня (активен/неактивен)
+        is_active = getattr(schedule, day_key, False) if schedule else False
+        icon = "✅" if is_active else "⬜"
+        button_text = f"{icon} {day_name}"
+        keyboard.append([InlineKeyboardButton(button_text, callback_data=f"schedule_toggle_{day_key}")])
+
+    # Кнопки для дополнительных действий
+    keyboard.append([InlineKeyboardButton("🕒 Установить время", callback_data="schedule_set_time")])
+    keyboard.append([InlineKeyboardButton("🔙 Назад", callback_data="schedule_back")])
+
+    return InlineKeyboardMarkup(keyboard)
+
 def tutor_schedule_confirm_keyboard(student_id):
     """Клавиатура подтверждения создания расписания."""
     keyboard = [

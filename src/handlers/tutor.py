@@ -18,14 +18,14 @@ from sqlalchemy import func, or_
 from sqlalchemy.orm import joinedload
 
 from ..database import (
-    SessionLocal, User, UserRole, Lesson, Homework, Payment, Material, Achievement,
+    SessionLocal, User, UserRole, Lesson, Homework, Payment, Material, Achievement, WeeklySchedule,
     get_user_by_telegram_id, get_all_students, get_user_by_id,
     get_lesson_by_id, get_homework_by_id,
     get_lessons_for_student_by_month, get_payments_for_student_by_month,
     get_all_materials, get_material_by_id, delete_material_by_id,
     get_dashboard_stats, HomeworkStatus, TopicMastery, AttendanceStatus, LessonStatus, get_student_balance,
     get_student_achievements, award_achievement, update_study_streak, check_points_achievements,
-    shift_lessons_after_cancellation
+    shift_lessons_after_cancellation, get_weekly_schedule, get_schedule_days_text, toggle_schedule_day
 )
 from ..keyboards import (
     tutor_main_keyboard, tutor_student_list_keyboard, tutor_student_profile_keyboard,
@@ -2043,78 +2043,101 @@ async def tutor_confirm_delete_lesson(update: Update, context: ContextTypes.DEFA
 
 # --- Schedule System ---
 async def tutor_schedule_setup_start(update: Update, context: ContextTypes.DEFAULT_TYPE, student_id: int):
-    """Начинает настройку расписания для ученика."""
+    """Показывает еженедельное расписание ученика с возможностью редактирования."""
     print(f"DEBUG: tutor_schedule_setup_start called with student_id={student_id}")
     query = update.callback_query
     db = SessionLocal()
     try:
         student = db.query(User).filter(User.id == student_id).first()
-        if not student:
-            await query.edit_message_text("Ученик не найден.")
+        tutor = get_user_by_telegram_id(update.effective_user.id)
+
+        if not student or not tutor:
+            await query.edit_message_text("Ученик или репетитор не найден.")
             return
-        
+
+        # Получаем текущее расписание
+        schedule = get_weekly_schedule(student_id, tutor.id)
+        schedule_text = get_schedule_days_text(schedule)
+
         context.user_data['schedule_student_id'] = student_id
-        context.user_data['schedule_days'] = []
-        context.user_data['schedule_time'] = None
-        
-        from ..keyboards import tutor_schedule_setup_keyboard
+
+        from ..keyboards import tutor_weekly_schedule_keyboard
         await query.edit_message_text(
-            f"📅 Настройка расписания для {student.full_name}\n\n"
-            f"Выберите дни недели для уроков.\n"
-            f"Можно выбрать несколько дней.\n\n"
-            f"Выбранные дни: {', '.join(context.user_data['schedule_days'])}",
-            reply_markup=tutor_schedule_setup_keyboard()
+            f"📅 Еженедельное расписание для {student.full_name}\n\n"
+            f"{schedule_text}\n\n"
+            f"Нажмите на день недели, чтобы включить/выключить его:",
+            reply_markup=tutor_weekly_schedule_keyboard(schedule)
         )
     finally:
         db.close()
 
-async def tutor_schedule_select_day(update: Update, context: ContextTypes.DEFAULT_TYPE, day: str):
-    """Добавляет/убирает день из расписания."""
+async def tutor_schedule_toggle_day(update: Update, context: ContextTypes.DEFAULT_TYPE, day: str):
+    """Переключает день недели в еженедельном расписании."""
     query = update.callback_query
-    
-    day_names = {
-        'monday': 'Понедельник',
-        'tuesday': 'Вторник', 
-        'wednesday': 'Среда',
-        'thursday': 'Четверг',
-        'friday': 'Пятница',
-        'saturday': 'Суббота',
-        'sunday': 'Воскресенье'
-    }
-    
-    selected_days = context.user_data.get('schedule_days', [])
-    day_name = day_names[day]
-    
-    if day in selected_days:
-        selected_days.remove(day)
-    else:
-        selected_days.append(day)
-    
-    context.user_data['schedule_days'] = selected_days
-    
-    from ..keyboards import tutor_schedule_setup_keyboard
-    await query.edit_message_text(
-        f"📅 Настройка расписания\n\n"
-        f"Выберите дни недели для уроков.\n"
-        f"Можно выбрать несколько дней.\n\n"
-        f"Выбранные дни: {', '.join([day_names[d] for d in selected_days]) if selected_days else 'Не выбраны'}",
-        reply_markup=tutor_schedule_setup_keyboard()
-    )
+    student_id = context.user_data.get('schedule_student_id')
 
-async def tutor_schedule_finish_setup(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    """Переходит к выбору времени."""
-    query = update.callback_query
-    selected_days = context.user_data.get('schedule_days', [])
-    
-    if not selected_days:
-        await query.answer("⚠️ Выберите хотя бы один день!", show_alert=True)
+    if not student_id:
+        await query.answer("Ошибка: студент не выбран")
         return
-    
-    from ..keyboards import tutor_schedule_time_keyboard
-    await query.edit_message_text(
-        "🕐 Выберите время проведения уроков:",
-        reply_markup=tutor_schedule_time_keyboard()
-    )
+
+    db = SessionLocal()
+    try:
+        tutor = get_user_by_telegram_id(update.effective_user.id)
+        student = db.query(User).filter(User.id == student_id).first()
+
+        if not tutor or not student:
+            await query.answer("Ошибка: пользователь не найден")
+            return
+
+        # Переключаем день в расписании
+        success = toggle_schedule_day(student_id, tutor.id, day)
+
+        if success:
+            # Обновляем расписание и клавиатуру
+            schedule = get_weekly_schedule(student_id, tutor.id)
+            schedule_text = get_schedule_days_text(schedule)
+
+            day_names = {
+                'monday': 'Понедельник',
+                'tuesday': 'Вторник',
+                'wednesday': 'Среда',
+                'thursday': 'Четверг',
+                'friday': 'Пятница',
+                'saturday': 'Суббота',
+                'sunday': 'Воскресенье'
+            }
+
+            day_ru = day_names.get(day, day)
+            status = "включен" if getattr(schedule, day, False) else "выключен"
+
+            from ..keyboards import tutor_weekly_schedule_keyboard
+            await query.edit_message_text(
+                f"📅 Еженедельное расписание для {student.full_name}\n\n"
+                f"{schedule_text}\n\n"
+                f"Нажмите на день недели, чтобы включить/выключить его:",
+                reply_markup=tutor_weekly_schedule_keyboard(schedule)
+            )
+            await query.answer(f"✅ {day_ru} {status}")
+        else:
+            await query.answer("❌ Ошибка при изменении расписания")
+
+    finally:
+        db.close()
+
+async def tutor_schedule_back(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Возвращает к просмотру ученика."""
+    query = update.callback_query
+    student_id = context.user_data.get('schedule_student_id')
+
+    if student_id:
+        await tutor_view_student(update, context, student_id)
+    else:
+        await query.edit_message_text("❌ Ошибка: ученик не найден")
+
+# --- Старые функции автогенерации удалены ---
+# Теперь используется только WeeklySchedule для отметок дней без автосоздания уроков
+
+# --- Messaging System ---
 
 async def tutor_schedule_select_time(update: Update, context: ContextTypes.DEFAULT_TYPE, time: str):
     """Сохраняет время и показывает подтверждение."""

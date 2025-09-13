@@ -10,33 +10,39 @@ services:
       - ADMIN_ACCESS_CODE=${ADMIN_ACCESS_CODE}
       - DATABASE_URL=sqlite:///data/repitbot.db
       - LOG_LEVEL=INFO
+      - TZ=Europe/Kaliningrad
     volumes:
       - ./data:/app/data
       - ./logs:/app/logs
       - ./charts:/app/charts
-    depends_on:
-      - db
     networks:
       - repitbot_network
+    healthcheck:
+      test: ["CMD", "python", "-c", "import requests; requests.get('http://localhost:8080/health', timeout=5)"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
 
-  # Опционально: PostgreSQL база данных
-  db:
-    image: postgres:15-alpine
-    container_name: repitbot_db
-    restart: unless-stopped
-    environment:
-      - POSTGRES_DB=repitbot
-      - POSTGRES_USER=repitbot
-      - POSTGRES_PASSWORD=${DB_PASSWORD}
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-    networks:
-      - repitbot_network
-    ports:
-      - "5434:5432"
+  # Optional: PostgreSQL database (commented out by default)
+  # db:
+  #   image: postgres:15-alpine
+  #   container_name: repitbot_db
+  #   restart: unless-stopped
+  #   environment:
+  #     - POSTGRES_DB=repitbot
+  #     - POSTGRES_USER=repitbot
+  #     - POSTGRES_PASSWORD=${DB_PASSWORD}
+  #     - TZ=Europe/Kaliningrad
+  #   volumes:
+  #     - postgres_data:/var/lib/postgresql/data
+  #   networks:
+  #     - repitbot_network
+  #   ports:
+  #     - "5434:5432"
 
-volumes:
-  postgres_data:
+# volumes:
+#   postgres_data:
 
 networks:
   repitbot_network:
