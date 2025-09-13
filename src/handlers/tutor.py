@@ -164,6 +164,7 @@ async def show_student_list(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 async def show_student_profile(update: Update, context: ContextTypes.DEFAULT_TYPE, student_id: int):
     """Показывает профиль конкретного ученика."""
+    print(f"DEBUG: show_student_profile called with student_id={student_id}")
     db = SessionLocal()
     try:
         # Используем joinedload для "жадной" загрузки связанных родителей
