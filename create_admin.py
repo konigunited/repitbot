@@ -10,20 +10,20 @@ sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 from src.database import SessionLocal, User, UserRole
 
 def create_admin_user():
-    """Создает админского пользователя с кодом доступа marina"""
+    """Создает админского пользователя с кодом доступа MARINA2024"""
     db = SessionLocal()
     try:
-        # Проверяем, есть ли уже такой пользователь
-        existing_admin = db.query(User).filter(User.access_code == 'marina').first()
-        if existing_admin:
-            print(f"Пользователь с кодом 'marina' уже существует: {existing_admin.full_name}")
-            return
+        # Удаляем существующих репетиторов чтобы избежать дублирования
+        existing_tutors = db.query(User).filter(User.role == UserRole.TUTOR).all()
+        for tutor in existing_tutors:
+            print(f"Удаляем существующего репетитора: {tutor.full_name} (код: {tutor.access_code})")
+            db.delete(tutor)
         
         # Создаем нового админа
         admin = User(
-            full_name='Administrator',
+            full_name='Марина Администратор',
             role=UserRole.TUTOR,
-            access_code='marina'
+            access_code='MARINA2024'
         )
         
         db.add(admin)
