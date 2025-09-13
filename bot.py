@@ -276,10 +276,11 @@ def main() -> None:
         entry_points=[
             CallbackQueryHandler(chat_with_tutor_start, pattern="^chat_with_tutor$"),
             CallbackQueryHandler(chat_with_tutor_start, pattern="^parent_chat_with_tutor$"),
+            CallbackQueryHandler(button_handler, pattern="^tutor_reply_to_"),
             MessageHandler(filters.Regex(f"^{STUDENT_BUTTONS['chat']}$"), chat_with_tutor_start)
         ],
         states={
-            CHAT_WITH_TUTOR: [MessageHandler(filters.TEXT | filters.PHOTO | filters.Document.ALL, forward_message_to_tutor)]
+            CHAT_WITH_TUTOR: [MessageHandler(filters.TEXT | filters.PHOTO | filters.Document.ALL, chat_with_tutor_start)]
         },
         fallbacks=[CommandHandler("cancel", cancel_conversation)],
         per_user=True,
