@@ -102,6 +102,8 @@ ADD_MATERIAL_LINK = 19
 ADD_MATERIAL_DESC = 20
 BROADCAST_MESSAGE = 21
 BROADCAST_CONFIRM = 22
+MESSAGE_INPUT = 28
+MESSAGE_CONFIRM = 29
 
 # --- Helper Functions ---
 def generate_access_code(length=8):
@@ -2028,8 +2030,7 @@ async def tutor_confirm_delete_lesson(update: Update, context: ContextTypes.DEFA
             )
             
             # Показываем список уроков ученика
-            from .shared import show_lesson_list
-            await show_lesson_list(update, context, student_id)
+            await show_tutor_lessons(update, context, student_id)
         else:
             await query.edit_message_text("❌ Урок не найден.")
     except Exception as e:
@@ -2231,12 +2232,44 @@ async def tutor_schedule_cancel(update: Update, context: ContextTypes.DEFAULT_TY
     context.user_data.clear()
     
     if student_id:
-        from .shared import show_student_profile
+        # show_student_profile is defined in this module
         await show_student_profile(update, context, student_id)
     else:
         await query.edit_message_text("❌ Настройка расписания отменена.")
 
 # --- Messaging System ---
+async def tutor_message_student_start_wrapper(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Обертка для ConversationHandler - извлекает student_id из callback_data."""
+    query = update.callback_query
+    if not query or not query.data:
+        return ConversationHandler.END
+    
+    # Извлекаем student_id из callback_data формата "tutor_message_student_<student_id>"
+    try:
+        student_id = int(query.data.split("_")[-1])
+        return await tutor_message_student_start(update, context, student_id)
+    except (ValueError, IndexError):
+        await query.edit_message_text("❌ Ошибка: неверный формат данных.")
+        return ConversationHandler.END
+
+async def tutor_message_parent_start_wrapper(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Обертка для ConversationHandler - извлекает parent_id_student_id из callback_data."""
+    query = update.callback_query
+    if not query or not query.data:
+        return ConversationHandler.END
+    
+    # Извлекаем parent_id_student_id из callback_data формата "tutor_message_parent_<parent_id>_<student_id>"
+    try:
+        parts = query.data.split("_")
+        if len(parts) >= 4:
+            parent_id_student_id = "_".join(parts[3:])  # parent_id_student_id
+            return await tutor_message_parent_start(update, context, parent_id_student_id)
+        else:
+            raise ValueError("Invalid format")
+    except (ValueError, IndexError):
+        await query.edit_message_text("❌ Ошибка: неверный формат данных.")
+        return ConversationHandler.END
+
 async def tutor_message_student_start(update: Update, context: ContextTypes.DEFAULT_TYPE, student_id: int):
     """Начинает отправку сообщения ученику."""
     query = update.callback_query
@@ -2265,7 +2298,7 @@ async def tutor_message_student_start(update: Update, context: ContextTypes.DEFA
             f"Можно отправлять текст, фото или файлы.\n\n"
             f"Для отмены введите /cancel"
         )
-        return 1  # MESSAGE_INPUT состояние
+        return MESSAGE_INPUT
         
     finally:
         db.close()
@@ -2335,7 +2368,7 @@ async def tutor_message_parent_start(update: Update, context: ContextTypes.DEFAU
             f"Можно отправлять текст, фото или файлы.\n\n"
             f"Для отмены введите /cancel"
         )
-        return 1  # MESSAGE_INPUT состояние
+        return MESSAGE_INPUT
         
     finally:
         db.close()
@@ -2363,7 +2396,7 @@ async def tutor_message_input(update: Update, context: ContextTypes.DEFAULT_TYPE
         preview = f"📄 Документ: {update.message.document.file_name}"
     else:
         await update.message.reply_text("❌ Поддерживаются только текст, фото или документы.")
-        return 1  # MESSAGE_INPUT
+        return MESSAGE_INPUT
     
     from ..keyboards import message_confirm_keyboard
     await update.message.reply_text(
@@ -2376,7 +2409,25 @@ async def tutor_message_input(update: Update, context: ContextTypes.DEFAULT_TYPE
             student_id
         )
     )
-    return 2  # MESSAGE_CONFIRM
+    return MESSAGE_CONFIRM
+
+async def tutor_message_send_wrapper(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Обертка для ConversationHandler - извлекает recipient_info из callback_data."""
+    query = update.callback_query
+    if not query or not query.data:
+        return ConversationHandler.END
+    
+    # Извлекаем recipient_info из callback_data формата "send_message_<recipient_type>_<recipient_id>"
+    try:
+        parts = query.data.split("_")
+        if len(parts) >= 4 and parts[0] == "send" and parts[1] == "message":
+            recipient_info = "_".join(parts[2:])  # recipient_type_recipient_id
+            return await tutor_message_send(update, context, recipient_info)
+        else:
+            raise ValueError("Invalid format")
+    except (ValueError, IndexError):
+        await query.edit_message_text("❌ Ошибка: неверный формат данных.")
+        return ConversationHandler.END
 
 async def tutor_message_send(update: Update, context: ContextTypes.DEFAULT_TYPE, recipient_info: str):
     """Отправляет сообщение получателю."""
@@ -2447,14 +2498,14 @@ async def tutor_message_cancel(update: Update, context: ContextTypes.DEFAULT_TYP
     if update.callback_query:
         query = update.callback_query
         if student_id:
-            from .shared import show_student_profile  
+            # show_student_profile is defined in this module  
             await show_student_profile(update, context, student_id)
         else:
             await query.edit_message_text("❌ Отправка сообщения отменена.")
     else:
         await update.message.reply_text("❌ Отправка сообщения отменена.")
         if student_id:
-            from .shared import show_student_profile
+            # show_student_profile is defined in this module
             await show_student_profile(update, context, student_id)
     
     return ConversationHandler.END

@@ -401,8 +401,8 @@ async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
                        tutor_delete_lesson_start, tutor_confirm_delete_lesson,
                        tutor_schedule_setup_start, tutor_schedule_select_day, tutor_schedule_finish_setup,
                        tutor_schedule_select_time, tutor_schedule_create_lessons, tutor_schedule_cancel,
-                       tutor_parent_contact_start, tutor_message_student_start, tutor_message_parent_start,
-                       tutor_message_input, tutor_message_send, tutor_message_cancel)
+                       tutor_parent_contact_start, tutor_message_student_start_wrapper, tutor_message_parent_start_wrapper,
+                       tutor_message_input, tutor_message_send_wrapper, tutor_message_cancel)
     from .parent import (show_parent_dashboard, show_child_menu, show_child_progress,
                         show_child_schedule, show_child_payments, parent_generate_chart,
                         show_child_homework, show_child_lessons, show_child_achievements)

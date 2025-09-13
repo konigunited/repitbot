@@ -41,8 +41,8 @@ from src.handlers.tutor import (
     tutor_delete_lesson_start, tutor_confirm_delete_lesson,
     tutor_schedule_setup_start, tutor_schedule_select_day, tutor_schedule_finish_setup, 
     tutor_schedule_select_time, tutor_schedule_create_lessons, tutor_schedule_cancel,
-    tutor_message_student_start, tutor_parent_contact_start, tutor_message_parent_start,
-    tutor_message_input, tutor_message_send, tutor_message_cancel
+    tutor_message_student_start_wrapper, tutor_parent_contact_start, tutor_message_parent_start_wrapper,
+    tutor_message_input, tutor_message_send_wrapper, tutor_message_cancel
 )
 
 # Импортируем обработчики ученика
@@ -380,22 +380,22 @@ def main() -> None:
 
     message_conv = ConversationHandler(
         entry_points=[
-            CallbackQueryHandler(tutor_message_student_start, pattern="^tutor_message_student_"),
-            CallbackQueryHandler(tutor_message_parent_start, pattern="^tutor_message_parent_")
+            CallbackQueryHandler(tutor_message_student_start_wrapper, pattern="^tutor_message_student_"),
+            CallbackQueryHandler(tutor_message_parent_start_wrapper, pattern="^tutor_message_parent_")
         ],
         states={
             MESSAGE_INPUT: [
                 MessageHandler(filters.TEXT | filters.PHOTO | filters.Document.ALL, tutor_message_input)
             ],
             MESSAGE_CONFIRM: [
-                CallbackQueryHandler(tutor_message_send, pattern="^send_message_"),
+                CallbackQueryHandler(tutor_message_send_wrapper, pattern="^send_message_"),
                 CallbackQueryHandler(tutor_message_cancel, pattern="^message_cancel$")
             ],
         },
         fallbacks=[CommandHandler("cancel", tutor_message_cancel)],
         per_user=True,
         per_chat=True,
-        per_message=True
+        per_message=False
     )
 
     # --- Регистрация обработчиков ---
@@ -424,7 +424,7 @@ def main() -> None:
     application.add_handler(message_conv)
     
     # button_handler обрабатывает все остальные callback'ы ПОСЛЕ ConversationHandlers
-    application.add_handler(CallbackQueryHandler(button_handler, pattern="^(?!(tutor_add_payment_|tutor_add_lesson_|tutor_add_parent_|tutor_add_second_parent_|tutor_edit_name_|tutor_edit_lesson_|tutor_edit_attendance_|tutor_edit_mastery_|tutor_set_mastery_|tutor_add_hw_|student_submit_hw_|report_select_|broadcast_|add_student|tutor_add_material|select_grade_|second_parent_|tutor_message_student_|tutor_message_parent_|send_message_|message_cancel|schedule_day_|schedule_finish|schedule_time_|schedule_create_|schedule_cancel|tutor_schedule_setup_)).*"))
+    application.add_handler(CallbackQueryHandler(button_handler, pattern="^(?!(tutor_add_payment_|tutor_add_lesson_|tutor_add_parent_|tutor_add_second_parent_|tutor_edit_name_|tutor_edit_lesson_|tutor_edit_attendance_|tutor_edit_mastery_|tutor_set_mastery_|tutor_add_hw_|student_submit_hw_|report_select_|broadcast_|add_student|tutor_add_material|select_grade_|second_parent_|tutor_message_student_|tutor_message_parent_|send_message_|message_cancel)).*"))
 
     # Импортируем микросервисы
     from src.handlers.tutor import show_tutor_dashboard, show_student_list
