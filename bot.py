@@ -42,8 +42,7 @@ from src.handlers.tutor import (
     tutor_delete_lesson_start, tutor_confirm_delete_lesson,
     tutor_schedule_setup_start, tutor_schedule_toggle_day, tutor_schedule_back,
     tutor_message_student_start_wrapper, tutor_parent_contact_start, tutor_message_parent_start_wrapper,
-    tutor_message_input, tutor_message_send_wrapper, tutor_message_cancel,
-    tutor_schedule_add_note, tutor_schedule_save_note
+    tutor_message_input, tutor_message_send_wrapper, tutor_message_cancel
 )
 
 # Импортируем обработчики ученика
@@ -403,19 +402,7 @@ def main() -> None:
         per_message=False
     )
 
-    # Conversation for tutor adding notes to weekly schedule
-    tutor_note_conv = ConversationHandler(
-        entry_points=[CallbackQueryHandler(tutor_schedule_add_note, pattern="^schedule_note_")],
-        states={
-            # WAITING_NOTE is a logical string returned by handler; use text message handler to capture note
-            # We match any text message when tutor is in the conversation
-            0: [MessageHandler(filters.TEXT & ~filters.COMMAND, tutor_schedule_save_note)]
-        },
-        fallbacks=[CommandHandler("cancel", cancel_conversation)],
-        per_user=True,
-        per_chat=True,
-        per_message=False
-    )
+    # ConversationHandler for schedule notes removed - now using simple toggle logic
 
     # --- Регистрация обработчиков ---
     # ВАЖНО: ConversationHandlers должны быть зарегистрированы ПЕРЕД общими CallbackQueryHandlers
@@ -441,7 +428,7 @@ def main() -> None:
     application.add_handler(submit_hw_conv)
     application.add_handler(broadcast_conv)
     application.add_handler(message_conv)
-    application.add_handler(tutor_note_conv)
+    # tutor_note_conv removed - now using simple toggle logic
     
     # button_handler обрабатывает все остальные callback'ы ПОСЛЕ ConversationHandlers
     application.add_handler(CallbackQueryHandler(button_handler, pattern="^(?!(tutor_add_payment_|tutor_add_lesson_|tutor_add_parent_|tutor_add_second_parent_|tutor_edit_name_|tutor_edit_lesson_|tutor_edit_attendance_|tutor_edit_mastery_|tutor_set_mastery_|tutor_add_hw_|student_submit_hw_|report_select_|broadcast_|add_student|tutor_add_material|select_grade_|second_parent_|tutor_message_student_|tutor_message_parent_|send_message_|message_cancel)).*"))

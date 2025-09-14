@@ -251,8 +251,35 @@ def toggle_schedule_day(student_id: int, tutor_id: int, day_name: str):
     finally:
         db.close()
 
+def get_planned_lessons_text(schedule):
+    """Возвращает текстовое представление запланированных уроков (шаблон расписания)."""
+    if not schedule:
+        return "Шаблон расписания не создан"
+
+    days_ru = {
+        'monday': 'Понедельник',
+        'tuesday': 'Вторник',
+        'wednesday': 'Среда',
+        'thursday': 'Четверг',
+        'friday': 'Пятница',
+        'saturday': 'Суббота',
+        'sunday': 'Воскресенье'
+    }
+
+    planned_days = []
+    for day_en, day_ru in days_ru.items():
+        if is_lesson_planned(schedule, day_en):
+            planned_days.append(day_ru)
+
+    if not planned_days:
+        return "Уроки не запланированы\n\nЭто шаблон расписания для напоминаний. Реальные уроки записываются отдельно."
+
+    result = "Шаблон расписания:\n" + "\n".join([f"- {day}" for day in planned_days])
+    result += "\n\nЭто шаблон для напоминаний. Реальные уроки записываются отдельно."
+    return result
+
 def get_schedule_days_text(schedule):
-    """Возвращает текстовое представление дней расписания."""
+    """Возвращает текстовое представление дней расписания (DEPRECATED - используйте get_planned_lessons_text)."""
     if not schedule:
         return "Нет регулярного расписания"
 
@@ -681,8 +708,41 @@ def shift_lessons_after_cancellation(cancelled_lesson_id: int):
     finally:
         db.close()
 
+def toggle_lesson_plan(student_id: int, tutor_id: int, day_name: str):
+    """Переключает запланированный урок на день недели."""
+    db = SessionLocal()
+    try:
+        schedule = db.query(WeeklySchedule).filter(
+            WeeklySchedule.student_id == student_id,
+            WeeklySchedule.tutor_id == tutor_id
+        ).first()
+
+        if not schedule:
+            schedule = WeeklySchedule(student_id=student_id, tutor_id=tutor_id)
+            db.add(schedule)
+
+        # Переключаем планирование урока - используем поле *_note для хранения "planned" или None
+        day_note_field = f"{day_name.lower()}_note"
+        current_value = getattr(schedule, day_note_field)
+
+        if current_value == "planned":
+            # Убираем планирование урока
+            setattr(schedule, day_note_field, None)
+        else:
+            # Планируем урок
+            setattr(schedule, day_note_field, "planned")
+
+        db.commit()
+        return True
+    except Exception as e:
+        db.rollback()
+        print(f"ERROR toggling lesson plan: {e}")
+        return False
+    finally:
+        db.close()
+
 def update_day_note(student_id: int, tutor_id: int, day: str, note: str):
-    """Обновляет заметку для конкретного дня недели"""
+    """Обновляет заметку для конкретного дня недели (DEPRECATED - используйте toggle_lesson_plan)"""
     db = SessionLocal()
     try:
         schedule = db.query(WeeklySchedule).filter(
@@ -707,8 +767,16 @@ def update_day_note(student_id: int, tutor_id: int, day: str, note: str):
     finally:
         db.close()
 
+def is_lesson_planned(schedule, day_name: str) -> bool:
+    """Проверяет запланирован ли урок на день."""
+    if not schedule:
+        return False
+
+    day_note_field = f"{day_name.lower()}_note"
+    return getattr(schedule, day_note_field) == "planned"
+
 def get_day_note(student_id: int, tutor_id: int, day: str) -> str:
-    """Получает заметку для конкретного дня недели"""
+    """Получает заметку для конкретного дня недели (DEPRECATED - используйте is_lesson_planned)"""
     db = SessionLocal()
     try:
         schedule = db.query(WeeklySchedule).filter(

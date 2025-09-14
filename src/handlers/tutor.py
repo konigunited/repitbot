@@ -26,7 +26,7 @@ from ..database import (
     get_dashboard_stats, HomeworkStatus, TopicMastery, AttendanceStatus, LessonStatus, get_student_balance,
     get_student_achievements, award_achievement, update_study_streak, check_points_achievements,
     shift_lessons_after_cancellation, get_weekly_schedule, get_schedule_days_text, toggle_schedule_day,
-    update_day_note, get_day_note
+    update_day_note, get_day_note, toggle_lesson_plan, is_lesson_planned, get_planned_lessons_text
 )
 from ..keyboards import (
     tutor_main_keyboard, tutor_student_list_keyboard, tutor_student_profile_keyboard,
@@ -2044,7 +2044,7 @@ async def tutor_confirm_delete_lesson(update: Update, context: ContextTypes.DEFA
 
 # --- Schedule System ---
 async def tutor_schedule_setup_start(update: Update, context: ContextTypes.DEFAULT_TYPE, student_id: int):
-    """Показывает еженедельное расписание ученика с возможностью редактирования."""
+    """Показывает шаблон расписания для ученика с возможностью редактирования."""
     print(f"DEBUG: tutor_schedule_setup_start called with student_id={student_id}")
     query = update.callback_query
     db = SessionLocal()
@@ -2056,24 +2056,24 @@ async def tutor_schedule_setup_start(update: Update, context: ContextTypes.DEFAU
             await query.edit_message_text("Ученик или репетитор не найден.")
             return
 
-        # Получаем текущее расписание
+        # Получаем текущий шаблон расписания
         schedule = get_weekly_schedule(student_id, tutor.id)
-        schedule_text = get_schedule_days_text(schedule)
+        schedule_text = get_planned_lessons_text(schedule)
 
         context.user_data['schedule_student_id'] = student_id
 
         from ..keyboards import tutor_weekly_schedule_keyboard
         await query.edit_message_text(
-            f"📅 Еженедельное расписание для {student.full_name}\n\n"
+            f"📅 Настроить шаблон расписания для {student.full_name}\n\n"
             f"{schedule_text}\n\n"
-            f"Нажмите на день недели, чтобы включить/выключить его:",
+            f"Нажмите на день, чтобы запланировать/убрать урок:",
             reply_markup=tutor_weekly_schedule_keyboard(schedule)
         )
     finally:
         db.close()
 
 async def tutor_schedule_toggle_day(update: Update, context: ContextTypes.DEFAULT_TYPE, day: str):
-    """Переключает день недели в еженедельном расписании."""
+    """Переключает запланированный урок на день недели."""
     query = update.callback_query
     student_id = context.user_data.get('schedule_student_id')
 
@@ -2090,37 +2090,38 @@ async def tutor_schedule_toggle_day(update: Update, context: ContextTypes.DEFAUL
             await query.answer("Ошибка: пользователь не найден")
             return
 
-        # Переключаем день в расписании
-        success = toggle_schedule_day(student_id, tutor.id, day)
+        # Переключаем планирование урока
+        success = toggle_lesson_plan(student_id, tutor.id, day)
 
         if success:
-            # Обновляем расписание и клавиатуру
+            # Обновляем шаблон расписания и клавиатуру
             schedule = get_weekly_schedule(student_id, tutor.id)
-            schedule_text = get_schedule_days_text(schedule)
+            schedule_text = get_planned_lessons_text(schedule)
 
             day_names = {
-                'monday': 'Понедельник',
-                'tuesday': 'Вторник',
-                'wednesday': 'Среда',
-                'thursday': 'Четверг',
-                'friday': 'Пятница',
-                'saturday': 'Суббота',
-                'sunday': 'Воскресенье'
+                'monday': 'понедельник',
+                'tuesday': 'вторник',
+                'wednesday': 'среду',
+                'thursday': 'четверг',
+                'friday': 'пятницу',
+                'saturday': 'субботу',
+                'sunday': 'воскресенье'
             }
 
             day_ru = day_names.get(day, day)
-            status = "включен" if getattr(schedule, day, False) else "выключен"
+            is_planned = is_lesson_planned(schedule, day)
+            status = "запланирован" if is_planned else "убран из плана"
 
             from ..keyboards import tutor_weekly_schedule_keyboard
             await query.edit_message_text(
-                f"📅 Еженедельное расписание для {student.full_name}\n\n"
+                f"📅 Настроить шаблон расписания для {student.full_name}\n\n"
                 f"{schedule_text}\n\n"
-                f"Нажмите на день недели, чтобы включить/выключить его:",
+                f"Нажмите на день, чтобы запланировать/убрать урок:",
                 reply_markup=tutor_weekly_schedule_keyboard(schedule)
             )
-            await query.answer(f"✅ {day_ru} {status}")
+            await query.answer(f"✅ Урок на {day_ru} {status}")
         else:
-            await query.answer("❌ Ошибка при изменении расписания")
+            await query.answer("❌ Ошибка при изменении шаблона расписания")
 
     finally:
         db.close()
@@ -2558,86 +2559,5 @@ async def tutor_message_cancel(update: Update, context: ContextTypes.DEFAULT_TYP
 
     return ConversationHandler.END
 
-async def tutor_schedule_add_note(update: Update, context: ContextTypes.DEFAULT_TYPE, day: str = None):
-    """Добавляет заметку к дню недели в расписании."""
-    query = update.callback_query
-    # Если day не передан явно (например, вызов через CallbackQueryHandler entry_point),
-    # извлекаем его из callback_data
-    if not day:
-        try:
-            day = query.data.split("_")[-1]
-        except Exception:
-            await query.answer("Ошибка: не удалось определить день")
-            return
-    student_id = context.user_data.get('schedule_student_id')
-
-    if not student_id:
-        await query.answer("Ошибка: студент не выбран")
-        return
-
-    # Сохраняем информацию для ConversationHandler
-    context.user_data['note_day'] = day
-    context.user_data['note_student_id'] = student_id
-
-    # Получаем текущую заметку
-    db = SessionLocal()
-    try:
-        tutor = get_user_by_telegram_id(update.effective_user.id)
-        student = db.query(User).filter(User.id == student_id).first()
-
-        if not tutor or not student:
-            await query.answer("Ошибка: пользователь не найден")
-            return
-
-        current_note = get_day_note(student_id, tutor.id, day)
-        day_names = {
-            'monday': 'понедельник', 'tuesday': 'вторник', 'wednesday': 'среда',
-            'thursday': 'четверг', 'friday': 'пятница', 'saturday': 'суббота', 'sunday': 'воскресенье'
-        }
-
-        note_text = f"Текущая заметка: {current_note}" if current_note else "Заметка пока не добавлена"
-
-        await query.edit_message_text(
-            f"📝 *Заметка на {day_names[day]}*\n\n"
-            f"{note_text}\n\n"
-            f"Введите новую заметку для {day_names[day]} или /cancel для отмены:",
-            parse_mode='Markdown'
-        )
-
-        return 0
-
-    finally:
-        db.close()
-
-async def tutor_schedule_save_note(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    """Сохраняет заметку для дня недели."""
-    day = context.user_data.get('note_day')
-    student_id = context.user_data.get('note_student_id')
-    note_text = update.message.text
-
-    if not day or not student_id:
-        await update.message.reply_text("❌ Ошибка: потеряны данные. Попробуйте снова.")
-        return ConversationHandler.END
-
-    tutor = get_user_by_telegram_id(update.effective_user.id)
-    if not tutor:
-        await update.message.reply_text("❌ Ошибка: репетитор не найден.")
-        return ConversationHandler.END
-
-    # Сохраняем заметку
-    success = update_day_note(student_id, tutor.id, day, note_text)
-
-    if success:
-        day_names = {
-            'monday': 'понедельник', 'tuesday': 'вторник', 'wednesday': 'среда',
-            'thursday': 'четверг', 'friday': 'пятница', 'saturday': 'суббота', 'sunday': 'воскресенье'
-        }
-        await update.message.reply_text(f"✅ Заметка для {day_names[day]} сохранена!")
-    else:
-        await update.message.reply_text("❌ Ошибка при сохранении заметки.")
-
-    # Очищаем данные
-    context.user_data.pop('note_day', None)
-    context.user_data.pop('note_student_id', None)
-
-    return ConversationHandler.END
+# Функции tutor_schedule_add_note и tutor_schedule_save_note удалены
+# Теперь используется простое переключение планирования уроков через toggle_lesson_plan

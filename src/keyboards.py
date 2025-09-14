@@ -647,7 +647,10 @@ def tutor_schedule_time_keyboard():
     return InlineKeyboardMarkup(keyboard)
 
 def tutor_weekly_schedule_keyboard(schedule):
-    """Клавиатура управления еженедельным расписанием."""
+    """Упрощенная клавиатура управления шаблоном расписания."""
+    # Импортируем функцию проверки планирования урока
+    from .database import is_lesson_planned
+
     weekdays = [
         ("Понедельник", "monday"),
         ("Вторник", "tuesday"),
@@ -660,25 +663,18 @@ def tutor_weekly_schedule_keyboard(schedule):
 
     keyboard = []
     for day_name, day_key in weekdays:
-        # Показываем статус дня (активен/неактивен)
-        is_active = getattr(schedule, day_key, False) if schedule else False
-        # Показываем, есть ли заметка для этого дня
-        note_field = f"{day_key}_note"
-        has_note = bool(getattr(schedule, note_field, None)) if schedule else False
+        # Проверяем запланирован ли урок на этот день
+        is_planned = is_lesson_planned(schedule, day_key)
 
-        icon = "✅" if is_active else "⬜"
-        note_icon = " 📝" if has_note else ""
-        button_text = f"{icon} {day_name}{note_icon}"
+        if is_planned:
+            icon = "✅"
+            status = "Урок запланирован"
+        else:
+            icon = "⬜"
+            status = "Запланировать урок"
+
+        button_text = f"{icon} {day_name}\n{status}"
         keyboard.append([InlineKeyboardButton(button_text, callback_data=f"schedule_toggle_{day_key}")])
-
-    # Кнопки для заметок к дням недели
-    note_buttons = []
-    for day_name, day_key in weekdays:
-        note_buttons.append(InlineKeyboardButton(f"📝 {day_name}", callback_data=f"schedule_note_{day_key}"))
-
-    # Разбиваем кнопки заметок на строки по 2
-    for i in range(0, len(note_buttons), 2):
-        keyboard.append(note_buttons[i:i+2])
 
     keyboard.append([InlineKeyboardButton("🔙 Назад", callback_data="schedule_back")])
 

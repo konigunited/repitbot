@@ -502,7 +502,7 @@ async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
                        tutor_edit_lesson_start, tutor_edit_attendance_status, tutor_edit_mastery_status,
                        tutor_edit_lesson_conduct_status, tutor_set_lesson_conduct,
                        tutor_delete_lesson_start, tutor_confirm_delete_lesson,
-                       tutor_schedule_setup_start, tutor_schedule_toggle_day, tutor_schedule_back, tutor_schedule_add_note,
+                       tutor_schedule_setup_start, tutor_schedule_toggle_day, tutor_schedule_back,
                        tutor_parent_contact_start, tutor_message_student_start_wrapper, tutor_message_parent_start_wrapper,
                        tutor_message_input, tutor_message_send_wrapper, tutor_message_cancel)
     from .parent import (show_parent_dashboard, show_child_menu, show_child_progress,
@@ -538,7 +538,7 @@ async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
         "tutor_schedule_setup_": (tutor_schedule_setup_start, "student_id"),
         "schedule_toggle_": (tutor_schedule_toggle_day, "day"),
         "schedule_day_": (tutor_schedule_toggle_day, "day"),
-        "schedule_note_": (tutor_schedule_add_note, "day"),
+        # "schedule_note_" removed - now using simple toggle logic
         "schedule_back": (tutor_schedule_back, None),
         "tutor_parent_contact_": (tutor_parent_contact_start, "student_id"),
         "tutor_reply_to_": (tutor_reply_handler, "user_id"),
