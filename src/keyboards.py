@@ -662,13 +662,18 @@ def tutor_weekly_schedule_keyboard(schedule):
     for day_name, day_key in weekdays:
         # Показываем статус дня (активен/неактивен)
         is_active = getattr(schedule, day_key, False) if schedule else False
+        # Показываем, есть ли заметка для этого дня
+        note_field = f"{day_key}_note"
+        has_note = bool(getattr(schedule, note_field, None)) if schedule else False
+
         icon = "✅" if is_active else "⬜"
-        button_text = f"{icon} {day_name}"
+        note_icon = " 📝" if has_note else ""
+        button_text = f"{icon} {day_name}{note_icon}"
         keyboard.append([InlineKeyboardButton(button_text, callback_data=f"schedule_toggle_{day_key}")])
 
     # Кнопки для заметок к дням недели
     note_buttons = []
-    for day_key, day_name in days.items():
+    for day_name, day_key in weekdays:
         note_buttons.append(InlineKeyboardButton(f"📝 {day_name}", callback_data=f"schedule_note_{day_key}"))
 
     # Разбиваем кнопки заметок на строки по 2

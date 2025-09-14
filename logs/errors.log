@@ -1038,3 +1038,33 @@
 2025-09-14 20:08:39 | RepitBot.HealthMonitor | CRITICAL | health_monitor.py:139 | _handle_critical_failure | 🚨 CRITICAL: Health check disk_space failed 75 times
 2025-09-14 20:13:41 | RepitBot.HealthMonitor | CRITICAL | health_monitor.py:139 | _handle_critical_failure | 🚨 CRITICAL: Health check disk_space failed 76 times
 2025-09-14 20:18:43 | RepitBot.HealthMonitor | CRITICAL | health_monitor.py:139 | _handle_critical_failure | 🚨 CRITICAL: Health check disk_space failed 77 times
+2025-09-14 20:23:45 | RepitBot.HealthMonitor | CRITICAL | health_monitor.py:139 | _handle_critical_failure | 🚨 CRITICAL: Health check disk_space failed 78 times
+2025-09-14 20:28:48 | RepitBot.HealthMonitor | CRITICAL | health_monitor.py:139 | _handle_critical_failure | 🚨 CRITICAL: Health check disk_space failed 79 times
+2025-09-14 20:33:51 | RepitBot.HealthMonitor | CRITICAL | health_monitor.py:139 | _handle_critical_failure | 🚨 CRITICAL: Health check disk_space failed 80 times
+2025-09-14 20:35:21 | RepitBot.HealthMonitor | ERROR    | health_monitor.py:83 | run_check | Health check bot_connection timeout after 10s
+2025-09-14 20:35:21 | RepitBot.HealthMonitor | CRITICAL | health_monitor.py:139 | _handle_critical_failure | 🚨 CRITICAL: Health check bot_connection failed 1 times
+2025-09-14 20:38:53 | RepitBot.HealthMonitor | CRITICAL | health_monitor.py:139 | _handle_critical_failure | 🚨 CRITICAL: Health check disk_space failed 81 times
+2025-09-14 20:43:53 | RepitBot.HealthMonitor | CRITICAL | health_monitor.py:139 | _handle_critical_failure | 🚨 CRITICAL: Health check disk_space failed 82 times
+2025-09-14 20:49:00 | RepitBot.HealthMonitor | CRITICAL | health_monitor.py:139 | _handle_critical_failure | 🚨 CRITICAL: Health check disk_space failed 83 times
+2025-09-14 20:53:56 | RepitBot.HealthMonitor | ERROR    | health_monitor.py:83 | run_check | Health check bot_connection timeout after 10s
+2025-09-14 20:53:56 | RepitBot.HealthMonitor | CRITICAL | health_monitor.py:139 | _handle_critical_failure | 🚨 CRITICAL: Health check bot_connection failed 1 times
+2025-09-14 20:54:13 | RepitBot.HealthMonitor | CRITICAL | health_monitor.py:139 | _handle_critical_failure | 🚨 CRITICAL: Health check disk_space failed 84 times
+2025-09-14 20:59:17 | RepitBot.HealthMonitor | CRITICAL | health_monitor.py:139 | _handle_critical_failure | 🚨 CRITICAL: Health check disk_space failed 85 times
+2025-09-14 21:00:17 | RepitBot.HealthMonitor | ERROR    | health_monitor.py:83 | run_check | Health check bot_connection timeout after 10s
+2025-09-14 21:00:17 | RepitBot.HealthMonitor | CRITICAL | health_monitor.py:139 | _handle_critical_failure | 🚨 CRITICAL: Health check bot_connection failed 1 times
+2025-09-14 21:00:30 | RepitBot.HealthMonitor | ERROR    | health_monitor.py:174 | _recover_bot_connection | ❌ Failed to recover bot connection: httpx.ConnectError: 
+2025-09-14 21:00:32 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: '}
+2025-09-14 21:02:20 | RepitBot.HealthMonitor | ERROR    | health_monitor.py:83 | run_check | Health check bot_connection timeout after 10s
+2025-09-14 21:02:20 | RepitBot.HealthMonitor | CRITICAL | health_monitor.py:139 | _handle_critical_failure | 🚨 CRITICAL: Health check bot_connection failed 2 times
+2025-09-14 21:02:30 | RepitBot.HealthMonitor | ERROR    | health_monitor.py:174 | _recover_bot_connection | ❌ Failed to recover bot connection: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+2025-09-14 21:02:30 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-09-14 21:04:17 | RepitBot.HealthMonitor | CRITICAL | health_monitor.py:139 | _handle_critical_failure | 🚨 CRITICAL: Health check bot_connection failed 3 times
+2025-09-14 21:04:28 | RepitBot.HealthMonitor | ERROR    | health_monitor.py:174 | _recover_bot_connection | ❌ Failed to recover bot connection: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+2025-09-14 21:04:38 | RepitBot.HealthMonitor | CRITICAL | health_monitor.py:139 | _handle_critical_failure | 🚨 CRITICAL: Health check disk_space failed 86 times
+2025-09-14 21:05:17 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.ConnectError: [Errno 11001] getaddrinfo failed'}
+2025-09-14 21:09:40 | RepitBot.HealthMonitor | CRITICAL | health_monitor.py:139 | _handle_critical_failure | 🚨 CRITICAL: Health check disk_space failed 87 times
+2025-09-14 21:14:42 | RepitBot.HealthMonitor | CRITICAL | health_monitor.py:139 | _handle_critical_failure | 🚨 CRITICAL: Health check disk_space failed 88 times
+2025-09-14 21:19:44 | RepitBot.HealthMonitor | CRITICAL | health_monitor.py:139 | _handle_critical_failure | 🚨 CRITICAL: Health check disk_space failed 89 times
+2025-09-14 21:24:53 | RepitBot.HealthMonitor | CRITICAL | health_monitor.py:139 | _handle_critical_failure | 🚨 CRITICAL: Health check disk_space failed 90 times
+2025-09-14 21:25:23 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.RemoteProtocolError: Server disconnected without sending a response.'}
+2025-09-14 21:29:57 | RepitBot.HealthMonitor | CRITICAL | health_monitor.py:139 | _handle_critical_failure | 🚨 CRITICAL: Health check disk_space failed 91 times

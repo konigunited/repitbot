@@ -326,7 +326,28 @@ async def show_schedule(update: Update, context: ContextTypes.DEFAULT_TYPE):
         message = "📅 *Ваше расписание*\n\n"
         for i, lesson in enumerate(future_lessons, 1):
             date_str = lesson.date.strftime('%d.%m.%Y в %H:%M')
-            message += f"{i}. *{date_str}*\n   {lesson.topic or 'Тема не указана'}\n\n"
+            message += f"{i}. *{date_str}*\n   {lesson.topic or 'Тема не указана'}\n"
+            # Показать заметку репетитора для этого дня, если есть
+            try:
+                from ..database import get_day_note
+                tutor_id = lesson.tutor_id
+                weekday = lesson.date.strftime('%A').lower()
+                # Приводим английский день к нашим ключам (monday, tuesday...)
+                weekday_map = {
+                    'monday': 'monday', 'tuesday': 'tuesday', 'wednesday': 'wednesday',
+                    'thursday': 'thursday', 'friday': 'friday', 'saturday': 'saturday', 'sunday': 'sunday'
+                }
+                day_key = weekday_map.get(weekday, None)
+                if day_key:
+                    note = get_day_note(lesson.student_id, tutor_id, day_key)
+                    if note:
+                        message += f"   📝 Заметка репетитора: {note}\n\n"
+                    else:
+                        message += "\n"
+                else:
+                    message += "\n"
+            except Exception:
+                message += "\n"
     
     keyboard = InlineKeyboardMarkup([
         [InlineKeyboardButton("⬅️ Назад в главное меню", callback_data="main_menu")]
