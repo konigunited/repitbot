@@ -3533,3 +3533,10 @@ F
 2025-09-14 21:25:23 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.RemoteProtocolError: Server disconnected without sending a response.'}
 2025-09-14 21:28:36 | RepitBot.HealthMonitor | WARNING  | health_monitor.py:149 | _handle_warning | ⚠️ WARNING: Health check memory_usage failed 1 times
 2025-09-14 21:29:57 | RepitBot.HealthMonitor | CRITICAL | health_monitor.py:139 | _handle_critical_failure | 🚨 CRITICAL: Health check disk_space failed 91 times
+2025-09-14 21:35:02 | RepitBot.HealthMonitor | CRITICAL | health_monitor.py:139 | _handle_critical_failure | 🚨 CRITICAL: Health check disk_space failed 92 times
+2025-09-14 21:40:06 | RepitBot.HealthMonitor | CRITICAL | health_monitor.py:139 | _handle_critical_failure | 🚨 CRITICAL: Health check disk_space failed 93 times
+2025-09-14 21:40:21 | RepitBot | ERROR    | logger.py:228 | log_telegram_error | Telegram error: {'error_type': 'Global Error Handler', 'user_id': None, 'message': None, 'error': 'httpx.RemoteProtocolError: Server disconnected without sending a response.'}
+2025-09-14 21:45:10 | RepitBot.HealthMonitor | CRITICAL | health_monitor.py:139 | _handle_critical_failure | 🚨 CRITICAL: Health check disk_space failed 94 times
+2025-09-14 21:50:15 | RepitBot.HealthMonitor | CRITICAL | health_monitor.py:139 | _handle_critical_failure | 🚨 CRITICAL: Health check disk_space failed 95 times
+2025-09-14 21:55:22 | RepitBot.HealthMonitor | CRITICAL | health_monitor.py:139 | _handle_critical_failure | 🚨 CRITICAL: Health check disk_space failed 96 times
+2025-09-14 21:59:15 | RepitBot.HealthMonitor | WARNING  | health_monitor.py:149 | _handle_warning | ⚠️ WARNING: Health check memory_usage failed 1 times
