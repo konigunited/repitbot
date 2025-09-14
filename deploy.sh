@@ -560,3 +560,48 @@ else
             ;;
     esac
 fi
+
+#!/usr/bin/env bash
+# Скрипт деплоя: локальный коммит/пуш + удалённый git pull и перезапуск docker-compose
+# Использование: перед запуском экспортируйте переменные SSH_USER_HOST и SERVER_PROJECT_PATH
+# Пример:
+# export SSH_USER_HOST="user@your_server"
+# export SERVER_PROJECT_PATH="/home/user/repitbot"
+# ./deploy.sh "Commit message"
+
+set -euo pipefail
+MSG=${1:-"Deploy from local"}
+GIT_REMOTE=${GIT_REMOTE:-origin}
+GIT_BRANCH=${GIT_BRANCH:-main}
+SSH_USER_HOST=${SSH_USER_HOST:-}
+SERVER_PROJECT_PATH=${SERVER_PROJECT_PATH:-}
+COMPOSE_SERVICE=${COMPOSE_SERVICE:-repitbot}
+
+# Локальный коммит и пуш
+git add .
+git commit -m "$MSG" || echo "No changes to commit"
+git push $GIT_REMOTE $GIT_BRANCH
+
+if [ -z "$SSH_USER_HOST" ] || [ -z "$SERVER_PROJECT_PATH" ]; then
+  echo "SSH_USER_HOST или SERVER_PROJECT_PATH не заданы. Выполните деплой вручную на сервере или экспортируйте переменные и запустите снова."
+  exit 0
+fi
+
+# На сервере: pull и перезапуск
+ssh -o StrictHostKeyChecking=no "$SSH_USER_HOST" bash -c "'
+  set -euo pipefail
+  cd $SERVER_PROJECT_PATH
+  git fetch $GIT_REMOTE
+  git reset --hard $GIT_REMOTE/$GIT_BRANCH
+  # Обновляем образ/контейнеры и поднимаем сервис
+  if [ -f docker-compose.yml ]; then
+    docker-compose pull || true
+    docker-compose build --no-cache $COMPOSE_SERVICE || true
+    docker-compose up -d --remove-orphans $COMPOSE_SERVICE
+  else
+    echo 'docker-compose.yml не найден в $SERVER_PROJECT_PATH'
+    exit 1
+  fi
+'"
+
+echo "Deploy completed"

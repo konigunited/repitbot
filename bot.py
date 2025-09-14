@@ -6,6 +6,7 @@ from telegram.ext import (Application, CommandHandler, MessageHandler, filters,
                           CallbackQueryHandler, ConversationHandler, ContextTypes)
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from telegram_bot_calendar import DetailedTelegramCalendar
+import asyncio
 
 # Since bot.py is outside the src package, we need to adjust the path
 # to ensure correct imports from our source files.
@@ -138,21 +139,22 @@ async def start_scheduler(application):
     logger.info("Планировщик запущен с задачами: напоминания об уроках, балансе и дедлайнах ДЗ")
 
 async def start_health_monitoring(application):
-    """Инициализирует систему мониторинга здоровья."""
-    # Настраиваем стандартные проверки
+    """Инициализирует систему мониторинга здоровья с устойчивой проверкой подключения к Telegram API."""
     setup_default_checks()
-    
-    # Добавляем проверку подключения к Telegram
+
     async def check_bot_connection():
         try:
-            me = await application.bot.get_me()
-            return me is not None
-        except Exception:
+            # Попытка получить информацию о боте с таймаутом
+            await asyncio.wait_for(application.bot.get_me(), timeout=10)
+            return True
+        except Exception as e:
+            logger.warning(f"Health check bot_connection failed: {e}")
             return False
-    
-    health_monitor.add_check("bot_connection", check_bot_connection, interval=120)
+
+    # Добавляем проверку с интервалом и обработкой ретраев
+    health_monitor.add_check("bot_connection", check_bot_connection, interval=120, retries=2)
     health_monitor.bot_application = application
-    
+
     # Запускаем мониторинг
     await health_monitor.start_monitoring()
     logger.info("Система мониторинга здоровья запущена")
