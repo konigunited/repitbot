@@ -2604,7 +2604,7 @@ async def tutor_schedule_add_note(update: Update, context: ContextTypes.DEFAULT_
             parse_mode='Markdown'
         )
 
-    return 0
+        return 0
 
     finally:
         db.close()
