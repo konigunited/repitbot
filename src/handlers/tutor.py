@@ -2558,9 +2558,17 @@ async def tutor_message_cancel(update: Update, context: ContextTypes.DEFAULT_TYP
 
     return ConversationHandler.END
 
-async def tutor_schedule_add_note(update: Update, context: ContextTypes.DEFAULT_TYPE, day: str):
+async def tutor_schedule_add_note(update: Update, context: ContextTypes.DEFAULT_TYPE, day: str = None):
     """Добавляет заметку к дню недели в расписании."""
     query = update.callback_query
+    # Если day не передан явно (например, вызов через CallbackQueryHandler entry_point),
+    # извлекаем его из callback_data
+    if not day:
+        try:
+            day = query.data.split("_")[-1]
+        except Exception:
+            await query.answer("Ошибка: не удалось определить день")
+            return
     student_id = context.user_data.get('schedule_student_id')
 
     if not student_id:
