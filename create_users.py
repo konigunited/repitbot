@@ -4,10 +4,13 @@ import string
 import sys
 import os
 
-# Добавляем src в sys.path, чтобы корректно импортировать database
-sys.path.append(os.path.join(os.path.dirname(__file__), "src"))
+# Добавляем корень проекта в sys.path, чтобы корректно импортировать пакеты из src
+project_root = os.path.abspath(os.path.dirname(__file__))
+if project_root not in sys.path:
+    sys.path.insert(0, project_root)
 
-from database import SessionLocal, engine, Base, User, UserRole
+# Импортируем из пакета src (нужно, чтобы относительные импорты внутри src.database работали)
+from src.database import SessionLocal, engine, Base, User, UserRole
 
 def generate_access_code(length=8):
     """Генерирует случайный уникальный код доступа."""
