@@ -4,13 +4,17 @@ import string
 import sys
 import os
 
-# Добавляем корень проекта в sys.path, чтобы корректно импортировать пакеты из src
+# Ensure project root and src package are importable when running inside container
 project_root = os.path.abspath(os.path.dirname(__file__))
+src_path = os.path.join(project_root, 'src')
 if project_root not in sys.path:
     sys.path.insert(0, project_root)
+if src_path not in sys.path:
+    sys.path.insert(0, src_path)
 
-# Импортируем из пакета src (нужно, чтобы относительные импорты внутри src.database работали)
+# Import from package src to keep relative imports working inside src modules
 from src.database import SessionLocal, engine, Base, User, UserRole
+
 
 def generate_access_code(length=8):
     """Генерирует случайный уникальный код доступа."""
