@@ -151,8 +151,8 @@ async def start_health_monitoring(application):
             logger.warning(f"Health check bot_connection failed: {e}")
             return False
 
-    # Добавляем проверку с интервалом и обработкой ретраев
-    health_monitor.add_check("bot_connection", check_bot_connection, interval=120, retries=2)
+    # Добавляем проверку с интервалом и обработкой ретраев (max_failures используется в HealthMonitor)
+    health_monitor.add_check("bot_connection", check_bot_connection, interval=120, max_failures=2)
     health_monitor.bot_application = application
 
     # Запускаем мониторинг
