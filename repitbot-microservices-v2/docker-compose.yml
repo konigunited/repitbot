@@ -1,0 +1,104 @@
+version: "3.9"
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-repitbot}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-repitbot}
+      POSTGRES_DB: ${POSTGRES_DB:-repitbot_auth}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./infrastructure/postgres/init-databases.sql:/docker-entrypoint-initdb.d/init-databases.sql:ro
+    ports:
+      - "5432:5432"
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_DEFAULT_USER:-repitbot}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_DEFAULT_PASS:-repitbot}
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+
+  auth-service:
+    build: ./services/auth-service
+    env_file:
+      - ./services/auth-service/.env
+    depends_on:
+      - postgres
+      - rabbitmq
+
+  user-service:
+    build: ./services/user-service
+    env_file:
+      - ./services/user-service/.env
+    depends_on:
+      - postgres
+      - rabbitmq
+
+  lesson-service:
+    build: ./services/lesson-service
+    env_file:
+      - ./services/lesson-service/.env
+    depends_on:
+      - postgres
+      - rabbitmq
+
+  homework-service:
+    build: ./services/homework-service
+    env_file:
+      - ./services/homework-service/.env
+    depends_on:
+      - postgres
+      - rabbitmq
+
+  payment-service:
+    build: ./services/payment-service
+    env_file:
+      - ./services/payment-service/.env
+    depends_on:
+      - postgres
+      - rabbitmq
+
+  notification-service:
+    build: ./services/notification-service
+    env_file:
+      - ./services/notification-service/.env
+    depends_on:
+      - postgres
+      - rabbitmq
+
+  api-gateway:
+    build: ./api-gateway
+    env_file:
+      - ./api-gateway/.env
+    depends_on:
+      - auth-service
+      - user-service
+      - lesson-service
+      - homework-service
+      - payment-service
+      - notification-service
+    ports:
+      - "8080:8080"
+
+  telegram-bot:
+    build: ./telegram-bot
+    env_file:
+      - ./telegram-bot/.env
+    depends_on:
+      - api-gateway
+      - rabbitmq
+
+volumes:
+  postgres_data:
+  rabbitmq_data:
